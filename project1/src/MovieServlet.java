@@ -101,7 +101,9 @@ public class MovieServlet extends HttpServlet {
         			String rating = resultSet.getString("rating");
         			
         			out.println("<tr>");
-        			out.println("<td>" + title + "</td>");
+        			
+        			//out.println("<td>\"/project1/test?username="+resultSet.getString("title") +">" +"</td>");
+        			out.println("<td><a href = \"/project1/test?username="+resultSet.getString("title") +"\">" + title + "</a></td>");
         			out.println("<td>" + year + "</td>");
         			out.println("<td>" + director + "</td>");
         			out.println("<td>" + genres + "</td>");
