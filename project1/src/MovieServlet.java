@@ -25,17 +25,15 @@ public class MovieServlet extends HttpServlet {
      */
     public MovieServlet() {
         super();
-        // TODO Auto-generated constructor stub
     }
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
 		 // change this to your own mysql username and password
-        String loginUser = "root";
-        String loginPasswd = "espeon123";
+        String loginUser = "mytestuser";
+        String loginPasswd = "mypassword";
         String loginUrl = "jdbc:mysql://localhost:3306/moviedb";
 		
         // set response mime type
@@ -54,7 +52,7 @@ public class MovieServlet extends HttpServlet {
         		Connection connection = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
         		// declare statement
         		Statement statement = connection.createStatement();
-        		// prepare query, custome made for this problem
+        		// prepare query, custom made for this problem
         		String query =  "SELECT * FROM movies as m\r\n" + 
         				"JOIN  ratings as r ON r.movieId = m.id\r\n" + 
         				"\r\n" + 
@@ -93,6 +91,7 @@ public class MovieServlet extends HttpServlet {
         		out.println("</tr>");
         		
         		while (resultSet.next()) {
+        			
         			String title = resultSet.getString("title");
         			String year = resultSet.getString("year");
         			String director = resultSet.getString("director");
@@ -102,8 +101,7 @@ public class MovieServlet extends HttpServlet {
         			
         			out.println("<tr>");
         			
-        			//out.println("<td>\"/project1/test?username="+resultSet.getString("title") +">" +"</td>");
-        			out.println("<td><a href = \"/project1/test?username="+resultSet.getString("title") +"\">" + title + "</a></td>");
+        			out.println("<td><a href = \"/project1/SingleMovieServlet?moviename="+title +"\">" + title + "</a></td>");
         			out.println("<td>" + year + "</td>");
         			out.println("<td>" + director + "</td>");
         			out.println("<td>" + genres + "</td>");
@@ -111,6 +109,7 @@ public class MovieServlet extends HttpServlet {
         			out.println("<td>" + rating + "</td>");
         			out.println("</tr>");
         		}
+        		
         		out.println("</table>");
         		out.println("</center>");
         		out.println("</body>");
@@ -146,7 +145,6 @@ public class MovieServlet extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
 		doGet(request, response);
 	}
 
