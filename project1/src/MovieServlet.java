@@ -12,7 +12,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
+import project1.helperFunct;
 /**
  * Servlet implementation class MovieServlet
  */
@@ -32,8 +32,8 @@ public class MovieServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		 // change this to your own mysql username and password
-        String loginUser = "mytestuser";
-        String loginPasswd = "mypassword";
+        String loginUser = "root";
+        String loginPasswd = "espeon123";
         String loginUrl = "jdbc:mysql://localhost:3306/moviedb";
 		
         // set response mime type
@@ -70,6 +70,7 @@ public class MovieServlet extends HttpServlet {
         				"\r\n" + 
         				"ORDER BY r.rating desc\r\n" + 
         				"limit 20\r\n" + 
+        				
         				"" ;
         		// execute query , taken from example
         		ResultSet resultSet = statement.executeQuery(query);
@@ -98,14 +99,13 @@ public class MovieServlet extends HttpServlet {
         			String genres = resultSet.getString("genres");
         			String stars = resultSet.getString("stars");
         			String rating = resultSet.getString("rating");
-        			
+        			helperFunct help = new helperFunct();
         			out.println("<tr>");
-        			
-        			out.println("<td><a href = \"/project1/SingleMovieServlet?moviename="+title +"\">" + title + "</a></td>");
+        			out.println("<td><a href = \"/project1/SingleMovieServlet?query="+title +"\">" + title + "</a></td>");
         			out.println("<td>" + year + "</td>");
         			out.println("<td>" + director + "</td>");
         			out.println("<td>" + genres + "</td>");
-        			out.println("<td>" + stars + "</td>");
+        			out.println("<td>" + help.lister(stars, "/project1/SingleStarServlet") + "</td>");
         			out.println("<td>" + rating + "</td>");
         			out.println("</tr>");
         		}

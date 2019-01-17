@@ -13,6 +13,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import project1.helperFunct;
+
 /**
  * Servlet implementation class SingleMovieServlet
  */
@@ -34,11 +36,11 @@ public class SingleMovieServlet extends HttpServlet {
 		
 		//response.getWriter().append("Served at: ").append(request.getParameter("moviename"));
 		
-		String movie_to_search = request.getParameter("moviename");
+		String movie_to_search = request.getParameter("query");
 		
 		 // change this to your own mysql username and password
-        String loginUser = "mytestuser";
-        String loginPasswd = "mypassword";
+        String loginUser = "root";
+        String loginPasswd = "espeon123";
         String loginUrl = "jdbc:mysql://localhost:3306/moviedb";
 		
         // set response mime type
@@ -71,7 +73,7 @@ public class SingleMovieServlet extends HttpServlet {
         				"select title, group_concat(name) as stars from stars_in_movies join stars on stars_in_movies.starId = stars.id \r\n" + 
         				"join movies on stars_in_movies.movieId = movies.id Group by title\r\n" + 
         				") as sm\r\n" + 
-        				"ON sm.title = m.title\r\n" + 
+        				"ON sm.title = m.title\r\n" + "where m.title ="+ "\""+movie_to_search+"\""+ 
         				"\r\n" + 
         				"ORDER BY r.rating desc\r\n" + 
         				"limit 20\r\n" + 
@@ -100,19 +102,19 @@ public class SingleMovieServlet extends HttpServlet {
         			String genres = resultSet.getString("genres");
         			String stars = resultSet.getString("stars");
         			String rating = resultSet.getString("rating");
+        			helperFunct help = new helperFunct();
+
         			
-        			if (title.equals(movie_to_search))
-        			{
         				out.println("<h1>" + title + "</h1>");
 	        			out.println("<tr>");
 	        			
 	        			out.println("<td>" + year + "</td>");
 	        			out.println("<td>" + director + "</td>");
 	        			out.println("<td>" + genres + "</td>");
-	        			out.println("<td>" + stars + "</td>");
+	        			out.println("<td>" + help.lister(stars, "/project1/SingleStarServlet") + "</td>");
 	        			out.println("<td>" + rating + "</td>");
 	        			out.println("</tr>");
-        			}
+        			
         		}
         		
         		out.println("</table>");
