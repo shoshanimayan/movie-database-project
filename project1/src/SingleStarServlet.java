@@ -39,8 +39,8 @@ protected void doGet(HttpServletRequest request, HttpServletResponse response) t
 		String star_to_search = request.getParameter("query");
 		
 		 // change this to your own mysql username and password
-        String loginUser = "mytestuser";
-        String loginPasswd = "mypassword";
+        String loginUser = "root";
+        String loginPasswd = "espeon123";
         String loginUrl = "jdbc:mysql://localhost:3306/moviedb";
 		
         // set response mime type
@@ -50,8 +50,15 @@ protected void doGet(HttpServletRequest request, HttpServletResponse response) t
         PrintWriter out = response.getWriter();
         //set up html page
         out.println("<html>");
-        out.println("<head><title>Fabflix</title></head>");
-        
+        out.println("<head>");
+        out.println("<title>Fabflix</title>");
+        out.println("<style>");
+        out.println("button{cursor: pointer; border: 1px solid black; border-radius: 4px; }");
+        out.println("tr:nth-child(even) {background-color: #e2e2e2;}");
+        out.println("table {border-collapse: collapse;  width: 75%;  }");
+        out.println("table, tr, td {border: 2px solid;  padding: 14px; text-align: left; font-family: Arial}");
+        out.println("</style>");
+        out.println("</head>");        
         
         try {
         		Class.forName("com.mysql.jdbc.Driver").newInstance();
@@ -70,6 +77,8 @@ protected void doGet(HttpServletRequest request, HttpServletResponse response) t
         		ResultSet resultSet = statement.executeQuery(query);
         		//set up body
         		out.println("<body>");
+        		//out.println("<a>" +star_to_search+"</a>"); //for debugging jdbc cannot read characters with umla
+        		out.println("<button onclick=\"window.location.href = \'/project1/MovieServlet\';\"><h4>movie list</h4></button>");
         		out.println("<center>"); // hopefully will make it look nicer 
 
         		out.println("<table border>");

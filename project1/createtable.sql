@@ -77,4 +77,3 @@ CREATE TABLE ratings (
     numVotes integer NOT NULL,
     FOREIGN KEY (movieId) REFERENCES movies (id) ON DELETE CASCADE
 );
-

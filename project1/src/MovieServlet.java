@@ -32,8 +32,8 @@ public class MovieServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		 // change this to your own mysql username and password
-		String loginUser = "mytestuser";
-        String loginPasswd = "mypassword";
+		String loginUser = "root";
+        String loginPasswd = "espeon123";
         String loginUrl = "jdbc:mysql://localhost:3306/moviedb";
 		
         // set response mime type
@@ -43,8 +43,15 @@ public class MovieServlet extends HttpServlet {
         PrintWriter out = response.getWriter();
         //set up html page
         out.println("<html>");
-        out.println("<head><title>Fabflix</title></head>");
         
+        out.println("<head>");
+        out.println("<title>Fabflix</title>");
+        out.println("<style>");
+        out.println("tr:hover {background-color: #e2e2e2;}");
+        out.println("table {border-collapse: collapse; width: 75%; }");
+        out.println("table, td, tr {border: 2px solid;  padding: 14px; text-align: left; font-family: Arial}");
+        out.println("</style>");
+        out.println("</head>");
         
         try {
         		Class.forName("com.mysql.jdbc.Driver").newInstance();
