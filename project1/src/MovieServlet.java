@@ -85,18 +85,18 @@ public class MovieServlet extends HttpServlet {
         		//set up body
         		out.println("<body>");
         		out.println("<center>"); // hopefully will make it look nicer 
-        		out.println("<h1>Movie Database</h1>");
+        		out.println("<h1>Movies</h1>");
         		
         		out.println("<table border>");
         		
         		// set up table header
         		out.println("<tr>");
-        		out.println("<td>title</td>");
-        		out.println("<td>year</td>");
-        		out.println("<td>director</td>");
-        		out.println("<td>genres</td>");
-        		out.println("<td>stars</td>");
-        		out.println("<td>rating</td>");
+        		out.println("<td>Title</td>");
+        		out.println("<td>Year</td>");
+        		out.println("<td>Director</td>");
+        		out.println("<td>Genres</td>");
+        		out.println("<td>Stars</td>");
+        		out.println("<td>Rating</td>");
         		out.println("</tr>");
         		
         		while (resultSet.next()) {
