@@ -61,24 +61,25 @@ public class MovieServlet extends HttpServlet {
         		Statement statement = connection.createStatement();
         		// prepare query, custom made for this problem
         		String query =  "SELECT * FROM movies as m\r\n" + 
-        				"JOIN  ratings as r ON r.movieId = m.id\r\n" + 
-        				"\r\n" + 
-        				"join (\r\n" + 
-        				"select title, group_concat(name) as genres from genres_in_movies join genres on genres_in_movies.genreId = genres.id \r\n" + 
-        				"join movies on genres_in_movies.movieId = movies.id Group by title\r\n" + 
-        				") as gm\r\n" + 
-        				"ON gm.title = m.title\r\n" + 
-        				"\r\n" + 
-        				"join (\r\n" + 
-        				"select title, group_concat(name) as stars from stars_in_movies join stars on stars_in_movies.starId = stars.id \r\n" + 
-        				"join movies on stars_in_movies.movieId = movies.id Group by title\r\n" + 
-        				") as sm\r\n" + 
-        				"ON sm.title = m.title\r\n" + 
-        				"\r\n" + 
-        				"ORDER BY r.rating desc\r\n" + 
-        				"limit 20\r\n" + 
+        				"        				JOIN  ratings as r ON r.movieId = m.id\r\n" + 
+        				"        				 \r\n" + 
+        				"        				join (\r\n" + 
+        				"        				select title, group_concat(name) as genres from genres_in_movies join genres on genres_in_movies.genreId = genres.id \r\n" + 
+        				"        				join movies on genres_in_movies.movieId = movies.id Group by title\r\n" + 
+        				"        				) as gm\r\n" + 
+        				"        				ON gm.title = m.title\r\n" + 
+        				"						\r\n" + 
+        				"        				join ( \r\n" + 
+        				"        				select title, group_concat(name) as stars, group_concat(starId) as starID from stars_in_movies join stars on stars_in_movies.starId = stars.id \r\n" + 
+        				"        				join movies on stars_in_movies.movieId = movies.id Group by title\r\n" + 
+        				"        				) as sm\r\n" + 
+        				"        				ON sm.title = m.title\r\n" + 
+        				"        				\r\n" + 
+        				"        				ORDER BY r.rating desc\r\n" + 
+        				"        				limit 20";
         				
-        				"" ;
+        				
+    
         		// execute query , taken from example
         		ResultSet resultSet = statement.executeQuery(query);
         		//set up body
@@ -108,11 +109,11 @@ public class MovieServlet extends HttpServlet {
         			String rating = resultSet.getString("rating");
         			helperFunct help = new helperFunct();
         			out.println("<tr>");
-        			out.println("<td><a href = \"/project1/SingleMovieServlet?query="+title +"\">" + title + "</a></td>");
+        			out.println("<td><a href = \"/project1/SingleMovieServlet?query="+ resultSet.getString("id")+"\">" + title + "</a></td>");
         			out.println("<td>" + year + "</td>");
         			out.println("<td>" + director + "</td>");
         			out.println("<td>" + genres + "</td>");
-        			out.println("<td>" + help.lister(stars, "/project1/SingleStarServlet") + "</td>");
+        			out.println("<td>" + help.lister(stars, resultSet.getString("starID"), "/project1/SingleStarServlet") + "</td>");
         			out.println("<td>" + rating + "</td>");
         			out.println("</tr>");
         		}

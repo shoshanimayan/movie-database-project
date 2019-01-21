@@ -39,7 +39,7 @@ protected void doGet(HttpServletRequest request, HttpServletResponse response) t
 		String star_to_search = request.getParameter("query");
 		
 		 // change this to your own mysql username and password
-        String loginUser = "mytestuser";
+		String loginUser = "mytestuser";
         String loginPasswd = "catcat123";
         String loginUrl = "jdbc:mysql://localhost:3306/moviedb";
 		
@@ -69,10 +69,10 @@ protected void doGet(HttpServletRequest request, HttpServletResponse response) t
         		// prepare query, custom made for this problem
         		String query =  "SELECT * From stars as s\r\n" + 
         				"Join(\r\n" + 
-        				"select name, group_concat(title) as mlist from stars_in_movies join stars on stars_in_movies.starId = stars.id  \r\n" + 
+        				"select name, group_concat(title) as mlist, group_concat(movieId) as movieID from stars_in_movies join stars on stars_in_movies.starId = stars.id  \r\n" + 
         				"join movies on stars_in_movies.movieId = movies.id  Group by name \r\n" + 
         				") sm on s.name=sm.name\r\n" + 
-        				"where s.name = \""+star_to_search+"\"" ;
+        				"where s.id = \""+star_to_search+"\"" ;
         		// execute query, taken from example
         		ResultSet resultSet = statement.executeQuery(query);
         		//set up body
@@ -104,7 +104,7 @@ protected void doGet(HttpServletRequest request, HttpServletResponse response) t
 	        			
 	        			out.println("<td>" + name + "</td>");
 	        			out.println("<td>" + year + "</td>");
-	        			out.println("<td>" + help.lister(movieList,"/project1/SingleMovieServlet") + "</td>");
+	        			out.println("<td>" + help.lister(movieList,resultSet.getString("movieID"),"/project1/SingleMovieServlet") + "</td>");
 	        			
 	        			out.println("</tr>");
         			
