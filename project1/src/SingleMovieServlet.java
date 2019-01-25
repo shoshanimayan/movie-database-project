@@ -85,8 +85,8 @@ public class SingleMovieServlet extends HttpServlet {
         		// execute query, taken from example
         		ResultSet resultSet = statement.executeQuery(query);
         		//set up body
-        		out.println("<body>");
-        		out.println("<button onclick=\"window.location.href = \'/project1/MovieServlet\';\"><h4>movie list</h4></button>");
+        		out.println("<body>");        		out.println("<button onclick=\"window.location.href = \'/project1/MovieServlet\';\"><h4>movie list</h4></button>");
+
 
         		out.println("<center>"); // hopefully will make it look nicer 
 

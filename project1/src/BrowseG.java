@@ -12,25 +12,27 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import project1.helperFunct;
+
 /**
- * Servlet implementation class MovieServlet
+ * Servlet implementation class BrowseTitle
  */
-@WebServlet("/MovieServlet")
-public class MovieServlet extends HttpServlet {
+@WebServlet("/BrowseG")
+public class BrowseG extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public MovieServlet() {
+    public BrowseG() {
         super();
+        // TODO Auto-generated constructor stub
     }
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
 		 // change this to your own mysql username and password
 		String loginUser = "root";
         String loginPasswd = "espeon123";
@@ -60,65 +62,21 @@ public class MovieServlet extends HttpServlet {
         		// declare statement
         		Statement statement = connection.createStatement();
         		// prepare query, custom made for this problem
-        		String query =  "SELECT * FROM movies as m\r\n" + 
-        				"        				JOIN  ratings as r ON r.movieId = m.id\r\n" + 
-        				"        				 \r\n" + 
-        				"        				join (\r\n" + 
-        				"        				select title, group_concat(name) as genres from genres_in_movies join genres on genres_in_movies.genreId = genres.id \r\n" + 
-        				"        				join movies on genres_in_movies.movieId = movies.id Group by title\r\n" + 
-        				"        				) as gm\r\n" + 
-        				"        				ON gm.title = m.title\r\n" + 
-        				"						\r\n" + 
-        				"        				join ( \r\n" + 
-        				"        				select title, group_concat(name) as stars, group_concat(starId) as starID from stars_in_movies join stars on stars_in_movies.starId = stars.id \r\n" + 
-        				"        				join movies on stars_in_movies.movieId = movies.id Group by title\r\n" + 
-        				"        				) as sm\r\n" + 
-        				"        				ON sm.title = m.title\r\n" + 
-        				"        				\r\n" + 
-        				"        				ORDER BY r.rating desc\r\n" + 
-        				"        				limit 20";
-        				
-        				
+        		String query =  "SELECT name from genres";
     
         		// execute query , taken from example
         		ResultSet resultSet = statement.executeQuery(query);
         		//set up body
         		out.println("<body>");
         		out.println("<center>"); // hopefully will make it look nicer 
-        		out.println("<h1>Movie Database</h1>");
+        		out.println("<h1>Genres</h1>");
         		
-        		out.println("<table border>");
-        		
-        		// set up table header
-        		out.println("<tr>");
-        		out.println("<td>title</td>");
-        		out.println("<td>year</td>");
-        		out.println("<td>director</td>");
-        		out.println("<td>genres</td>");
-        		out.println("<td>stars</td>");
-        		out.println("<td>rating</td>");
-        		out.println("</tr>");
-        		
-        		while (resultSet.next()) {
+        		//resultSet.getString("name");
+while (resultSet.next()) {
+        			out.println("<h3><a href = \"/project1/MovieServlet?bTitle="+ resultSet.getString("name")+"\">" + resultSet.getString("name") + "</a></h3>");
         			
-        			String title = resultSet.getString("title");
-        			String year = resultSet.getString("year");
-        			String director = resultSet.getString("director");
-        			String genres = resultSet.getString("genres");
-        			String stars = resultSet.getString("stars");
-        			String rating = resultSet.getString("rating");
-        			helperFunct help = new helperFunct();
-        			out.println("<tr>");
-        			out.println("<td><a href = \"/project1/SingleMovieServlet?query="+ resultSet.getString("id")+"\">" + title + "</a></td>");
-        			out.println("<td>" + year + "</td>");
-        			out.println("<td>" + director + "</td>");
-        			out.println("<td>" + genres + "</td>");
-        			out.println("<td>" + help.lister(stars, resultSet.getString("starID"), "/project1/SingleStarServlet") + "</td>");
-        			out.println("<td>" + rating + "</td>");
-        			out.println("</tr>");
         		}
         		
-        		out.println("</table>");
         		out.println("</center>");
         		out.println("</body>");
         		resultSet.close();
@@ -146,13 +104,13 @@ public class MovieServlet extends HttpServlet {
         
         out.println("</html>");
         out.close();
-        
 	}
 
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
 		doGet(request, response);
 	}
 
