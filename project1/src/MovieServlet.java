@@ -33,8 +33,8 @@ public class MovieServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		 // change this to your own mysql username and password
-		String loginUser = "mytestuser";
-        String loginPasswd = "mypassword";
+		String loginUser = "root";
+        String loginPasswd = "espeon123";
         String loginUrl = "jdbc:mysql://localhost:3306/moviedb";
 		
         // set response mime type
@@ -62,6 +62,16 @@ public class MovieServlet extends HttpServlet {
         
         String yearSearch = null;
         yearSearch = request.getParameter("year");
+        
+        String titleSearch=null;
+        titleSearch = request.getParameter("title");
+        
+        String directorSearch=null;
+        directorSearch = request.getParameter("director");
+        
+        String starSearch=null;
+        starSearch = request.getParameter("star");
+
         
         try {
         		Class.forName("com.mysql.jdbc.Driver").newInstance();
@@ -122,6 +132,57 @@ public class MovieServlet extends HttpServlet {
             				"   ) as sm\r\n" + 
             				"   ON sm.title = m.title\r\n" +
             				"	WHERE m.year =" + yearSearch + "\r\n" +
+            				"   ORDER BY r.rating desc\r\n" + 
+            				"   limit 20";
+        		}
+        		else if (titleSearch != null) {
+        			query = "	SELECT * FROM movies as m\r\n" + 
+            				"   JOIN  ratings as r ON r.movieId = m.id\r\n" + 
+            				"   join (\r\n" + 
+            				"   select title, group_concat(name) as genres from genres_in_movies join genres on genres_in_movies.genreId = genres.id \r\n" + 
+            				"   join movies on genres_in_movies.movieId = movies.id Group by title \r\n" + 
+            				"   ) as gm\r\n" + 
+            				"   ON gm.title = m.title\r\n" + 						
+            				"   join ( \r\n" + 
+            				"   select title, group_concat(name) as stars, group_concat(starId) as starID from stars_in_movies join stars on stars_in_movies.starId = stars.id \r\n" + 
+            				"   join movies on stars_in_movies.movieId = movies.id Group by title\r\n" + 
+            				"   ) as sm\r\n" + 
+            				"   ON sm.title = m.title\r\n" +
+            				"	WHERE m.title LIKE \'%" + titleSearch + "%\'\r\n" +
+            				"   ORDER BY r.rating desc\r\n" + 
+            				"   limit 20";
+        		}
+        		else if (directorSearch != null) {
+        			query = "	SELECT * FROM movies as m\r\n" + 
+            				"   JOIN  ratings as r ON r.movieId = m.id\r\n" + 
+            				"   join (\r\n" + 
+            				"   select title, group_concat(name) as genres from genres_in_movies join genres on genres_in_movies.genreId = genres.id \r\n" + 
+            				"   join movies on genres_in_movies.movieId = movies.id Group by title \r\n" + 
+            				"   ) as gm\r\n" + 
+            				"   ON gm.title = m.title\r\n" + 						
+            				"   join ( \r\n" + 
+            				"   select title, group_concat(name) as stars, group_concat(starId) as starID from stars_in_movies join stars on stars_in_movies.starId = stars.id \r\n" + 
+            				"   join movies on stars_in_movies.movieId = movies.id Group by title\r\n" + 
+            				"   ) as sm\r\n" + 
+            				"   ON sm.title = m.title\r\n" +
+            				"	WHERE m.director LIKE \'%" + directorSearch + "%\'\r\n" +
+            				"   ORDER BY r.rating desc\r\n" + 
+            				"   limit 20";
+        		}
+        		else if (starSearch != null) {
+        			query = "	SELECT * FROM movies as m\r\n" + 
+            				"   JOIN  ratings as r ON r.movieId = m.id\r\n" + 
+            				"   join (\r\n" + 
+            				"   select title, group_concat(name) as genres from genres_in_movies join genres on genres_in_movies.genreId = genres.id \r\n" + 
+            				"   join movies on genres_in_movies.movieId = movies.id Group by title \r\n" + 
+            				"   ) as gm\r\n" + 
+            				"   ON gm.title = m.title\r\n" + 						
+            				"   join ( \r\n" + 
+            				"   select title, group_concat(name) as stars, group_concat(starId) as starID from stars_in_movies join stars on stars_in_movies.starId = stars.id \r\n" + 
+            				"   join movies on stars_in_movies.movieId = movies.id Group by title\r\n" + 
+            				"   ) as sm\r\n" + 
+            				"   ON sm.title = m.title\r\n" +
+            				"	WHERE stars LIKE \'%" + starSearch + "%\'\r\n" +
             				"   ORDER BY r.rating desc\r\n" + 
             				"   limit 20";
         		}
