@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.ResultSet;
 import java.sql.Statement;
 
 import javax.servlet.ServletException;
@@ -13,19 +12,17 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import project1.helperFunct;
-
 /**
- * Servlet implementation class MainPage
+ * Servlet implementation class LoginServlet
  */
-@WebServlet("/MainPage")
-public class MainPage extends HttpServlet {
+@WebServlet("/LoginServlet")
+public class LoginServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public MainPage() {
+    public LoginServlet() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -34,12 +31,8 @@ public class MainPage extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		//response.getWriter().append("Served at: ").append(request.getContextPath());
-		//response.getWriter().append("Served at: ").append(request.getParameter("moviename"));
 		
-		String src = request.getParameter("src");
-		if (src==null) {src="title";}
+		String errormsg = request.getParameter("errormsg");
 		
 		 // change this to your own mysql username and password
 		String loginUser = "mytestuser";
@@ -74,15 +67,28 @@ public class MainPage extends HttpServlet {
         		// execute query, taken from example
         		//set up body
         		out.println("<body>");
-        		out.println("<center>"); // hopefully will make it look nicer 
-        		out.println("<h1>Main Page</h1>");
-        		out.println("<h3>Browse</h3>");
-        		out.println("<form action=\"/project1/browse\" method=\"get\"><button>Browse</button></form>");
-        		out.println("<h3>Search by "+src+"</h3>");
-        		out.print("<form action=\"/project1/MainPage\" method=\"get\" ><button name=\"src\" type=\"submit\" value=\"title\">title</button><button name=\"src\" type=\"submit\" value=\"year\">year</button><button name=\"src\" type=\"submit\" value=\"director\">director</button><button name=\"src\" type=\"submit\" value=\"star\">star</button></form>");
-        		out.print("<form action = \'/project1/MovieServlet\'>Search:<input type =\'text\' name =\'"+src+"\'><input type=\"submit\" value=\"Search\"></form>");
+        		out.println("<center>"); 
+        		
+        		if (errormsg != null)
+        			out.println(errormsg);
+        		
+        		
+        		out.println("<h1>Login to Database</h1>");
+        		out.println("<form id=\"login_form\" method=\"post\" action=\"/project1/LoginFilterServlet\">");
+        	    out.println("<label><b>Email</b></label>");
+        	    out.println("<input type=\"text\" placeholder=\"Enter Email\" name=\"email\">");
+        	    out.println("<br>");
+        	    out.println("<label><b>Password</b></label>");
+        	    out.println("<input type=\"password\" placeholder=\"Enter Password\" name=\"password\">");
+        	    out.println("<br>");
+        	    out.println("<input type=\"submit\" value=\"Login\">");
+        	    out.println("</form>");
+        		
+        	    
         		out.println("</center>");
         		out.println("</body>");
+        		
+        		
         		statement.close();
         		connection.close();
         		
@@ -108,7 +114,6 @@ public class MainPage extends HttpServlet {
         
         out.println("</html>");
         out.close();
-        
 	}
 
 	/**

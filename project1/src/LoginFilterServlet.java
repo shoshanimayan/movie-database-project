@@ -16,16 +16,16 @@ import javax.servlet.http.HttpServletResponse;
 import project1.helperFunct;
 
 /**
- * Servlet implementation class MainPage
+ * Servlet implementation class LoginFilterServlet
  */
-@WebServlet("/MainPage")
-public class MainPage extends HttpServlet {
+@WebServlet("/LoginFilterServlet")
+public class LoginFilterServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public MainPage() {
+    public LoginFilterServlet() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -34,13 +34,14 @@ public class MainPage extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		//response.getWriter().append("Served at: ").append(request.getContextPath());
-		//response.getWriter().append("Served at: ").append(request.getParameter("moviename"));
 		
-		String src = request.getParameter("src");
-		if (src==null) {src="title";}
+		String email = request.getParameter("email");
+		String password = request.getParameter("password");
 		
+		
+		// get the printwriter for writing response
+        PrintWriter out = response.getWriter();
+   	
 		 // change this to your own mysql username and password
 		String loginUser = "mytestuser";
         String loginPasswd = "mypassword";
@@ -48,20 +49,7 @@ public class MainPage extends HttpServlet {
 		
         // set response mime type
         response.setContentType("text/html"); 
-
-        // get the printwriter for writing response
-        PrintWriter out = response.getWriter();
-        //set up html page
-        out.println("<html>");
-        out.println("<head>");
-        out.println("<title>Fabflix</title>");
-        out.println("<style>");
-        out.println("button{cursor: pointer; border: 1px solid black; border-radius: 4px; }");
-        out.println("tr:nth-child(even) {background-color: #e2e2e2;}");
-        out.println("table {border-collapse: collapse;  width: 75%;  }");
-        out.println("table, tr, td {border: 2px solid;  padding: 14px; text-align: left; font-family: Arial}");
-        out.println("</style>");
-        out.println("</head>");        
+         
         
         try {
         		Class.forName("com.mysql.jdbc.Driver").newInstance();
@@ -69,20 +57,31 @@ public class MainPage extends HttpServlet {
         		Connection connection = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
         		// declare statement
         		Statement statement = connection.createStatement();
+        		
         		// prepare query, custom made for this problem
+        		String query1 = " SELECT email from customers where email =\"" + email + "\"";
+        		String query2 = " SELECT email from customers where email =\"" + email + "\" and password =\"" + password + "\"";
+
         		
         		// execute query, taken from example
-        		//set up body
-        		out.println("<body>");
-        		out.println("<center>"); // hopefully will make it look nicer 
-        		out.println("<h1>Main Page</h1>");
-        		out.println("<h3>Browse</h3>");
-        		out.println("<form action=\"/project1/browse\" method=\"get\"><button>Browse</button></form>");
-        		out.println("<h3>Search by "+src+"</h3>");
-        		out.print("<form action=\"/project1/MainPage\" method=\"get\" ><button name=\"src\" type=\"submit\" value=\"title\">title</button><button name=\"src\" type=\"submit\" value=\"year\">year</button><button name=\"src\" type=\"submit\" value=\"director\">director</button><button name=\"src\" type=\"submit\" value=\"star\">star</button></form>");
-        		out.print("<form action = \'/project1/MovieServlet\'>Search:<input type =\'text\' name =\'"+src+"\'><input type=\"submit\" value=\"Search\"></form>");
-        		out.println("</center>");
-        		out.println("</body>");
+        		ResultSet result = statement.executeQuery(query1);
+        		
+        		if (!result.next())
+        			response.sendRedirect("/project1/LoginServlet?errormsg=Email does not exist");
+        		
+        		else {
+        		result = statement.executeQuery(query2);
+        		if (!result.next())
+        			response.sendRedirect("/project1/LoginServlet?errormsg=Password is incorrect");
+        		
+        		else {
+        		    response.sendRedirect("/project1/MainPage");	
+        		}
+        		}
+        		
+        		
+
+        		result.close();
         		statement.close();
         		connection.close();
         		
@@ -106,16 +105,15 @@ public class MainPage extends HttpServlet {
         		out.print("</body>");
         }
         
-        out.println("</html>");
         out.close();
-        
+		
+		
 	}
 
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
 		doGet(request, response);
 	}
 
