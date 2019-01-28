@@ -35,8 +35,8 @@ public class BrowseT extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		 // change this to your own mysql username and password
-		String loginUser = "root";
-        String loginPasswd = "espeon123";
+		String loginUser = "mytestuser";
+        String loginPasswd = "mypassword";
         String loginUrl = "jdbc:mysql://localhost:3306/moviedb";
 		
         // set response mime type
@@ -73,7 +73,7 @@ public class BrowseT extends HttpServlet {
         		out.println("<h1>Title Letters</h1>");
         		
         		//resultSet.getString("name");
-        		char[] alphabet = "1234567890abcdefghijklmnopqrstuvwxyz".toCharArray();
+        		char[] alphabet = "1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ".toCharArray();
 for( int i = 0; i<36;i++)  {
         			out.println("<h3><a href = \"/project1/MovieServlet?bTitle="+ alphabet[i]+"\">" + alphabet[i] + "</a></h3>");
         		}

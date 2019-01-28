@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import project1.helperFunct;
+
 /**
  * Servlet implementation class MovieServlet
  */
@@ -32,8 +33,8 @@ public class MovieServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		 // change this to your own mysql username and password
-		String loginUser = "root";
-        String loginPasswd = "espeon123";
+		String loginUser = "mytestuser";
+        String loginPasswd = "mypassword";
         String loginUrl = "jdbc:mysql://localhost:3306/moviedb";
 		
         // set response mime type
@@ -53,6 +54,15 @@ public class MovieServlet extends HttpServlet {
         out.println("</style>");
         out.println("</head>");
         
+        String genreBrowse = null;
+        genreBrowse = request.getParameter("bGenre");
+        
+        String titleBrowse = null;
+        titleBrowse = request.getParameter("bTitle");
+        
+        String yearSearch = null;
+        yearSearch = request.getParameter("year");
+        
         try {
         		Class.forName("com.mysql.jdbc.Driver").newInstance();
         		// create database connection
@@ -60,43 +70,96 @@ public class MovieServlet extends HttpServlet {
         		// declare statement
         		Statement statement = connection.createStatement();
         		// prepare query, custom made for this problem
-        		String query =  "SELECT * FROM movies as m\r\n" + 
-        				"        				JOIN  ratings as r ON r.movieId = m.id\r\n" + 
-        				"        				 \r\n" + 
-        				"        				join (\r\n" + 
-        				"        				select title, group_concat(name) as genres from genres_in_movies join genres on genres_in_movies.genreId = genres.id \r\n" + 
-        				"        				join movies on genres_in_movies.movieId = movies.id Group by title\r\n" + 
-        				"        				) as gm\r\n" + 
-        				"        				ON gm.title = m.title\r\n" + 
-        				"						\r\n" + 
-        				"        				join ( \r\n" + 
-        				"        				select title, group_concat(name) as stars, group_concat(starId) as starID from stars_in_movies join stars on stars_in_movies.starId = stars.id \r\n" + 
-        				"        				join movies on stars_in_movies.movieId = movies.id Group by title\r\n" + 
-        				"        				) as sm\r\n" + 
-        				"        				ON sm.title = m.title\r\n" + 
-        				"        				\r\n" + 
-        				"        				ORDER BY r.rating desc\r\n" + 
-        				"        				limit 20";
-        				
-        				
+        		
+        		String query;
+        		
+        		if (genreBrowse != null) {
+        			query = "	SELECT * FROM movies as m\r\n" + 
+	        				"	JOIN  ratings as r ON r.movieId = m.id\r\n" + 
+	        				"   join (\r\n" + 
+	        				"   select title, group_concat(name) as genres from genres_in_movies join genres on genres_in_movies.genreId = genres.id \r\n" + 
+	        				"   join movies on genres_in_movies.movieId = movies.id Group by title HAVING FIND_IN_SET(" +"\"" + genreBrowse + "\", genres) > 0 " + 
+	        				"   ) as gm\r\n" + 
+	        				"   ON gm.title = m.title\r\n" + 						
+	        				"   join ( \r\n" + 
+	        				"   select title, group_concat(name) as stars, group_concat(starId) as starID from stars_in_movies join stars on stars_in_movies.starId = stars.id \r\n" + 
+	        				"   join movies on stars_in_movies.movieId = movies.id Group by title\r\n" + 
+	        				"   ) as sm\r\n" + 
+	        				"   ON sm.title = m.title\r\n" + 
+	        				"   ORDER BY r.rating desc\r\n" + 
+	        				"   limit 20";
+        		}
+        		
+        		else if (titleBrowse != null) {
+        			query = "	SELECT * FROM movies as m\r\n" + 
+            				"   JOIN  ratings as r ON r.movieId = m.id\r\n" + 
+            				"   join (\r\n" + 
+            				"   select title, group_concat(name) as genres from genres_in_movies join genres on genres_in_movies.genreId = genres.id \r\n" + 
+            				"   join movies on genres_in_movies.movieId = movies.id Group by title \r\n" + 
+            				"   ) as gm\r\n" + 
+            				"   ON gm.title = m.title\r\n" + 						
+            				"   join ( \r\n" + 
+            				"   select title, group_concat(name) as stars, group_concat(starId) as starID from stars_in_movies join stars on stars_in_movies.starId = stars.id \r\n" + 
+            				"   join movies on stars_in_movies.movieId = movies.id Group by title\r\n" + 
+            				"   ) as sm\r\n" + 
+            				"   ON sm.title = m.title\r\n" + 
+            				"   WHERE SUBSTRING(m.title, 1, 1) =" + "\"" + titleBrowse + "\" \r\n" + 
+            				"   ORDER BY r.rating desc\r\n" + 
+            				"   limit 20";
+        		}
+       
+        		else if (yearSearch != null) {
+        			query = "	SELECT * FROM movies as m\r\n" + 
+            				"   JOIN  ratings as r ON r.movieId = m.id\r\n" + 
+            				"   join (\r\n" + 
+            				"   select title, group_concat(name) as genres from genres_in_movies join genres on genres_in_movies.genreId = genres.id \r\n" + 
+            				"   join movies on genres_in_movies.movieId = movies.id Group by title \r\n" + 
+            				"   ) as gm\r\n" + 
+            				"   ON gm.title = m.title\r\n" + 						
+            				"   join ( \r\n" + 
+            				"   select title, group_concat(name) as stars, group_concat(starId) as starID from stars_in_movies join stars on stars_in_movies.starId = stars.id \r\n" + 
+            				"   join movies on stars_in_movies.movieId = movies.id Group by title\r\n" + 
+            				"   ) as sm\r\n" + 
+            				"   ON sm.title = m.title\r\n" +
+            				"	WHERE m.year =" + yearSearch + "\r\n" +
+            				"   ORDER BY r.rating desc\r\n" + 
+            				"   limit 20";
+        		}
+        		
+        		else {
+        			query = "	SELECT * FROM movies as m\r\n" + 
+            				"   JOIN  ratings as r ON r.movieId = m.id\r\n" + 
+            				"   join (\r\n" + 
+            				"   select title, group_concat(name) as genres from genres_in_movies join genres on genres_in_movies.genreId = genres.id \r\n" + 
+            				"   join movies on genres_in_movies.movieId = movies.id Group by title \r\n" + 
+            				"   ) as gm\r\n" + 
+            				"   ON gm.title = m.title\r\n" + 						
+            				"   join ( \r\n" + 
+            				"   select title, group_concat(name) as stars, group_concat(starId) as starID from stars_in_movies join stars on stars_in_movies.starId = stars.id \r\n" + 
+            				"   join movies on stars_in_movies.movieId = movies.id Group by title\r\n" + 
+            				"   ) as sm\r\n" + 
+            				"   ON sm.title = m.title\r\n" + 
+            				"   ORDER BY r.rating desc\r\n" + 
+            				"   limit 20";
+        		}
     
         		// execute query , taken from example
         		ResultSet resultSet = statement.executeQuery(query);
         		//set up body
         		out.println("<body>");
         		out.println("<center>"); // hopefully will make it look nicer 
-        		out.println("<h1>Movie Database</h1>");
+        		out.println("<h1>Movies</h1>");
         		
         		out.println("<table border>");
         		
         		// set up table header
         		out.println("<tr>");
-        		out.println("<td>title</td>");
-        		out.println("<td>year</td>");
-        		out.println("<td>director</td>");
-        		out.println("<td>genres</td>");
-        		out.println("<td>stars</td>");
-        		out.println("<td>rating</td>");
+        		out.println("<td>Title</td>");
+        		out.println("<td>Year</td>");
+        		out.println("<td>Director</td>");
+        		out.println("<td>Genres</td>");
+        		out.println("<td>Stars</td>");
+        		out.println("<td>Rating</td>");
         		out.println("</tr>");
         		
         		while (resultSet.next()) {
@@ -107,7 +170,9 @@ public class MovieServlet extends HttpServlet {
         			String genres = resultSet.getString("genres");
         			String stars = resultSet.getString("stars");
         			String rating = resultSet.getString("rating");
+        			
         			helperFunct help = new helperFunct();
+        			
         			out.println("<tr>");
         			out.println("<td><a href = \"/project1/SingleMovieServlet?query="+ resultSet.getString("id")+"\">" + title + "</a></td>");
         			out.println("<td>" + year + "</td>");

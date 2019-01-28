@@ -34,8 +34,8 @@ public class BrowseG extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		 // change this to your own mysql username and password
-		String loginUser = "root";
-        String loginPasswd = "espeon123";
+		String loginUser = "mytestuser";
+        String loginPasswd = "mypassword";
         String loginUrl = "jdbc:mysql://localhost:3306/moviedb";
 		
         // set response mime type
@@ -73,7 +73,7 @@ public class BrowseG extends HttpServlet {
         		
         		//resultSet.getString("name");
 while (resultSet.next()) {
-        			out.println("<h3><a href = \"/project1/MovieServlet?bTitle="+ resultSet.getString("name")+"\">" + resultSet.getString("name") + "</a></h3>");
+        			out.println("<h3><a href = \"/project1/MovieServlet?bGenre="+ resultSet.getString("name")+"\">" + resultSet.getString("name") + "</a></h3>");
         			
         		}
         		

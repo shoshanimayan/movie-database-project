@@ -38,8 +38,8 @@ public class browse extends HttpServlet {
 				//response.getWriter().append("Served at: ").append(request.getParameter("moviename"));
 						
 				 // change this to your own mysql username and password
-				String loginUser = "root";
-		        String loginPasswd = "espeon123";
+				String loginUser = "mytestuser";
+		        String loginPasswd = "mypassword";
 		        String loginUrl = "jdbc:mysql://localhost:3306/moviedb";
 				
 		        // set response mime type
@@ -74,10 +74,10 @@ public class browse extends HttpServlet {
 		        		//out.println("<button onclick=\"window.location.href = \'/project1/MovieServlet\';\"><h4>movie list</h4></button>");
 		        		out.println("<center>"); // hopefully will make it look nicer 
 		        		out.println("<h1>Browse Page</h1>");
-		        		out.println("<h3>title</h3>");
+		        		out.println("<h3>Browse by Title</h3>");
 		        		out.println("<form action=\"/project1/BrowseT\" method=\"get\"><button>Title</button></form>");
 		        		
-		        		out.println("<h3>genre</h3>");
+		        		out.println("<h3>Browse by Genre</h3>");
 		        		out.println("<form action=\"/project1/BrowseG\" method=\"get\"><button>Genre</button></form>");
 		        		;
 		        		out.println("</center>");

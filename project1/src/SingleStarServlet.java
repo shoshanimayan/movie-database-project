@@ -85,9 +85,9 @@ protected void doGet(HttpServletRequest request, HttpServletResponse response) t
         		
         		// set up table header
         		out.println("<tr>");
-        		out.println("<td>name</td>");
-        		out.println("<td>year of birth</td>");
-        		out.println("<td>movie list</td>");
+        		out.println("<td>Name</td>");
+        		out.println("<td>Year of Birth</td>");
+        		out.println("<td>Movies</td>");
         		
         		out.println("</tr>");
         		

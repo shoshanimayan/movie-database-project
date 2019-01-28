@@ -94,11 +94,11 @@ public class SingleMovieServlet extends HttpServlet {
         		
         		// set up table header
         		out.println("<tr>");
-        		out.println("<td>year</td>");
-        		out.println("<td>director</td>");
-        		out.println("<td>genres</td>");
-        		out.println("<td>stars</td>");
-        		out.println("<td>rating</td>");
+        		out.println("<td>Year</td>");
+        		out.println("<td>Director</td>");
+        		out.println("<td>Genres</td>");
+        		out.println("<td>Stars</td>");
+        		out.println("<td>Rating</td>");
         		out.println("</tr>");
         		
         		while (resultSet.next()) {
