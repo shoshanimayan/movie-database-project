@@ -36,8 +36,11 @@ public class LoginFilterServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		String email = request.getParameter("email");
+		if(email ==null||email=="") {email=(String)request.getSession().getAttribute("email");}
+		if(email ==null||email=="") {response.sendRedirect("/project1/LoginServlet?errormsg=you were not logged in");}
 		String password = request.getParameter("password");
 		String forward = request.getParameter("filterTo");
+		
 		
 		
 		// get the printwriter for writing response
@@ -77,6 +80,7 @@ public class LoginFilterServlet extends HttpServlet {
         			response.sendRedirect("/project1/LoginServlet?errormsg=Password is incorrect");
         		
         		else {
+        	        request.getSession().setAttribute("email", email);
         		    response.sendRedirect(forward);	
         		}
         		}
