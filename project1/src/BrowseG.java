@@ -33,6 +33,16 @@ public class BrowseG extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
+		//session
+		 request.getSession().setAttribute("title", null);
+	        request.getSession().setAttribute("star", null);
+	        request.getSession().setAttribute("director", null);
+	        request.getSession().setAttribute("year", null);
+	        request.getSession().setAttribute("bGenre", null);
+	        request.getSession().setAttribute("bTitle", null);
+	        request.getSession().setAttribute("direction", "DESC");
+	        request.getSession().setAttribute("sort", "r.rating");
+		
 		 // change this to your own mysql username and password
 		String loginUser = "root";
         String loginPasswd = "espeon123";
@@ -111,6 +121,7 @@ while (resultSet.next()) {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
+		
 		doGet(request, response);
 	}
 

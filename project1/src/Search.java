@@ -31,9 +31,15 @@ public class Search extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-				//response.getWriter().append("Served at: ").append(request.getContextPath());
-				//response.getWriter().append("Served at: ").append(request.getParameter("moviename"));
+		//session 
+		request.getSession().setAttribute("title", null);
+	        request.getSession().setAttribute("star", null);
+	        request.getSession().setAttribute("director", null);
+	        request.getSession().setAttribute("year", null);
+	        request.getSession().setAttribute("bGenre", null);
+	        request.getSession().setAttribute("bTitle", null);
+	        request.getSession().setAttribute("direction", "DESC");
+	        request.getSession().setAttribute("sort", "r.rating");
 				
 				String src = request.getParameter("src");
 				if (src==null) {src="title";}
@@ -122,6 +128,7 @@ public class Search extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	
 		// TODO Auto-generated method stub
 		doGet(request, response);
 	}
