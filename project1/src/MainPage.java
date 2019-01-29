@@ -42,8 +42,8 @@ public class MainPage extends HttpServlet {
 		if (src==null) {src="title";}
 		
 		 // change this to your own mysql username and password
-		String loginUser = "mytestuser";
-        String loginPasswd = "mypassword";
+		String loginUser = "root";
+        String loginPasswd = "espeon123";
         String loginUrl = "jdbc:mysql://localhost:3306/moviedb";
 		
         // set response mime type
@@ -74,13 +74,13 @@ public class MainPage extends HttpServlet {
         		// execute query, taken from example
         		//set up body
         		out.println("<body>");
+        		
         		out.println("<center>"); // hopefully will make it look nicer 
         		out.println("<h1>Main Page</h1>");
         		out.println("<h3>Browse</h3>");
         		out.println("<form action=\"/project1/browse\" method=\"get\"><button>Browse</button></form>");
-        		out.println("<h3>Search by "+src+"</h3>");
-        		out.print("<form action=\"/project1/MainPage\" method=\"get\" ><button name=\"src\" type=\"submit\" value=\"title\">title</button><button name=\"src\" type=\"submit\" value=\"year\">year</button><button name=\"src\" type=\"submit\" value=\"director\">director</button><button name=\"src\" type=\"submit\" value=\"star\">star</button></form>");
-        		out.print("<form action = \'/project1/MovieServlet\'>Search:<input type =\'text\' name =\'"+src+"\'><input type=\"submit\" value=\"Search\"></form>");
+        		out.println("<h3>Search</h3>");
+        		out.println("<form action=\"/project1/Search\" method=\"get\"><button>Search</button></form>");
         		out.println("</center>");
         		out.println("</body>");
         		statement.close();

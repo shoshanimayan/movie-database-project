@@ -33,8 +33,8 @@ public class MovieServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		 // change this to your own mysql username and password
-		String loginUser = "mytestuser";
-        String loginPasswd = "mypassword";
+		String loginUser = "root";
+        String loginPasswd = "espeon123";
         String loginUrl = "jdbc:mysql://localhost:3306/moviedb";
 		
         // set response mime type
@@ -54,17 +54,28 @@ public class MovieServlet extends HttpServlet {
         out.println("</style>");
         out.println("</head>");
         
+        String sortBy=null;
+        sortBy = request.getParameter("sort");
+        if(sortBy==null) {sortBy="r.rating";}
+        
+        String direction=null;
+        direction = request.getParameter("direction");
+        if(direction==null) {direction="DESC";}
+        
         String genreBrowse = null;
         genreBrowse = request.getParameter("bGenre");
+        
         
         String titleBrowse = null;
         titleBrowse = request.getParameter("bTitle");
         
         String yearSearch = null;
         yearSearch = request.getParameter("year");
+       
         
         String titleSearch=null;
         titleSearch = request.getParameter("title");
+        
         
         String directorSearch=null;
         directorSearch = request.getParameter("director");
@@ -117,77 +128,8 @@ public class MovieServlet extends HttpServlet {
             				"   ORDER BY r.rating desc\r\n" + 
             				"   limit 20";
         		}
-       
-        		else if (yearSearch != null) {
-        			query = "	SELECT * FROM movies as m\r\n" + 
-            				"   JOIN  ratings as r ON r.movieId = m.id\r\n" + 
-            				"   join (\r\n" + 
-            				"   select title, group_concat(name) as genres from genres_in_movies join genres on genres_in_movies.genreId = genres.id \r\n" + 
-            				"   join movies on genres_in_movies.movieId = movies.id Group by title \r\n" + 
-            				"   ) as gm\r\n" + 
-            				"   ON gm.title = m.title\r\n" + 						
-            				"   join ( \r\n" + 
-            				"   select title, group_concat(name) as stars, group_concat(starId) as starID from stars_in_movies join stars on stars_in_movies.starId = stars.id \r\n" + 
-            				"   join movies on stars_in_movies.movieId = movies.id Group by title\r\n" + 
-            				"   ) as sm\r\n" + 
-            				"   ON sm.title = m.title\r\n" +
-            				"	WHERE m.year =" + yearSearch + "\r\n" +
-            				"   ORDER BY r.rating desc\r\n" + 
-            				"   limit 20";
-        		}
-        		else if (titleSearch != null) {
-        			query = "	SELECT * FROM movies as m\r\n" + 
-            				"   JOIN  ratings as r ON r.movieId = m.id\r\n" + 
-            				"   join (\r\n" + 
-            				"   select title, group_concat(name) as genres from genres_in_movies join genres on genres_in_movies.genreId = genres.id \r\n" + 
-            				"   join movies on genres_in_movies.movieId = movies.id Group by title \r\n" + 
-            				"   ) as gm\r\n" + 
-            				"   ON gm.title = m.title\r\n" + 						
-            				"   join ( \r\n" + 
-            				"   select title, group_concat(name) as stars, group_concat(starId) as starID from stars_in_movies join stars on stars_in_movies.starId = stars.id \r\n" + 
-            				"   join movies on stars_in_movies.movieId = movies.id Group by title\r\n" + 
-            				"   ) as sm\r\n" + 
-            				"   ON sm.title = m.title\r\n" +
-            				"	WHERE m.title LIKE \'%" + titleSearch + "%\'\r\n" +
-            				"   ORDER BY r.rating desc\r\n" + 
-            				"   limit 20";
-        		}
-        		else if (directorSearch != null) {
-        			query = "	SELECT * FROM movies as m\r\n" + 
-            				"   JOIN  ratings as r ON r.movieId = m.id\r\n" + 
-            				"   join (\r\n" + 
-            				"   select title, group_concat(name) as genres from genres_in_movies join genres on genres_in_movies.genreId = genres.id \r\n" + 
-            				"   join movies on genres_in_movies.movieId = movies.id Group by title \r\n" + 
-            				"   ) as gm\r\n" + 
-            				"   ON gm.title = m.title\r\n" + 						
-            				"   join ( \r\n" + 
-            				"   select title, group_concat(name) as stars, group_concat(starId) as starID from stars_in_movies join stars on stars_in_movies.starId = stars.id \r\n" + 
-            				"   join movies on stars_in_movies.movieId = movies.id Group by title\r\n" + 
-            				"   ) as sm\r\n" + 
-            				"   ON sm.title = m.title\r\n" +
-            				"	WHERE m.director LIKE \'%" + directorSearch + "%\'\r\n" +
-            				"   ORDER BY r.rating desc\r\n" + 
-            				"   limit 20";
-        		}
-        		else if (starSearch != null) {
-        			query = "	SELECT * FROM movies as m\r\n" + 
-            				"   JOIN  ratings as r ON r.movieId = m.id\r\n" + 
-            				"   join (\r\n" + 
-            				"   select title, group_concat(name) as genres from genres_in_movies join genres on genres_in_movies.genreId = genres.id \r\n" + 
-            				"   join movies on genres_in_movies.movieId = movies.id Group by title \r\n" + 
-            				"   ) as gm\r\n" + 
-            				"   ON gm.title = m.title\r\n" + 						
-            				"   join ( \r\n" + 
-            				"   select title, group_concat(name) as stars, group_concat(starId) as starID from stars_in_movies join stars on stars_in_movies.starId = stars.id \r\n" + 
-            				"   join movies on stars_in_movies.movieId = movies.id Group by title\r\n" + 
-            				"   ) as sm\r\n" + 
-            				"   ON sm.title = m.title\r\n" +
-            				"	WHERE stars LIKE \'%" + starSearch + "%\'\r\n" +
-            				"   ORDER BY r.rating desc\r\n" + 
-            				"   limit 20";
-        		}
-        		
         		else {
+        		
         			query = "	SELECT * FROM movies as m\r\n" + 
             				"   JOIN  ratings as r ON r.movieId = m.id\r\n" + 
             				"   join (\r\n" + 
@@ -198,9 +140,27 @@ public class MovieServlet extends HttpServlet {
             				"   join ( \r\n" + 
             				"   select title, group_concat(name) as stars, group_concat(starId) as starID from stars_in_movies join stars on stars_in_movies.starId = stars.id \r\n" + 
             				"   join movies on stars_in_movies.movieId = movies.id Group by title\r\n" + 
-            				"   ) as sm\r\n" + 
-            				"   ON sm.title = m.title\r\n" + 
-            				"   ORDER BY r.rating desc\r\n" + 
+            				"   ) as sm\r\n" +
+            				"   ON sm.title = m.title\r\n" ;
+        			 String where="WHERE ";
+        			 if (titleSearch!="" && titleSearch!=null) {where += "m.title LIKE \'%" + titleSearch + "%\'\r\n" ;}
+        			 if(yearSearch!="" && yearSearch!=null) {
+        				 if(where!="WHERE ") {where+="AND ";}
+        				 where += "m.year =" + yearSearch + "\r\n";
+        			 }
+        			 if(directorSearch!="" && directorSearch != null) {
+        				 if(where!="WHERE " ) {where+="AND ";}
+        				 where +=  "m.director LIKE \'%" + directorSearch + "%\'\r\n";
+        			 }
+        			 if(starSearch!="" && starSearch!=null) {
+        				 if(where!="WHERE ") {where+="AND ";}
+        				 where +=  "stars LIKE \'%" + starSearch + "%\'\r\n";
+        			 }
+            			if(where!="WHERE ") {query+=where;}
+            			
+            	//		query+=	"WHERE m.year =" + yearSearch + "\r\n";
+            			
+            			query+=		"   ORDER BY "+ sortBy+" "+ direction+"\r\n" + 
             				"   limit 20";
         		}
     
@@ -208,6 +168,8 @@ public class MovieServlet extends HttpServlet {
         		ResultSet resultSet = statement.executeQuery(query);
         		//set up body
         		out.println("<body>");
+        		out.print("<form  method=\"get\" >Sort by: <button name=\"sort\" type=\"submit\" value=\"r.rating\">Rating</button><button name=\"sort\" type=\"submit\" value=\"m.title\">Title</button><br>In order: <button name=\"direction\" type=\"submit\" value=\"ASC\">Ascend</button><button name=\"direction\" type=\"submit\" value=\"DESC\">Descend</button></form>");
+
         		out.println("<center>"); // hopefully will make it look nicer 
         		out.println("<h1>Movies</h1>");
         		
