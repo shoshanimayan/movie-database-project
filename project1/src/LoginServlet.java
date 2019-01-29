@@ -35,8 +35,8 @@ public class LoginServlet extends HttpServlet {
 		String errormsg = request.getParameter("errormsg");
 		
 		 // change this to your own mysql username and password
-		String loginUser = "mytestuser";
-        String loginPasswd = "mypassword";
+		String loginUser = "root";
+        String loginPasswd = "espeon123";
         String loginUrl = "jdbc:mysql://localhost:3306/moviedb";
 		
         // set response mime type
@@ -74,14 +74,14 @@ public class LoginServlet extends HttpServlet {
         		
         		
         		out.println("<h1>Login to Database</h1>");
-        		out.println("<form id=\"login_form\" method=\"post\" action=\"/project1/LoginFilterServlet\">");
+        		out.println("<form id=\"login_form\" method=\"post\" action=\"/project1/LoginFilterServlet?filterTo=/project1/MainPage\">");
         	    out.println("<label><b>Email</b></label>");
         	    out.println("<input type=\"text\" placeholder=\"Enter Email\" name=\"email\">");
         	    out.println("<br>");
         	    out.println("<label><b>Password</b></label>");
         	    out.println("<input type=\"password\" placeholder=\"Enter Password\" name=\"password\">");
         	    out.println("<br>");
-        	    out.println("<input type=\"submit\" value=\"Login\">");
+        	    out.println("<input type=\"submit\"  value=\"Login\">");
         	    out.println("</form>");
         		
         	    

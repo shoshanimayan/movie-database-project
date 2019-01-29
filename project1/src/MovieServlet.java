@@ -54,7 +54,7 @@ public class MovieServlet extends HttpServlet {
         out.println("</style>");
         out.println("</head>");
         
-        //set data
+        //declare data
         String sortBy=null;
         String direction=null;
         String genreBrowse = null;
@@ -65,7 +65,7 @@ public class MovieServlet extends HttpServlet {
         String starSearch=null;
         
         
-        /// get data from url
+        /// get data from url or session
         sortBy = request.getParameter("sort");
         if(sortBy==null||sortBy=="") {sortBy=(String)request.getSession().getAttribute("sort");}
         if(sortBy==null||sortBy=="") {sortBy="r.rating";}
@@ -101,18 +101,8 @@ public class MovieServlet extends HttpServlet {
         request.getSession().setAttribute("bTitle", titleBrowse);
         request.getSession().setAttribute("direction", direction);
         request.getSession().setAttribute("sort", sortBy);
-     /*
-        titleSearch = (String)request.getSession().getAttribute("title");   
-        directorSearch = (String)request.getSession().getAttribute("director");
-         yearSearch= (String)request.getSession().getAttribute("year");
-         starSearch = (String)request.getSession().getAttribute("star");
-         genreBrowse = (String)request.getSession().getAttribute("bGenre");
-         titleBrowse =  (String)request.getSession().getAttribute("bTitle");
-         direction =  (String)request.getSession().getAttribute("direction");
-         sortBy =  (String)request.getSession().getAttribute("sort");
-*/
-        out.println((String)request.getSession().getAttribute("sort"));
-        out.println((String)request.getSession().getAttribute("direction"));
+
+        
         
         try {
         		Class.forName("com.mysql.jdbc.Driver").newInstance();
