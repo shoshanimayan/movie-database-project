@@ -68,8 +68,8 @@ public class LoginFilterServlet extends HttpServlet {
         		ResultSet result = statement.executeQuery(query1);
         		
         		if (!result.next())
-        			out.println("hi");
-        			//response.sendRedirect("/project1/LoginServlet?errormsg=Email does not exist");
+        		
+        			response.sendRedirect("/project1/LoginServlet?errormsg=Email does not exist");
         			
         		else {
         		result = statement.executeQuery(query2);
