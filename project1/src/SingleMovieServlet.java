@@ -39,8 +39,8 @@ public class SingleMovieServlet extends HttpServlet {
 		String movie_to_search = request.getParameter("query");
 		
 		 // change this to your own mysql username and password
-		String loginUser = "root";
-        String loginPasswd = "espeon123";
+		String loginUser = "mytestuser";
+        String loginPasswd = "mypassword";
         String loginUrl = "jdbc:mysql://localhost:3306/moviedb";
 		
         // set response mime type
@@ -85,7 +85,8 @@ public class SingleMovieServlet extends HttpServlet {
         		// execute query, taken from example
         		ResultSet resultSet = statement.executeQuery(query);
         		//set up body
-        		out.println("<body>");        		out.println("<button onclick=\"window.location.href = \'/project1/MovieServlet\';\"><h4>movie list</h4></button>");
+        		out.println("<body>");        
+        		out.println("<button onclick=\"window.location.href = \'/project1/MovieServlet\';\"><h4>Movie List</h4></button>");
 
 
         		out.println("<center>"); // hopefully will make it look nicer 

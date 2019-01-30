@@ -55,8 +55,8 @@ public class Search extends HttpServlet {
 				if (src==null) {src="title";}
 				
 				 // change this to your own mysql username and password
-				String loginUser = "root";
-		        String loginPasswd = "espeon123";
+				String loginUser = "mytestuser";
+		        String loginPasswd = "mypassword";
 		        String loginUrl = "jdbc:mysql://localhost:3306/moviedb";
 				
 		        // set response mime type
@@ -91,15 +91,15 @@ public class Search extends HttpServlet {
 		        		out.println("<h1>Search Page</h1>");
 		        		out.println("<h3>Search by </h3>");
 		        		out.print("<form action = \'/project1/MovieServlet?\' method =\'get\'>"+
-		        		"<label for=\"title\"><b>Title</b></label>"+ 
-		        		"  <input type=\"text\"  name=\"title\" >"+ 
-		        		"    <label for=\"year\"><b>Year</b></label>" + 
-		        		"    <input type=\"text\"  name=\"year\" >" + 
-		        		"    <label for=\"director\"><b>Director</b></label>" + 
-		        		"    <input type=\"text\"  name=\"director\" >" + 
-		        		"    <label for=\"star\"><b>Star</b></label>" + 
-		        		"    <input type=\"text\"  name=\"star\" >" + 
-		        		"<input id=\"msg\" name=\"msg\" type=\"hidden\" value=\"clean\">\r\n" + 
+		        		"	<label for=\"title\"><b>Title</b></label>"+ 
+		        		"   <input type=\"text\"  name=\"title\" >"+ 
+		        		"   <label for=\"year\"><b>Year</b></label>" + 
+		        		"   <input type=\"text\"  name=\"year\" >" + 
+		        		"   <label for=\"director\"><b>Director</b></label>" + 
+		        		"   <input type=\"text\"  name=\"director\" >" + 
+		        		"   <label for=\"star\"><b>Star</b></label>" + 
+		        		"   <input type=\"text\"  name=\"star\" >" + 
+		        		"	<input id=\"msg\" name=\"msg\" type=\"hidden\" value=\"clean\">\r\n" + 
 		
 		        		"    <button type=\"submit\">Submit</button>"
 		        			

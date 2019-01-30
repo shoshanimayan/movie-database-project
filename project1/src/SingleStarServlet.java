@@ -78,7 +78,7 @@ protected void doGet(HttpServletRequest request, HttpServletResponse response) t
         		//set up body
         		out.println("<body>");
         		//out.println("<a>" +star_to_search+"</a>"); //for debugging jdbc cannot read characters with umla
-        		out.println("<button onclick=\"window.location.href = \'/project1/MovieServlet\';\"><h4>movie list</h4></button>");
+        		out.println("<button onclick=\"window.location.href = \'/project1/MovieServlet\';\"><h4>Movie List</h4></button>");
         		out.println("<center>"); // hopefully will make it look nicer 
 
         		out.println("<table border>");

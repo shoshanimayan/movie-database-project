@@ -33,8 +33,8 @@ public class MovieServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		 // change this to your own mysql username and password
-		String loginUser = "root";
-        String loginPasswd = "espeon123";
+		String loginUser = "mytestuser";
+        String loginPasswd = "mypassword";
         String loginUrl = "jdbc:mysql://localhost:3306/moviedb";
 		
         // set response mime type
@@ -48,6 +48,7 @@ public class MovieServlet extends HttpServlet {
         out.println("<head>");
         out.println("<title>Fabflix</title>");
         out.println("<style>");
+        out.println("button{cursor: pointer; border: 1px solid black; border-radius: 4px; }");
         out.println("tr:hover {background-color: #e2e2e2;}");
         out.println("table {border-collapse: collapse; width: 75%; }");
         out.println("table, td, tr {border: 2px solid;  padding: 14px; text-align: left; font-family: Arial}");
@@ -64,7 +65,7 @@ public class MovieServlet extends HttpServlet {
         String directorSearch=null;
         String starSearch=null;
         
-        if(!"keep".equals(request.getParameter("msg"))) {
+        if("clean".equals(request.getParameter("msg"))) {
         	request.getSession().removeAttribute("title");
     		request.getSession().removeAttribute("star");
     		request.getSession().removeAttribute("year");
@@ -73,7 +74,10 @@ public class MovieServlet extends HttpServlet {
     		request.getSession().removeAttribute("bGenre");
     		request.getSession().removeAttribute("direction");
     		request.getSession().removeAttribute("sort");
+    		request.getSession().removeAttribute("currentPage");
+    		request.getSession().removeAttribute("pCount");
         }
+        
         /// get data from url or session
         sortBy = request.getParameter("sort");
         if(sortBy==null||sortBy=="") {sortBy=(String)request.getSession().getAttribute("sort");}
@@ -102,13 +106,14 @@ public class MovieServlet extends HttpServlet {
         if(starSearch=="" || starSearch==null) {starSearch = (String)request.getSession().getAttribute("star");}
         
         Integer pCount = (Integer)request.getSession().getAttribute("pCount");
-        if(pCount==null) {pCount=20;}
-        if(pCount<0) {pCount=20;}
+        if(pCount==null || pCount < 0) {pCount=20;}
+        
         Integer currentPage = (Integer)request.getSession().getAttribute("currentPage");
-        if(currentPage==null) {currentPage=0;}
-        if(currentPage<0) {currentPage=0;}
+        if(currentPage==null || currentPage < 0) {currentPage=0;}
+        
         //else {currentPage=(int)request.getSession().getAttribute("currentPage");}
         if("next".equals(request.getParameter("pageMsg"))) {currentPage+=pCount;}
+        
         if("prev".equals(request.getParameter("pageMsg"))) {
         	if(currentPage-pCount<0)
         		currentPage=0;
@@ -122,18 +127,7 @@ public class MovieServlet extends HttpServlet {
 
 
 
-        ///set data to session
-        request.getSession().setAttribute("title", titleSearch);
-        request.getSession().setAttribute("star", starSearch);
-        request.getSession().setAttribute("director", directorSearch);
-        request.getSession().setAttribute("year", yearSearch);
-        request.getSession().setAttribute("bGenre", genreBrowse);
-        request.getSession().setAttribute("bTitle", titleBrowse);
-        request.getSession().setAttribute("direction", direction);
-        request.getSession().setAttribute("sort", sortBy);
-        request.getSession().setAttribute("pCount", pCount);
-        request.getSession().setAttribute("currentPage", currentPage);
-
+        
 
         
         
@@ -221,8 +215,8 @@ public class MovieServlet extends HttpServlet {
                 		  SizeQ.last();
                 		  Qsize = SizeQ.getRow();
                 		}
-                		//out.println(Qsize);
-                		//out.println(currentPage);
+                		//out.println("Qsize: " + Qsize);
+                		//out.println("currentPage: " + currentPage);
                 		//out.println(currentPage>Qsize);
 
 
@@ -230,14 +224,27 @@ public class MovieServlet extends HttpServlet {
             			query+=		"   ORDER BY "+ sortBy+" "+ direction+"\r\n" + 
             				"   limit "+currentPage+", "+pCount;
         		}
-    
+        		
+        		///set data to session
+                request.getSession().setAttribute("title", titleSearch);
+                request.getSession().setAttribute("star", starSearch);
+                request.getSession().setAttribute("director", directorSearch);
+                request.getSession().setAttribute("year", yearSearch);
+                request.getSession().setAttribute("bGenre", genreBrowse);
+                request.getSession().setAttribute("bTitle", titleBrowse);
+                request.getSession().setAttribute("direction", direction);
+                request.getSession().setAttribute("sort", sortBy);
+                request.getSession().setAttribute("pCount", pCount);
+                request.getSession().setAttribute("currentPage", currentPage);
+
+        		
         		// execute query , taken from example
         		out.println("");
 
-        		out.println(query);
         		ResultSet resultSet = statement.executeQuery(query);
         		//set up body
         		out.println("<body>");
+        		out.println("<button onclick=\"window.location.href = \'/project1/MainPage\';\"><h4>Main Page</h4></button>");
         		out.print("<form  method=\"get\" >Sort by: <button name=\"sort\" type=\"submit\" value=\"r.rating\">Rating</button><button name=\"sort\" type=\"submit\" value=\"m.title\">Title</button><br>In order: <button name=\"direction\" type=\"submit\" value=\"ASC\">Ascend</button><button name=\"direction\" type=\"submit\" value=\"DESC\">Descend</button></form>");
 
         		out.println("<center>"); // hopefully will make it look nicer 
