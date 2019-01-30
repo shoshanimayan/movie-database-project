@@ -83,7 +83,7 @@ public class BrowseG extends HttpServlet {
         		
         		//resultSet.getString("name");
 while (resultSet.next()) {
-        			out.println("<h3><a href = \"/project1/MovieServlet?bGenre="+ resultSet.getString("name")+"\">" + resultSet.getString("name") + "</a></h3>");
+        			out.println("<h3><a href = \"/project1/MovieServlet?bGenre="+ resultSet.getString("name")+"&msg=clean\">" + resultSet.getString("name") + "</a></h3>");
         			
         		}
         		

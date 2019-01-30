@@ -85,7 +85,7 @@ public class BrowseT extends HttpServlet {
         		//resultSet.getString("name");
         		char[] alphabet = "1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ".toCharArray();
 for( int i = 0; i<36;i++)  {
-        			out.println("<h3><a href = \"/project1/MovieServlet?bTitle="+ alphabet[i]+"\">" + alphabet[i] + "</a></h3>");
+        			out.println("<h3><a href = \"/project1/MovieServlet?bTitle="+ alphabet[i]+"&msg=clean\">" + alphabet[i] + "</a></h3>");
         		}
         		
         		out.println("</center>");

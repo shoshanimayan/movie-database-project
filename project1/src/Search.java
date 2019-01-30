@@ -32,14 +32,24 @@ public class Search extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		//session 
-		request.getSession().setAttribute("title", null);
-	        request.getSession().setAttribute("star", null);
+		//request.getSession().setAttribute("title", null);
+	       /* request.getSession().setAttribute("star", null);
 	        request.getSession().setAttribute("director", null);
 	        request.getSession().setAttribute("year", null);
 	        request.getSession().setAttribute("bGenre", null);
-	        request.getSession().setAttribute("bTitle", null);
-	        request.getSession().setAttribute("direction", "DESC");
-	        request.getSession().setAttribute("sort", "r.rating");
+	        request.getSession().setAttribute("bTitle", null);*/
+		request.getSession().removeAttribute("title");
+		request.getSession().removeAttribute("star");
+		request.getSession().removeAttribute("year");
+		request.getSession().removeAttribute("director");
+		request.getSession().removeAttribute("bTitle");
+		request.getSession().removeAttribute("bGenre");
+		request.getSession().removeAttribute("direction");
+		request.getSession().removeAttribute("sort");
+
+
+	        //request.getSession().setAttribute("direction", "DESC");
+	        //request.getSession().setAttribute("sort", "r.rating");
 				
 				String src = request.getParameter("src");
 				if (src==null) {src="title";}
@@ -80,7 +90,7 @@ public class Search extends HttpServlet {
 		        		out.println("<center>"); // hopefully will make it look nicer 
 		        		out.println("<h1>Search Page</h1>");
 		        		out.println("<h3>Search by </h3>");
-		        		out.print("<form action = \'/project1/MovieServlet\' method =\'get\'>"+
+		        		out.print("<form action = \'/project1/MovieServlet?\' method =\'get\'>"+
 		        		"<label for=\"title\"><b>Title</b></label>"+ 
 		        		"  <input type=\"text\"  name=\"title\" >"+ 
 		        		"    <label for=\"year\"><b>Year</b></label>" + 
@@ -89,12 +99,15 @@ public class Search extends HttpServlet {
 		        		"    <input type=\"text\"  name=\"director\" >" + 
 		        		"    <label for=\"star\"><b>Star</b></label>" + 
 		        		"    <input type=\"text\"  name=\"star\" >" + 
+		        		"<input id=\"msg\" name=\"msg\" type=\"hidden\" value=\"clean\">\r\n" + 
+		
 		        		"    <button type=\"submit\">Submit</button>"
 		        			
 		        				
 		        						+ "</form>");
 		        		out.println("</center>");
 		        		out.println("</body>");
+		        		
 		        		statement.close();
 		        		connection.close();
 		        		

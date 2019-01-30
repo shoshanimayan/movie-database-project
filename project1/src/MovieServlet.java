@@ -64,7 +64,16 @@ public class MovieServlet extends HttpServlet {
         String directorSearch=null;
         String starSearch=null;
         
-        
+        if("clean".equals(request.getParameter("msg"))) {
+        	request.getSession().removeAttribute("title");
+    		request.getSession().removeAttribute("star");
+    		request.getSession().removeAttribute("year");
+    		request.getSession().removeAttribute("director");
+    		request.getSession().removeAttribute("bTitle");
+    		request.getSession().removeAttribute("bGenre");
+    		request.getSession().removeAttribute("direction");
+    		request.getSession().removeAttribute("sort");
+        }
         /// get data from url or session
         sortBy = request.getParameter("sort");
         if(sortBy==null||sortBy=="") {sortBy=(String)request.getSession().getAttribute("sort");}
@@ -209,12 +218,19 @@ public class MovieServlet extends HttpServlet {
                 		  Qsize = SizeQ.getRow();
                 		}
                 		out.println(Qsize);
-                		//if(currentPage>Qsize) {currentPage=Qsize-pCount;}
+                		out.println(currentPage);
+                		out.println(currentPage>Qsize);
+
+
+                	//	if(currentPage>Qsize) {currentPage=Qsize-pCount;}
             			query+=		"   ORDER BY "+ sortBy+" "+ direction+"\r\n" + 
             				"   limit "+currentPage+", "+pCount;
         		}
     
         		// execute query , taken from example
+        		out.println("");
+
+        		out.println(query);
         		ResultSet resultSet = statement.executeQuery(query);
         		//set up body
         		out.println("<body>");
