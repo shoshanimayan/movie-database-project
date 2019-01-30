@@ -95,8 +95,7 @@ public class MovieServlet extends HttpServlet {
         int pCount= 20;
         Integer currentPage;
         currentPage= (Integer)request.getSession().getAttribute("currentPage");
-        if(currentPage==null) {currentPage=0;}
-        
+        if(currentPage==null||currentPage<0) {currentPage=0;}
         if("next".equals(request.getParameter("pageMsg"))) {currentPage+=pCount;}
         if("prev".equals(request.getParameter("pageMsg"))) {
         	if(currentPage-pCount>0)
