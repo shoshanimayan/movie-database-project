@@ -87,7 +87,7 @@ public class Search extends HttpServlet {
 		        		"    <input type=\"text\"  name=\"year\" >" + 
 		        		"    <label for=\"director\"><b>Director</b></label>" + 
 		        		"    <input type=\"text\"  name=\"director\" >" + 
-		        		"    <label for=\"star\"><b>year</b></label>" + 
+		        		"    <label for=\"star\"><b>Star</b></label>" + 
 		        		"    <input type=\"text\"  name=\"star\" >" + 
 		        		"    <button type=\"submit\">Submit</button>"
 		        			

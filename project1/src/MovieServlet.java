@@ -93,15 +93,15 @@ public class MovieServlet extends HttpServlet {
         if(starSearch=="" || starSearch==null) {starSearch = (String)request.getSession().getAttribute("star");}
         
         int pCount= 20;
-        Integer currentPage;
-        currentPage= (Integer)request.getSession().getAttribute("currentPage");
-        if(currentPage==null||currentPage<0) {currentPage=0;}
+        Integer currentPage = (Integer)request.getSession().getAttribute("currentPage");
+        if(currentPage==null) {currentPage=0;}
+        if(currentPage<0) {currentPage=0;}
+        //else {currentPage=(int)request.getSession().getAttribute("currentPage");}
         if("next".equals(request.getParameter("pageMsg"))) {currentPage+=pCount;}
         if("prev".equals(request.getParameter("pageMsg"))) {
-        	if(currentPage-pCount>0)
-        		currentPage-=pCount;
-        	else
+        	if(currentPage-pCount<0)
         		currentPage=0;
+        	
         		
         }
     	//out.println(currentPage);
@@ -199,7 +199,7 @@ public class MovieServlet extends HttpServlet {
             			if(where!="WHERE ") {query+=where;}
             			
             	//		query+=	"WHERE m.year =" + yearSearch + "\r\n";
-            			
+            			if(currentPage<0) {currentPage=0;}
             			int Qsize = 0;
                 		ResultSet SizeQ = statement.executeQuery(query);
                 		if ( SizeQ!= null) 
@@ -208,7 +208,8 @@ public class MovieServlet extends HttpServlet {
                 		  SizeQ.last();
                 		  Qsize = SizeQ.getRow();
                 		}
-                		if(currentPage>=Qsize) {currentPage=Qsize-pCount;}
+                		out.println(Qsize);
+                		//if(currentPage>Qsize) {currentPage=Qsize-pCount;}
             			query+=		"   ORDER BY "+ sortBy+" "+ direction+"\r\n" + 
             				"   limit "+currentPage+", "+pCount;
         		}
