@@ -76,7 +76,6 @@ public class browse extends HttpServlet {
 		        		out.println("<h1>Browse Page</h1>");
 		        		out.println("<h3>Browse by Title</h3>");
 		        		out.println("<form action=\"/project1/BrowseT\" method=\"get\"><button>Title</button></form>");
-		        		
 		        		out.println("<h3>Browse by Genre</h3>");
 		        		out.println("<form action=\"/project1/BrowseG\" method=\"get\"><button>Genre</button></form>");
 		        		;

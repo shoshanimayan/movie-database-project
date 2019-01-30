@@ -92,6 +92,24 @@ public class MovieServlet extends HttpServlet {
         starSearch = request.getParameter("star");
         if(starSearch=="" || starSearch==null) {starSearch = (String)request.getSession().getAttribute("star");}
         
+        int pCount= 20;
+        Integer currentPage;
+        currentPage= (Integer)request.getSession().getAttribute("currentPage");
+        if(currentPage==null) {currentPage=0;}
+        
+        if("next".equals(request.getParameter("pageMsg"))) {currentPage+=pCount;}
+        if("prev".equals(request.getParameter("pageMsg"))) {
+        	if(currentPage-pCount>0)
+        		currentPage-=pCount;
+        	else
+        		currentPage=0;
+        		
+        }
+    	//out.println(currentPage);
+    	
+
+
+
         ///set data to session
         request.getSession().setAttribute("title", titleSearch);
         request.getSession().setAttribute("star", starSearch);
@@ -101,6 +119,9 @@ public class MovieServlet extends HttpServlet {
         request.getSession().setAttribute("bTitle", titleBrowse);
         request.getSession().setAttribute("direction", direction);
         request.getSession().setAttribute("sort", sortBy);
+        request.getSession().setAttribute("pCount", pCount);
+        request.getSession().setAttribute("currentPage", currentPage);
+
 
         
         
@@ -180,8 +201,17 @@ public class MovieServlet extends HttpServlet {
             			
             	//		query+=	"WHERE m.year =" + yearSearch + "\r\n";
             			
+            			int Qsize = 0;
+                		ResultSet SizeQ = statement.executeQuery(query);
+                		if ( SizeQ!= null) 
+                		{
+                		  SizeQ.beforeFirst();
+                		  SizeQ.last();
+                		  Qsize = SizeQ.getRow();
+                		}
+                		if(currentPage>=Qsize) {currentPage=Qsize-pCount;}
             			query+=		"   ORDER BY "+ sortBy+" "+ direction+"\r\n" + 
-            				"   limit 20";
+            				"   limit "+currentPage+", "+pCount;
         		}
     
         		// execute query , taken from example
@@ -227,6 +257,7 @@ public class MovieServlet extends HttpServlet {
         		}
         		
         		out.println("</table>");
+        		out.println("<form action=\"/project1/MovieServlet\" method=\"get\"><button name = \"pageMsg\" value=\"prev\">prev</button>"+"<button name = \"pageMsg\" value=\"next\">next</button>"+"</form>");
         		out.println("</center>");
         		out.println("</body>");
         		resultSet.close();
