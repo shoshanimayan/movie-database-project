@@ -64,7 +64,7 @@ public class MovieServlet extends HttpServlet {
         String directorSearch=null;
         String starSearch=null;
         
-        if("clean".equals(request.getParameter("msg"))) {
+        if(!"keep".equals(request.getParameter("msg"))) {
         	request.getSession().removeAttribute("title");
     		request.getSession().removeAttribute("star");
     		request.getSession().removeAttribute("year");
@@ -101,7 +101,9 @@ public class MovieServlet extends HttpServlet {
         starSearch = request.getParameter("star");
         if(starSearch=="" || starSearch==null) {starSearch = (String)request.getSession().getAttribute("star");}
         
-        int pCount= 20;
+        Integer pCount = (Integer)request.getSession().getAttribute("pCount");
+        if(pCount==null) {pCount=20;}
+        if(pCount<0) {pCount=20;}
         Integer currentPage = (Integer)request.getSession().getAttribute("currentPage");
         if(currentPage==null) {currentPage=0;}
         if(currentPage<0) {currentPage=0;}
@@ -110,8 +112,10 @@ public class MovieServlet extends HttpServlet {
         if("prev".equals(request.getParameter("pageMsg"))) {
         	if(currentPage-pCount<0)
         		currentPage=0;
+        	else {
+        		currentPage-=pCount;
+        	}
         	
-        		
         }
     	//out.println(currentPage);
     	
@@ -217,12 +221,12 @@ public class MovieServlet extends HttpServlet {
                 		  SizeQ.last();
                 		  Qsize = SizeQ.getRow();
                 		}
-                		out.println(Qsize);
-                		out.println(currentPage);
-                		out.println(currentPage>Qsize);
+                		//out.println(Qsize);
+                		//out.println(currentPage);
+                		//out.println(currentPage>Qsize);
 
 
-                	//	if(currentPage>Qsize) {currentPage=Qsize-pCount;}
+                		if(currentPage>Qsize) {currentPage-=pCount;}
             			query+=		"   ORDER BY "+ sortBy+" "+ direction+"\r\n" + 
             				"   limit "+currentPage+", "+pCount;
         		}
