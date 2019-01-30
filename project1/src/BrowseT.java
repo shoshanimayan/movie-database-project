@@ -34,19 +34,23 @@ public class BrowseT extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		//session
-		 request.getSession().setAttribute("title", null);
-	        request.getSession().setAttribute("star", null);
-	        request.getSession().setAttribute("director", null);
-	        request.getSession().setAttribute("year", null);
-	        request.getSession().setAttribute("bGenre", null);
-	        request.getSession().setAttribute("bTitle", null);
-	        request.getSession().setAttribute("direction", "DESC");
-	        request.getSession().setAttribute("sort", "r.rating");
+		
+		String email = (String)request.getSession().getAttribute("email");
+        if (email == null)
+		    response.sendRedirect("/project1/LoginServlet?errormsg=You are not logged in");
+		
+		request.getSession().setAttribute("title", null);
+        request.getSession().setAttribute("star", null);
+        request.getSession().setAttribute("director", null);
+        request.getSession().setAttribute("year", null);
+        request.getSession().setAttribute("bGenre", null);
+        request.getSession().setAttribute("bTitle", null);
+        request.getSession().setAttribute("direction", "DESC");
+        request.getSession().setAttribute("sort", "r.rating");
 		
 		 // change this to your own mysql username and password
-		String loginUser = "root";
-        String loginPasswd = "espeon123";
+		String loginUser = "mytestuser";
+        String loginPasswd = "mypassword";
         String loginUrl = "jdbc:mysql://localhost:3306/moviedb";
 		
         // set response mime type
@@ -56,7 +60,6 @@ public class BrowseT extends HttpServlet {
         PrintWriter out = response.getWriter();
         //set up html page
         out.println("<html>");
-        
         out.println("<head>");
         out.println("<title>Fabflix</title>");
         out.println("<style>");
@@ -72,25 +75,20 @@ public class BrowseT extends HttpServlet {
         		Connection connection = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
         		// declare statement
         		Statement statement = connection.createStatement();
-        		// prepare query, custom made for this problem
-        		//String query =  "SELECT name from genres";
-    
-        		// execute query , taken from example
-        		//ResultSet resultSet = statement.executeQuery(query);
+        		
         		//set up body
         		out.println("<body>");
         		out.println("<center>"); // hopefully will make it look nicer 
         		out.println("<h1>Title Letters</h1>");
         		
-        		//resultSet.getString("name");
         		char[] alphabet = "1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ".toCharArray();
-for( int i = 0; i<36;i++)  {
+        		for( int i = 0; i<36;i++)  {
         			out.println("<h3><a href = \"/project1/MovieServlet?bTitle="+ alphabet[i]+"&msg=clean\">" + alphabet[i] + "</a></h3>");
         		}
         		
         		out.println("</center>");
         		out.println("</body>");
-        		//resultSet.close();
+        		
         		statement.close();
         		connection.close();
         		

@@ -34,7 +34,9 @@ public class SingleMovieServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {		
 		
-		//response.getWriter().append("Served at: ").append(request.getParameter("moviename"));
+		String email = (String)request.getSession().getAttribute("email");
+        if (email == null)
+		    response.sendRedirect("/project1/LoginServlet?errormsg=You are not logged in");	
 		
 		String movie_to_search = request.getParameter("query");
 		
@@ -61,76 +63,72 @@ public class SingleMovieServlet extends HttpServlet {
         out.println("</head>");        
         
         try {
-        		Class.forName("com.mysql.jdbc.Driver").newInstance();
-        		// create database connection
-        		Connection connection = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
-        		// declare statement
-        		Statement statement = connection.createStatement();
-        		// prepare query, custom made for this problem
-        		String query =   "SELECT * FROM movies as m\r\n" + 
-        				"        				JOIN  ratings as r ON r.movieId = m.id\r\n" + 
-        				"        				 \r\n" + 
-        				"        				join ( \r\n" + 
-        				"        				select title, group_concat(name) as genres from genres_in_movies join genres on genres_in_movies.genreId = genres.id \r\n" + 
-        				"        				join movies on genres_in_movies.movieId = movies.id Group by title\r\n" + 
-        				"        				) as gm\r\n" + 
-        				"        				ON gm.title = m.title \r\n" + 
-        				"        				\r\n" + 
-        				"        				join (\r\n" + 
-        				"        				select title, group_concat(name) as stars, group_concat(starId) as starID from stars_in_movies join stars on stars_in_movies.starId = stars.id \r\n" + 
-        				"        				join movies on stars_in_movies.movieId = movies.id Group by title\r\n" + 
-        				"        				) as sm\r\n" + 
-        				"        				ON sm.title = m.title\r\n" + 
-        				"                        where m.id =" +  "\""+movie_to_search+"\"";
-        		// execute query, taken from example
-        		ResultSet resultSet = statement.executeQuery(query);
-        		//set up body
-        		out.println("<body>");        
-        		out.println("<button onclick=\"window.location.href = \'/project1/MovieServlet\';\"><h4>Movie List</h4></button>");
+    		Class.forName("com.mysql.jdbc.Driver").newInstance();
+    		// create database connection
+    		Connection connection = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
+    		// declare statement
+    		Statement statement = connection.createStatement();
+    		
+    		// prepare query, custom made for this problem
+    		String query =  "SELECT * FROM movies as m\r\n" + 
+    				"		JOIN  ratings as r ON r.movieId = m.id\r\n" + 
+    				"       join ( \r\n" + 
+    				"       select title, group_concat(name) as genres from genres_in_movies join genres on genres_in_movies.genreId = genres.id \r\n" + 
+    				"       join movies on genres_in_movies.movieId = movies.id Group by title\r\n" + 
+    				"       ) as gm\r\n" + 
+    				"       ON gm.title = m.title \r\n" + 
+    				"       join (\r\n" + 
+    				"       select title, group_concat(name) as stars, group_concat(starId) as starID from stars_in_movies join stars on stars_in_movies.starId = stars.id \r\n" + 
+    				"       join movies on stars_in_movies.movieId = movies.id Group by title\r\n" + 
+    				"       ) as sm\r\n" + 
+    				"       ON sm.title = m.title\r\n" + 
+    				"       where m.id =" +  "\""+movie_to_search+"\"";
+    		
+    		// execute query, taken from example
+    		ResultSet resultSet = statement.executeQuery(query);
+    		
+    		//set up body
+    		out.println("<body>");        
+    		out.println("<button onclick=\"window.location.href = \'/project1/MovieServlet\';\"><h4>Movie List</h4></button>");
+    		out.println("<center>");  
+    		out.println("<table border>");
+    		
+    		// set up table header
+    		out.println("<tr>");
+    		out.println("<td>Year</td>");
+    		out.println("<td>Director</td>");
+    		out.println("<td>Genres</td>");
+    		out.println("<td>Stars</td>");
+    		out.println("<td>Rating</td>");
+    		out.println("</tr>");
+    		
+    		while (resultSet.next()) {
+    			String title = resultSet.getString("title");
+    			String year = resultSet.getString("year");
+    			String director = resultSet.getString("director");
+    			String genres = resultSet.getString("genres");
+    			String stars = resultSet.getString("stars");
+    			String rating = resultSet.getString("rating");
+    			helperFunct help = new helperFunct();
+    			
+				out.println("<h1>" + title + "</h1>");
+    			out.println("<tr>");
+    			out.println("<td>" + year + "</td>");
+    			out.println("<td>" + director + "</td>");
+    			out.println("<td>" + genres + "</td>");
+    			out.println("<td>" + help.lister(stars,resultSet.getString("starID"), "/project1/SingleStarServlet") + "</td>");
+    			out.println("<td>" + rating + "</td>");
+    			out.println("</tr>");
+			
+    		}
+    		
+    		out.println("</table>");
+    		out.println("</center>");
+    		out.println("</body>");
 
-
-        		out.println("<center>"); // hopefully will make it look nicer 
-
-        		out.println("<table border>");
-        		
-        		// set up table header
-        		out.println("<tr>");
-        		out.println("<td>Year</td>");
-        		out.println("<td>Director</td>");
-        		out.println("<td>Genres</td>");
-        		out.println("<td>Stars</td>");
-        		out.println("<td>Rating</td>");
-        		out.println("</tr>");
-        		
-        		while (resultSet.next()) {
-        			String title = resultSet.getString("title");
-        			String year = resultSet.getString("year");
-        			String director = resultSet.getString("director");
-        			String genres = resultSet.getString("genres");
-        			String stars = resultSet.getString("stars");
-        			String rating = resultSet.getString("rating");
-        			helperFunct help = new helperFunct();
-
-        			
-        				out.println("<h1>" + title + "</h1>");
-	        			out.println("<tr>");
-	        			
-	        			out.println("<td>" + year + "</td>");
-	        			out.println("<td>" + director + "</td>");
-	        			out.println("<td>" + genres + "</td>");
-	        			out.println("<td>" + help.lister(stars,resultSet.getString("starID"), "/project1/SingleStarServlet") + "</td>");
-	        			out.println("<td>" + rating + "</td>");
-	        			out.println("</tr>");
-        			
-        		}
-        		
-        		out.println("</table>");
-        		out.println("</center>");
-        		out.println("</body>");
-
-        		resultSet.close();
-        		statement.close();
-        		connection.close();
+    		resultSet.close();
+    		statement.close();
+    		connection.close();
         		
 		
         } catch (Exception e) {

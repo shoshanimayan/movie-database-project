@@ -31,71 +31,63 @@ public class browse extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		// TODO Auto-generated method stub
-				//response.getWriter().append("Served at: ").append(request.getContextPath());
-
-				//response.getWriter().append("Served at: ").append(request.getParameter("moviename"));
+		
+		String email = (String)request.getSession().getAttribute("email");
+        if (email == null)
+		    response.sendRedirect("/project1/LoginServlet?errormsg=You are not logged in");
 						
-				 // change this to your own mysql username and password
-				String loginUser = "root";
-		        String loginPasswd = "espeon123";
-		        String loginUrl = "jdbc:mysql://localhost:3306/moviedb";
-				
-		        // set response mime type
-		        response.setContentType("text/html"); 
+		 // change this to your own mysql username and password
+		String loginUser = "mytestuser";
+        String loginPasswd = "mypassword";
+        String loginUrl = "jdbc:mysql://localhost:3306/moviedb";
+		
+        // set response mime type
+        response.setContentType("text/html"); 
 
-		        // get the printwriter for writing response
-		        PrintWriter out = response.getWriter();
-		        //set up html page
-		        out.println("<html>");
-		        out.println("<head>");
-		        out.println("<title>Fabflix</title>");
-		        out.println("<style>");
-		        out.println("button{cursor: pointer; border: 1px solid black; border-radius: 4px; }");
-		        out.println("tr:nth-child(even) {background-color: #e2e2e2;}");
-		        out.println("table {border-collapse: collapse;  width: 75%;  }");
-		        out.println("table, tr, td {border: 2px solid;  padding: 14px; text-align: left; font-family: Arial}");
-		        out.println("</style>");
-		        out.println("</head>");        
-		        
-		        try {
-		        		Class.forName("com.mysql.jdbc.Driver").newInstance();
-		        		// create database connection
-		        		Connection connection = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
-		        		// declare statement
-		        		Statement statement = connection.createStatement();
-		        		// prepare query, custom made for this problem
-		        		
-		        		// execute query, taken from example
-		        		//set up body
-		        		out.println("<body>");
-		        		//out.println("<a>" +star_to_search+"</a>"); //for debugging jdbc cannot read characters with umla
-		        		//out.println("<button onclick=\"window.location.href = \'/project1/MovieServlet\';\"><h4>movie list</h4></button>");
-		        		out.println("<center>"); // hopefully will make it look nicer 
-		        		out.println("<h1>Browse Page</h1>");
-		        		out.println("<h3>Browse by Title</h3>");
-		        		out.println("<form action=\"/project1/BrowseT\" method=\"get\"><button>Title</button></form>");
-		        		out.println("<h3>Browse by Genre</h3>");
-		        		out.println("<form action=\"/project1/BrowseG\" method=\"get\"><button>Genre</button></form>");
-		        		;
-		        		out.println("</center>");
-		        		out.println("</body>");
-		        		statement.close();
-		        		connection.close();
-		        		
-				
-		        } catch (Exception e) {
-		        	
-		        		e.printStackTrace();	
-		        		out.println("<body>");
-		        		out.println("<p>");
-		        		out.println("Exception in doGet: " + e.getMessage());
-		        		out.println("</p>");
-		        		out.print("</body>");
-		        }
-		        out.println("</html>");
-		        out.close();
+        // get the printwriter for writing response
+        PrintWriter out = response.getWriter();
+        //set up html page
+        out.println("<html>");
+        out.println("<head>");
+        out.println("<title>Fabflix</title>");
+        out.println("<style>");
+        out.println("button{cursor: pointer; border: 1px solid black; border-radius: 4px; }");
+        out.println("tr:nth-child(even) {background-color: #e2e2e2;}");
+        out.println("table {border-collapse: collapse;  width: 75%;  }");
+        out.println("table, tr, td {border: 2px solid;  padding: 14px; text-align: left; font-family: Arial}");
+        out.println("</style>");
+        out.println("</head>");        
+        
+        try {
+        		Class.forName("com.mysql.jdbc.Driver").newInstance();
+        		// create database connection
+        		Connection connection = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
+        		// declare statement
+        		Statement statement = connection.createStatement();
+        		
+        		//set up body
+        		out.println("<body>");
+        		out.println("<center>"); 
+        		out.println("<h1>Browse Page</h1>");
+        		out.println("<h3>Browse by Title</h3>");
+        		out.println("<form action=\"/project1/BrowseT\" method=\"get\"><button>Title</button></form>");
+        		out.println("<h3>Browse by Genre</h3>");
+        		out.println("<form action=\"/project1/BrowseG\" method=\"get\"><button>Genre</button></form>");
+        		out.println("</center>");
+        		out.println("</body>");
+        		statement.close();
+        		connection.close();
+		
+        } catch (Exception e) {
+        		e.printStackTrace();	
+        		out.println("<body>");
+        		out.println("<p>");
+        		out.println("Exception in doGet: " + e.getMessage());
+        		out.println("</p>");
+        		out.print("</body>");
+        }
+        out.println("</html>");
+        out.close();
 	}
 
 	/**

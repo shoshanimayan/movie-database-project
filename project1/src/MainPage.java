@@ -35,8 +35,10 @@ public class MainPage extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		//response.getWriter().append("Served at: ").append(request.getContextPath());
-		//response.getWriter().append("Served at: ").append(request.getParameter("moviename"));
+		
+        String email = (String)request.getSession().getAttribute("email");
+        if (email == null)
+		    response.sendRedirect("/project1/LoginServlet?errormsg=You are not logged in");	
 		
 		String src = request.getParameter("src");
 		if (src==null) {src="title";}
@@ -69,13 +71,11 @@ public class MainPage extends HttpServlet {
         		Connection connection = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
         		// declare statement
         		Statement statement = connection.createStatement();
-        		// prepare query, custom made for this problem
         		
-        		// execute query, taken from example
         		//set up body
         		out.println("<body>");
         		
-        		out.println("<center>"); // hopefully will make it look nicer 
+        		out.println("<center>"); 
         		out.println("<h1>Main Page</h1>");
         		out.println("<h3>Browse</h3>");
         		out.println("<form action=\"/project1/browse\" method=\"get\"><button>Browse</button></form>");

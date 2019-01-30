@@ -35,8 +35,8 @@ public class LoginServlet extends HttpServlet {
 		String errormsg = request.getParameter("errormsg");
 		
 		 // change this to your own mysql username and password
-		String loginUser = "root";
-        String loginPasswd = "espeon123";
+		String loginUser = "mytestuser";
+        String loginPasswd = "mypassword";
         String loginUrl = "jdbc:mysql://localhost:3306/moviedb";
 		
         // set response mime type
@@ -62,16 +62,13 @@ public class LoginServlet extends HttpServlet {
         		Connection connection = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
         		// declare statement
         		Statement statement = connection.createStatement();
-        		// prepare query, custom made for this problem
         		
-        		// execute query, taken from example
         		//set up body
         		out.println("<body>");
         		out.println("<center>"); 
         		
         		if (errormsg != null)
         			out.println(errormsg);
-        		
         		
         		out.println("<h1>Login to Database</h1>");
         		out.println("<form id=\"login_form\" method=\"post\" action=\"/project1/LoginFilterServlet?filterTo=/project1/MainPage\">");

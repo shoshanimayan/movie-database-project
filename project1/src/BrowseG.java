@@ -32,20 +32,23 @@ public class BrowseG extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		//session
-		 request.getSession().setAttribute("title", null);
-	        request.getSession().setAttribute("star", null);
-	        request.getSession().setAttribute("director", null);
-	        request.getSession().setAttribute("year", null);
-	        request.getSession().setAttribute("bGenre", null);
-	        request.getSession().setAttribute("bTitle", null);
-	        request.getSession().setAttribute("direction", "DESC");
-	        request.getSession().setAttribute("sort", "r.rating");
+	
+       String email = (String)request.getSession().getAttribute("email");
+        if (email == null)
+		    response.sendRedirect("/project1/LoginServlet?errormsg=You are not logged in");	
+	        
+        request.getSession().setAttribute("title", null);
+        request.getSession().setAttribute("star", null);
+        request.getSession().setAttribute("director", null);
+        request.getSession().setAttribute("year", null);
+        request.getSession().setAttribute("bGenre", null);
+        request.getSession().setAttribute("bTitle", null);
+        request.getSession().setAttribute("direction", "DESC");
+        request.getSession().setAttribute("sort", "r.rating");
 		
 		 // change this to your own mysql username and password
-		String loginUser = "root";
-        String loginPasswd = "espeon123";
+		String loginUser = "mytestuser";
+        String loginPasswd = "mypassword";
         String loginUrl = "jdbc:mysql://localhost:3306/moviedb";
 		
         // set response mime type
@@ -82,9 +85,8 @@ public class BrowseG extends HttpServlet {
         		out.println("<h1>Genres</h1>");
         		
         		//resultSet.getString("name");
-while (resultSet.next()) {
+        		while (resultSet.next()) {
         			out.println("<h3><a href = \"/project1/MovieServlet?bGenre="+ resultSet.getString("name")+"&msg=clean\">" + resultSet.getString("name") + "</a></h3>");
-        			
         		}
         		
         		out.println("</center>");

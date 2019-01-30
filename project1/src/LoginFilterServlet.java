@@ -37,18 +37,17 @@ public class LoginFilterServlet extends HttpServlet {
 		
 		String email = request.getParameter("email");
 		if(email ==null||email=="") {email=(String)request.getSession().getAttribute("email");}
-		if(email ==null||email=="") {response.sendRedirect("/project1/LoginServlet?errormsg=you were not logged in");}
+		if(email ==null||email=="") {response.sendRedirect("/project1/LoginServlet?errormsg=You were not logged in");}
 		String password = request.getParameter("password");
 		String forward = request.getParameter("filterTo");
-		
 		
 		
 		// get the printwriter for writing response
         PrintWriter out = response.getWriter();
    	
 		 // change this to your own mysql username and password
-		String loginUser = "root";
-        String loginPasswd = "espeon123";
+		String loginUser = "mytestuser";
+        String loginPasswd = "mypassword";
         String loginUrl = "jdbc:mysql://localhost:3306/moviedb";
 		
         // set response mime type
@@ -71,21 +70,20 @@ public class LoginFilterServlet extends HttpServlet {
         		ResultSet result = statement.executeQuery(query1);
         		
         		if (!result.next())
-        		
         			response.sendRedirect("/project1/LoginServlet?errormsg=Email does not exist");
         			
         		else {
         		result = statement.executeQuery(query2);
-        		if (!result.next())
+        		if (!result.next()) {
         			response.sendRedirect("/project1/LoginServlet?errormsg=Password is incorrect");
+        		}
         		
         		else {
         	        request.getSession().setAttribute("email", email);
         		    response.sendRedirect(forward);	
         		}
         		}
-        		
-        		
+
 
         		result.close();
         		statement.close();
