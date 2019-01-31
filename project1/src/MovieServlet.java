@@ -38,7 +38,7 @@ public class MovieServlet extends HttpServlet {
 		    response.sendRedirect("/project1/LoginServlet?errormsg=You are not logged in");	
         
 		 // change this to your own mysql username and password
-		String loginUser = "mytestuser";
+        String loginUser = "mytestuser";
         String loginPasswd = "mypassword";
         String loginUrl = "jdbc:mysql://localhost:3306/moviedb";
 		
@@ -109,12 +109,20 @@ public class MovieServlet extends HttpServlet {
         starSearch = request.getParameter("star");
         if(starSearch=="" || starSearch==null) {starSearch = (String)request.getSession().getAttribute("star");}
         
-        Integer pCount = (Integer)request.getSession().getAttribute("pCount");
-        if(pCount==null || pCount < 0) {pCount=20;}
+        Integer pCount =0;
+        String count =request.getParameter("pCount");
+        if(count==null||count=="") { 
+        	pCount =(Integer)request.getSession().getAttribute("pCount");
+            if(pCount==null || pCount <= 0) {pCount=20;}
+        	}
+        else {
+        	pCount = Integer.parseInt(count);
+        }  
+        
         
         Integer currentPage = (Integer)request.getSession().getAttribute("currentPage");
         if(currentPage==null || currentPage < 0) {currentPage=0;}
-        
+   
         if("next".equals(request.getParameter("pageMsg"))) {currentPage+=pCount;}
         
         if("prev".equals(request.getParameter("pageMsg"))) {
@@ -149,9 +157,24 @@ public class MovieServlet extends HttpServlet {
         				"   select title, group_concat(name) as stars, group_concat(starId) as starID from stars_in_movies join stars on stars_in_movies.starId = stars.id \r\n" + 
         				"   join movies on stars_in_movies.movieId = movies.id Group by title\r\n" + 
         				"   ) as sm\r\n" + 
-        				"   ON sm.title = m.title\r\n" + 
-        				"   ORDER BY r.rating desc\r\n" + 
-        				"   limit 20";
+        				"   ON sm.title = m.title\r\n" ;
+    			if(currentPage<0) {currentPage=0;}
+    			int Qsize = 0;
+        		ResultSet SizeQ = statement.executeQuery(query);
+        		if ( SizeQ!= null) 
+        		{
+        		  SizeQ.beforeFirst();
+        		  SizeQ.last();
+        		  Qsize = SizeQ.getRow();
+        		}
+
+        		if(currentPage>Qsize) {currentPage-=pCount;}
+    			query+=		"   ORDER BY "+ sortBy+" "+ direction+"\r\n" + 
+    				"   limit "+currentPage+", "+pCount;
+        				
+        				
+        			//	"   ORDER BY r.rating desc\r\n" + 
+        			//	"   limit 20";
     		}
     		
     		else if (titleBrowse != null) {
@@ -167,9 +190,23 @@ public class MovieServlet extends HttpServlet {
         				"   join movies on stars_in_movies.movieId = movies.id Group by title\r\n" + 
         				"   ) as sm\r\n" + 
         				"   ON sm.title = m.title\r\n" + 
-        				"   WHERE SUBSTRING(m.title, 1, 1) =" + "\"" + titleBrowse + "\" \r\n" + 
-        				"   ORDER BY r.rating desc\r\n" + 
-        				"   limit 20";
+        				"   WHERE SUBSTRING(m.title, 1, 1) =" + "\"" + titleBrowse + "\" \r\n" ;
+    			if(currentPage<0) {currentPage=0;}
+    			int Qsize = 0;
+        		ResultSet SizeQ = statement.executeQuery(query);
+        		if ( SizeQ!= null) 
+        		{
+        		  SizeQ.beforeFirst();
+        		  SizeQ.last();
+        		  Qsize = SizeQ.getRow();
+        		}
+
+        		if(currentPage>Qsize) {currentPage-=pCount;}
+    			query+=		"   ORDER BY "+ sortBy+" "+ direction+"\r\n" + 
+    				"   limit "+currentPage+", "+pCount;
+        				
+        			//	"   ORDER BY r.rating desc\r\n" + 
+        			//	"   limit 20";
     		}
     		
     		else {
@@ -241,6 +278,7 @@ public class MovieServlet extends HttpServlet {
     		//set up body
     		out.println("<body>");
     		out.println("<button onclick=\"window.location.href = \'/project1/MainPage\';\"><h4>Main Page</h4></button>");
+    		out.println("<form action=\"/project1/MovieServlet\" >Page Count <select name=\"pCount\"> <option value=\"\" selected disabled hidden>limit</option><option value=20>20</option><option value=5>5</option><option value=10>10</option><option value=50>50</option><option value=100>100</option> </select> <input type=\"submit\"></form>");
     		out.print("<form  method=\"get\" >Sort by: <button name=\"sort\" type=\"submit\" value=\"r.rating\">Rating</button><button name=\"sort\" type=\"submit\" value=\"m.title\">Title</button><br>In order: <button name=\"direction\" type=\"submit\" value=\"ASC\">Ascend</button><button name=\"direction\" type=\"submit\" value=\"DESC\">Descend</button></form>");
     		out.println("<center>"); // hopefully will make it look nicer 
     		out.println("<h1>Movies</h1>");
@@ -270,7 +308,7 @@ public class MovieServlet extends HttpServlet {
     			out.println("<td><a href = \"/project1/SingleMovieServlet?query="+ resultSet.getString("id")+"\">" + title + "</a></td>");
     			out.println("<td>" + year + "</td>");
     			out.println("<td>" + director + "</td>");
-    			out.println("<td>" + genres + "</td>");
+    			out.println("<td>" + help.listerG(genres, genres, "/project1/MovieServlet") + "</td>");
     			out.println("<td>" + help.lister(stars, resultSet.getString("starID"), "/project1/SingleStarServlet") + "</td>");
     			out.println("<td>" + rating + "</td>");
     			out.println("</tr>");

@@ -49,7 +49,7 @@ public class BrowseT extends HttpServlet {
         request.getSession().setAttribute("sort", "r.rating");
 		
 		 // change this to your own mysql username and password
-		String loginUser = "mytestuser";
+        String loginUser = "mytestuser";
         String loginPasswd = "mypassword";
         String loginUrl = "jdbc:mysql://localhost:3306/moviedb";
 		

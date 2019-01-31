@@ -46,7 +46,7 @@ public class LoginFilterServlet extends HttpServlet {
         PrintWriter out = response.getWriter();
    	
 		 // change this to your own mysql username and password
-		String loginUser = "mytestuser";
+        String loginUser = "mytestuser";
         String loginPasswd = "mypassword";
         String loginUrl = "jdbc:mysql://localhost:3306/moviedb";
 		
