@@ -1,6 +1,8 @@
 
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -40,9 +42,14 @@ public class SingleMovieServlet extends HttpServlet {
 		
 		String movie_to_search = request.getParameter("query");
 		
+		Map<String, Integer> cart= new HashMap<String,Integer>();
+        cart = (HashMap<String, Integer>)request.getSession().getAttribute("cart");
+		
+		
+		
 		 // change this to your own mysql username and password
-		String loginUser = "mytestuser";
-        String loginPasswd = "mypassword";
+		 String loginUser = "root";
+	        String loginPasswd = "espeon123";
         String loginUrl = "jdbc:mysql://localhost:3306/moviedb";
 		
         // set response mime type
@@ -50,6 +57,19 @@ public class SingleMovieServlet extends HttpServlet {
 
         // get the printwriter for writing response
         PrintWriter out = response.getWriter();
+        
+        String addTo= request.getParameter("cartAdd");
+        if(addTo!=null) {
+        	if(!cart.containsKey(addTo)) {
+        		cart.put(addTo, 1);
+        	}
+        	else {
+        		out.println("first: "+cart.get(addTo));
+        		cart.put(addTo,cart.get(addTo)+1);
+        		out.println("after: "+cart.get(addTo));
+        	}        	
+        }
+        
         //set up html page
         out.println("<html>");
         out.println("<head>");
@@ -60,7 +80,9 @@ public class SingleMovieServlet extends HttpServlet {
         out.println("button{cursor: pointer; border: 1px solid black; border-radius: 4px; }");
         out.println("table, td, tr {border: 2px solid;  padding: 14px; text-align: left; font-family: Arial}");
         out.println("</style>");
-        out.println("</head>");        
+        out.println("</head>");  
+        
+        
         
         try {
     		Class.forName("com.mysql.jdbc.Driver").newInstance();
@@ -83,6 +105,9 @@ public class SingleMovieServlet extends HttpServlet {
     				"       ) as sm\r\n" + 
     				"       ON sm.title = m.title\r\n" + 
     				"       where m.id =" +  "\""+movie_to_search+"\"";
+    		
+            request.getSession().setAttribute("cart", cart);
+
     		
     		// execute query, taken from example
     		ResultSet resultSet = statement.executeQuery(query);
@@ -118,6 +143,8 @@ public class SingleMovieServlet extends HttpServlet {
     			out.println("<td>" + genres + "</td>");
     			out.println("<td>" + help.lister(stars,resultSet.getString("starID"), "/project1/SingleStarServlet") + "</td>");
     			out.println("<td>" + rating + "</td>");
+    			out.println("<td><button onclick=\"window.location.href = \'/project1/SingleMovieServlet?cartAdd="+resultSet.getString("id")+"&query="+movie_to_search+"\';\" >Add to Cart</button></td>");
+
     			out.println("</tr>");
 			
     		}

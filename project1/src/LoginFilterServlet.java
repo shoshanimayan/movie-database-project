@@ -6,6 +6,8 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -46,8 +48,8 @@ public class LoginFilterServlet extends HttpServlet {
         PrintWriter out = response.getWriter();
    	
 		 // change this to your own mysql username and password
-        String loginUser = "mytestuser";
-        String loginPasswd = "mypassword";
+        String loginUser = "root";
+        String loginPasswd = "espeon123";
         String loginUrl = "jdbc:mysql://localhost:3306/moviedb";
 		
         // set response mime type
@@ -79,7 +81,12 @@ public class LoginFilterServlet extends HttpServlet {
         		}
         		
         		else {
+        			Map<String, Integer> cart = new HashMap<String, Integer>();
+        			cart.put("test", 20);
         	        request.getSession().setAttribute("email", email);
+        	        request.getSession().setAttribute("cart", cart );
+
+        	        
         		    response.sendRedirect(forward);	
         		}
         		}

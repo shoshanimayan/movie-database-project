@@ -6,6 +6,8 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -33,13 +35,16 @@ public class MovieServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
+		Map<String, Integer> cart= new HashMap<String,Integer>();
+        cart = (HashMap<String, Integer>)request.getSession().getAttribute("cart");
+		
 		String email = (String)request.getSession().getAttribute("email");
-        if (email == null)
+        if (email == null || cart==null)
 		    response.sendRedirect("/project1/LoginServlet?errormsg=You are not logged in");	
         
 		 // change this to your own mysql username and password
-        String loginUser = "mytestuser";
-        String loginPasswd = "mypassword";
+        String loginUser = "root";
+        String loginPasswd = "espeon123";
         String loginUrl = "jdbc:mysql://localhost:3306/moviedb";
 		
         // set response mime type
@@ -83,6 +88,9 @@ public class MovieServlet extends HttpServlet {
         }
         
         /// get data from url or session
+        
+     
+        
         sortBy = request.getParameter("sort");
         if(sortBy==null||sortBy=="") {sortBy=(String)request.getSession().getAttribute("sort");}
         if(sortBy==null||sortBy=="") {sortBy="r.rating";}
@@ -133,7 +141,17 @@ public class MovieServlet extends HttpServlet {
         	}
         	
         }
-    	
+        String addTo= request.getParameter("cartAdd");
+        if(addTo!=null) {
+        	if(!cart.containsKey(addTo)) {
+        		cart.put(addTo, 1);
+        	}
+        	else {
+        		out.println("first: "+cart.get(addTo));
+        		cart.put(addTo,cart.get(addTo)+1);
+        		out.println("after: "+cart.get(addTo));
+        	}        	
+        }
         
         try {
     		Class.forName("com.mysql.jdbc.Driver").newInstance();
@@ -270,6 +288,7 @@ public class MovieServlet extends HttpServlet {
             request.getSession().setAttribute("sort", sortBy);
             request.getSession().setAttribute("pCount", pCount);
             request.getSession().setAttribute("currentPage", currentPage);
+            request.getSession().setAttribute("cart", cart);
     		
     		out.println("");
     		
@@ -311,6 +330,8 @@ public class MovieServlet extends HttpServlet {
     			out.println("<td>" + help.listerG(genres, genres, "/project1/MovieServlet") + "</td>");
     			out.println("<td>" + help.lister(stars, resultSet.getString("starID"), "/project1/SingleStarServlet") + "</td>");
     			out.println("<td>" + rating + "</td>");
+    			out.println("<td><button onclick=\"window.location.href = \'/project1/MovieServlet?cartAdd="+resultSet.getString("id")+"\';\" >Add to Cart</button></td>");
+    			
     			out.println("</tr>");
     		}
     		

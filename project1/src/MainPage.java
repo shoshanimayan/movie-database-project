@@ -1,6 +1,8 @@
 
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -44,8 +46,8 @@ public class MainPage extends HttpServlet {
 		if (src==null) {src="title";}
 		
 		 // change this to your own mysql username and password
-		String loginUser = "mytestuser";
-        String loginPasswd = "mypassword";
+		 String loginUser = "root";
+	        String loginPasswd = "espeon123";
         String loginUrl = "jdbc:mysql://localhost:3306/moviedb";
 		
         // set response mime type
