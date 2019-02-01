@@ -34,7 +34,7 @@ public class BrowseG extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 	
        String email = (String)request.getSession().getAttribute("email");
-        if (email == null)
+       if (email == null)
 		    response.sendRedirect("/project1/LoginServlet?errormsg=You are not logged in");	
 	        
         request.getSession().setAttribute("title", null);
@@ -58,60 +58,62 @@ public class BrowseG extends HttpServlet {
         PrintWriter out = response.getWriter();
         //set up html page
         out.println("<html>");
-        
         out.println("<head>");
         out.println("<title>Fabflix</title>");
         out.println("<style>");
         out.println("tr:hover {background-color: #e2e2e2;}");
+        out.println("button{cursor: pointer; border: 1px solid black; border-radius: 4px; }");
         out.println("table {border-collapse: collapse; width: 75%; }");
         out.println("table, td, tr {border: 2px solid;  padding: 14px; text-align: left; font-family: Arial}");
         out.println("</style>");
         out.println("</head>");
         
         try {
-        		Class.forName("com.mysql.jdbc.Driver").newInstance();
-        		// create database connection
-        		Connection connection = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
-        		// declare statement
-        		Statement statement = connection.createStatement();
-        		// prepare query, custom made for this problem
-        		String query =  "SELECT name from genres";
-    
-        		// execute query , taken from example
-        		ResultSet resultSet = statement.executeQuery(query);
-        		//set up body
-        		out.println("<body>");
-        		out.println("<center>"); // hopefully will make it look nicer 
-        		out.println("<h1>Genres</h1>");
+    		Class.forName("com.mysql.jdbc.Driver").newInstance();
+    		// create database connection
+    		Connection connection = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
+    		// declare statement
+    		Statement statement = connection.createStatement();
+    		// prepare query, custom made for this problem
+    		String query =  "SELECT name from genres";
+
+    		// execute query , taken from example
+    		ResultSet resultSet = statement.executeQuery(query);
+    		//set up body
+    		out.println("<body>");
+    		out.println("<button onclick=\"window.location.href = \'/project1/ShoppingCart\';\"><h4>Checkout</h4></button>");
+    		out.println("<center>");
+    		out.println("<h1>Genres</h1>");
+    		
+    		while (resultSet.next()) {
+    			out.println("<h3><a href = \"/project1/MovieServlet?bGenre="+ resultSet.getString("name")+"&msg=clean\">" + resultSet.getString("name") + "</a></h3>");
+    		}
+    		
+    		out.println("</center>");
+    		out.println("</body>");
+    		
+    		resultSet.close();
+    		statement.close();
+    		connection.close();
         		
-        		//resultSet.getString("name");
-        		while (resultSet.next()) {
-        			out.println("<h3><a href = \"/project1/MovieServlet?bGenre="+ resultSet.getString("name")+"&msg=clean\">" + resultSet.getString("name") + "</a></h3>");
-        		}
-        		
-        		out.println("</center>");
-        		out.println("</body>");
-        		resultSet.close();
-        		statement.close();
-        		connection.close();
-        		
+    		
         } catch (Exception e) {
-        		/*
-        		 * After you deploy the WAR file through tomcat manager webpage,
-        		 *   there's no console to see the print messages.
-        		 * Tomcat append all the print messages to the file: tomcat_directory/logs/catalina.out
-        		 * 
-        		 * To view the last n lines (for example, 100 lines) of messages you can use:
-        		 *   tail -100 catalina.out
-        		 * This can help you debug your program after deploying it on AWS.
-        		 */
-        		e.printStackTrace();
-        		
-        		out.println("<body>");
-        		out.println("<p>");
-        		out.println("Exception in doGet: " + e.getMessage());
-        		out.println("</p>");
-        		out.print("</body>");
+    		/*
+    		 * After you deploy the WAR file through tomcat manager webpage,
+    		 *   there's no console to see the print messages.
+    		 * Tomcat append all the print messages to the file: tomcat_directory/logs/catalina.out
+    		 * 
+    		 * To view the last n lines (for example, 100 lines) of messages you can use:
+    		 *   tail -100 catalina.out
+    		 * This can help you debug your program after deploying it on AWS.
+    		 */
+    		e.printStackTrace();
+    		
+    		out.println("<body>");
+    		out.println("<p>");
+    		out.println("Exception in doGet: " + e.getMessage());
+    		out.println("</p>");
+    		out.print("</body>");
         }
         
         out.println("</html>");

@@ -32,7 +32,7 @@ public class SingleStarServlet extends HttpServlet {
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
-protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {		
+protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 	String email = (String)request.getSession().getAttribute("email");
     if (email == null)
@@ -58,7 +58,7 @@ protected void doGet(HttpServletRequest request, HttpServletResponse response) t
     out.println("button{cursor: pointer; border: 1px solid black; border-radius: 4px; }");
     out.println("tr:nth-child(even) {background-color: #e2e2e2;}");
     out.println("table {border-collapse: collapse;  width: 75%;  }");
-    out.println("table, tr, td {border: 2px solid;  padding: 14px; text-align: left; font-family: Arial}");
+    out.println("table, tr, td, th {border: 2px solid;  padding: 14px; text-align: left; font-family: Arial}");
     out.println("</style>");
     out.println("</head>");        
     
@@ -83,14 +83,15 @@ protected void doGet(HttpServletRequest request, HttpServletResponse response) t
 		//set up body
 		out.println("<body>");
 		out.println("<button onclick=\"window.location.href = \'/project1/MovieServlet\';\"><h4>Movie List</h4></button>");
+		out.println("<button onclick=\"window.location.href = \'/project1/ShoppingCart\';\"><h4>Checkout</h4></button>");
 		out.println("<center>"); 
 
 		out.println("<table border>");
 		// set up table header
 		out.println("<tr>");
-		out.println("<td>Name</td>");
-		out.println("<td>Year of Birth</td>");
-		out.println("<td>Movies</td>");
+		out.println("<th>Name</th>");
+		out.println("<th>Year of Birth</th>");
+		out.println("<th>Movies</th>");
 		out.println("</tr>");
 		
 		while (resultSet.next()) {
@@ -117,22 +118,22 @@ protected void doGet(HttpServletRequest request, HttpServletResponse response) t
     		
 	
     } catch (Exception e) {
-    		/*
-    		 * After you deploy the WAR file through tomcat manager webpage,
-    		 *   there's no console to see the print messages.
-    		 * Tomcat append all the print messages to the file: tomcat_directory/logs/catalina.out
-    		 * 
-    		 * To view the last n lines (for example, 100 lines) of messages you can use:
-    		 *   tail -100 catalina.out
-    		 * This can help you debug your program after deploying it on AWS.
-    		 */
-    		e.printStackTrace();
-    		
-    		out.println("<body>");
-    		out.println("<p>");
-    		out.println("Exception in doGet: " + e.getMessage());
-    		out.println("</p>");
-    		out.print("</body>");
+		/*
+		 * After you deploy the WAR file through tomcat manager webpage,
+		 *   there's no console to see the print messages.
+		 * Tomcat append all the print messages to the file: tomcat_directory/logs/catalina.out
+		 * 
+		 * To view the last n lines (for example, 100 lines) of messages you can use:
+		 *   tail -100 catalina.out
+		 * This can help you debug your program after deploying it on AWS.
+		 */
+		e.printStackTrace();
+		
+		out.println("<body>");
+		out.println("<p>");
+		out.println("Exception in doGet: " + e.getMessage());
+		out.println("</p>");
+		out.print("</body>");
     }
     
     out.println("</html>");

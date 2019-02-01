@@ -34,7 +34,7 @@ public class SingleMovieServlet extends HttpServlet {
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {		
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		String email = (String)request.getSession().getAttribute("email");
         if (email == null)
@@ -44,12 +44,10 @@ public class SingleMovieServlet extends HttpServlet {
 		
 		Map<String, Integer> cart= new HashMap<String,Integer>();
         cart = (HashMap<String, Integer>)request.getSession().getAttribute("cart");
-		
-		
-		
-		 // change this to your own mysql username and password
-		 String loginUser = "root";
-	        String loginPasswd = "espeon123";
+
+		// change this to your own mysql username and password
+        String loginUser = "mytestuser";
+	    String loginPasswd = "mypassword";
         String loginUrl = "jdbc:mysql://localhost:3306/moviedb";
 		
         // set response mime type
@@ -78,11 +76,10 @@ public class SingleMovieServlet extends HttpServlet {
         out.println("tr:nth-child(even) {background-color: #e2e2e2;;}");
         out.println("table {border-collapse: collapse;  width: 75%;  }");
         out.println("button{cursor: pointer; border: 1px solid black; border-radius: 4px; }");
-        out.println("table, td, tr {border: 2px solid;  padding: 14px; text-align: left; font-family: Arial}");
+        out.println("table, td, tr, th {border: 2px solid;  padding: 14px; text-align: left; font-family: Arial}");
         out.println("</style>");
         out.println("</head>");  
-        
-        
+
         
         try {
     		Class.forName("com.mysql.jdbc.Driver").newInstance();
@@ -107,24 +104,25 @@ public class SingleMovieServlet extends HttpServlet {
     				"       where m.id =" +  "\""+movie_to_search+"\"";
     		
             request.getSession().setAttribute("cart", cart);
-
     		
+            
     		// execute query, taken from example
     		ResultSet resultSet = statement.executeQuery(query);
     		
     		//set up body
     		out.println("<body>");        
     		out.println("<button onclick=\"window.location.href = \'/project1/MovieServlet\';\"><h4>Movie List</h4></button>");
+    		out.println("<button onclick=\"window.location.href = \'/project1/ShoppingCart\';\"><h4>Checkout</h4></button>");
     		out.println("<center>");  
     		out.println("<table border>");
     		
     		// set up table header
     		out.println("<tr>");
-    		out.println("<td>Year</td>");
-    		out.println("<td>Director</td>");
-    		out.println("<td>Genres</td>");
-    		out.println("<td>Stars</td>");
-    		out.println("<td>Rating</td>");
+    		out.println("<th>Year</th>");
+    		out.println("<th>Director</th>");
+    		out.println("<th>Genres</th>");
+    		out.println("<th>Stars</th>");
+    		out.println("<th>Rating</th>");
     		out.println("</tr>");
     		
     		while (resultSet.next()) {
@@ -143,10 +141,8 @@ public class SingleMovieServlet extends HttpServlet {
     			out.println("<td>" + genres + "</td>");
     			out.println("<td>" + help.lister(stars,resultSet.getString("starID"), "/project1/SingleStarServlet") + "</td>");
     			out.println("<td>" + rating + "</td>");
-    			out.println("<td><button onclick=\"window.location.href = \'/project1/SingleMovieServlet?cartAdd="+resultSet.getString("id")+"&query="+movie_to_search+"\';\" >Add to Cart</button></td>");
-
+    			out.println("<td width=\"10%\"><button onclick=\"window.location.href = \'/project1/SingleMovieServlet?cartAdd="+resultSet.getString("id")+"&query="+movie_to_search+"\';\" >Add to Cart</button></td>");
     			out.println("</tr>");
-			
     		}
     		
     		out.println("</table>");
@@ -159,22 +155,22 @@ public class SingleMovieServlet extends HttpServlet {
         		
 		
         } catch (Exception e) {
-        		/*
-        		 * After you deploy the WAR file through tomcat manager webpage,
-        		 *   there's no console to see the print messages.
-        		 * Tomcat append all the print messages to the file: tomcat_directory/logs/catalina.out
-        		 * 
-        		 * To view the last n lines (for example, 100 lines) of messages you can use:
-        		 *   tail -100 catalina.out
-        		 * This can help you debug your program after deploying it on AWS.
-        		 */
-        		e.printStackTrace();
-        		
-        		out.println("<body>");
-        		out.println("<p>");
-        		out.println("Exception in doGet: " + e.getMessage());
-        		out.println("</p>");
-        		out.print("</body>");
+    		/*
+    		 * After you deploy the WAR file through tomcat manager webpage,
+    		 *   there's no console to see the print messages.
+    		 * Tomcat append all the print messages to the file: tomcat_directory/logs/catalina.out
+    		 * 
+    		 * To view the last n lines (for example, 100 lines) of messages you can use:
+    		 *   tail -100 catalina.out
+    		 * This can help you debug your program after deploying it on AWS.
+    		 */
+    		e.printStackTrace();
+    		
+    		out.println("<body>");
+    		out.println("<p>");
+    		out.println("Exception in doGet: " + e.getMessage());
+    		out.println("</p>");
+    		out.print("</body>");
         }
         
         out.println("</html>");

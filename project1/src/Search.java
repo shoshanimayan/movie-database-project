@@ -51,8 +51,8 @@ public class Search extends HttpServlet {
 		if (src==null) {src="title";}
 		
 		 // change this to your own mysql username and password
-		String loginUser = "root";
-        String loginPasswd = "espeon123";
+		String loginUser = "mytestuser";
+        String loginPasswd = "mypassword";
         String loginUrl = "jdbc:mysql://localhost:3306/moviedb";
 		
         // set response mime type
@@ -81,7 +81,8 @@ public class Search extends HttpServlet {
     		
     		//set up body
     		out.println("<body>");
-    		out.println("<center>"); // hopefully will make it look nicer 
+    		out.println("<button onclick=\"window.location.href = \'/project1/ShoppingCart\';\"><h4>Checkout</h4></button>");
+    		out.println("<center>");
     		out.println("<h1>Search Page</h1>");
     		out.println("<h3>Search by </h3>");
     		out.print("<form action = \'/project1/MovieServlet?\' method =\'get\'>"+
@@ -104,22 +105,22 @@ public class Search extends HttpServlet {
     		connection.close();
 		
         } catch (Exception e) {
-        		/*
-        		 * After you deploy the WAR file through tomcat manager webpage,
-        		 *   there's no console to see the print messages.
-        		 * Tomcat append all the print messages to the file: tomcat_directory/logs/catalina.out
-        		 * 
-        		 * To view the last n lines (for example, 100 lines) of messages you can use:
-        		 *   tail -100 catalina.out
-        		 * This can help you debug your program after deploying it on AWS.
-        		 */
-        		e.printStackTrace();
-        		
-        		out.println("<body>");
-        		out.println("<p>");
-        		out.println("Exception in doGet: " + e.getMessage());
-        		out.println("</p>");
-        		out.print("</body>");
+    		/*
+    		 * After you deploy the WAR file through tomcat manager webpage,
+    		 *   there's no console to see the print messages.
+    		 * Tomcat append all the print messages to the file: tomcat_directory/logs/catalina.out
+    		 * 
+    		 * To view the last n lines (for example, 100 lines) of messages you can use:
+    		 *   tail -100 catalina.out
+    		 * This can help you debug your program after deploying it on AWS.
+    		 */
+    		e.printStackTrace();
+    		
+    		out.println("<body>");
+    		out.println("<p>");
+    		out.println("Exception in doGet: " + e.getMessage());
+    		out.println("</p>");
+    		out.print("</body>");
         }
         
         out.println("</html>");

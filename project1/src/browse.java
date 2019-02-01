@@ -36,7 +36,7 @@ public class browse extends HttpServlet {
         if (email == null)
 		    response.sendRedirect("/project1/LoginServlet?errormsg=You are not logged in");
 						
-		 // change this to your own mysql username and password
+		// change this to your own mysql username and password
         String loginUser = "mytestuser";
         String loginPasswd = "mypassword";
         String loginUrl = "jdbc:mysql://localhost:3306/moviedb";
@@ -59,33 +59,37 @@ public class browse extends HttpServlet {
         out.println("</head>");        
         
         try {
-        		Class.forName("com.mysql.jdbc.Driver").newInstance();
-        		// create database connection
-        		Connection connection = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
-        		// declare statement
-        		Statement statement = connection.createStatement();
-        		
-        		//set up body
-        		out.println("<body>");
-        		out.println("<center>"); 
-        		out.println("<h1>Browse Page</h1>");
-        		out.println("<h3>Browse by Title</h3>");
-        		out.println("<form action=\"/project1/BrowseT\" method=\"get\"><button>Title</button></form>");
-        		out.println("<h3>Browse by Genre</h3>");
-        		out.println("<form action=\"/project1/BrowseG\" method=\"get\"><button>Genre</button></form>");
-        		out.println("</center>");
-        		out.println("</body>");
-        		statement.close();
-        		connection.close();
+    		Class.forName("com.mysql.jdbc.Driver").newInstance();
+    		// create database connection
+    		Connection connection = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
+    		// declare statement
+    		Statement statement = connection.createStatement();
+    		
+    		//set up body
+    		out.println("<body>");
+    		out.println("<button onclick=\"window.location.href = \'/project1/ShoppingCart\';\"><h4>Checkout</h4></button>");
+    		out.println("<center>"); 
+    		out.println("<h1>Browse Page</h1>");
+    		out.println("<h3>Browse by Title</h3>");
+    		out.println("<form action=\"/project1/BrowseT\" method=\"get\"><button>Title</button></form>");
+    		out.println("<h3>Browse by Genre</h3>");
+    		out.println("<form action=\"/project1/BrowseG\" method=\"get\"><button>Genre</button></form>");
+    		out.println("</center>");
+    		out.println("</body>");
+    		
+    		statement.close();
+    		connection.close();
 		
+    		
         } catch (Exception e) {
-        		e.printStackTrace();	
-        		out.println("<body>");
-        		out.println("<p>");
-        		out.println("Exception in doGet: " + e.getMessage());
-        		out.println("</p>");
-        		out.print("</body>");
+    		e.printStackTrace();	
+    		out.println("<body>");
+    		out.println("<p>");
+    		out.println("Exception in doGet: " + e.getMessage());
+    		out.println("</p>");
+    		out.print("</body>");
         }
+        
         out.println("</html>");
         out.close();
 	}

@@ -6,6 +6,8 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -13,19 +15,17 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import project1.helperFunct;
-
 /**
- * Servlet implementation class BrowseGenre
+ * Servlet implementation class ConfirmationServlet
  */
-@WebServlet("/BrowseT")
-public class BrowseT extends HttpServlet {
+@WebServlet("/ConfirmationServlet")
+public class ConfirmationServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public BrowseT() {
+    public ConfirmationServlet() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -35,20 +35,15 @@ public class BrowseT extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
+		Map<String, Integer> cart= new HashMap<String,Integer>();
+        cart = (HashMap<String, Integer>)request.getSession().getAttribute("cart");
+		
 		String email = (String)request.getSession().getAttribute("email");
-        if (email == null)
+        if (email == null || cart==null)
 		    response.sendRedirect("/project1/LoginServlet?errormsg=You are not logged in");
-		
-		request.getSession().setAttribute("title", null);
-        request.getSession().setAttribute("star", null);
-        request.getSession().setAttribute("director", null);
-        request.getSession().setAttribute("year", null);
-        request.getSession().setAttribute("bGenre", null);
-        request.getSession().setAttribute("bTitle", null);
-        request.getSession().setAttribute("direction", "DESC");
-        request.getSession().setAttribute("sort", "r.rating");
-		
-		 // change this to your own mysql username and password
+        
+        
+		// change this to your own mysql username and password
         String loginUser = "mytestuser";
         String loginPasswd = "mypassword";
         String loginUrl = "jdbc:mysql://localhost:3306/moviedb";
@@ -63,10 +58,10 @@ public class BrowseT extends HttpServlet {
         out.println("<head>");
         out.println("<title>Fabflix</title>");
         out.println("<style>");
-        out.println("tr:hover {background-color: #e2e2e2;}");
         out.println("button{cursor: pointer; border: 1px solid black; border-radius: 4px; }");
+        out.println("tr:hover {background-color: #e2e2e2;}");
         out.println("table {border-collapse: collapse; width: 75%; }");
-        out.println("table, td, tr {border: 2px solid;  padding: 14px; text-align: left; font-family: Arial}");
+        out.println("table, td, tr, th {border: 2px solid;  padding: 14px; text-align: left; font-family: Arial}");
         out.println("</style>");
         out.println("</head>");
         
@@ -77,24 +72,24 @@ public class BrowseT extends HttpServlet {
     		// declare statement
     		Statement statement = connection.createStatement();
     		
-    		//set up body
+    		//String update;
+    		//statement.executeUpdate(update);
+    		cart.clear();
+    	
     		out.println("<body>");
-    		out.println("<button onclick=\"window.location.href = \'/project1/ShoppingCart\';\"><h4>Checkout</h4></button>");
-    		out.println("<center>"); 
-    		out.println("<h1>Title Letters</h1>");
-    		
-    		char[] alphabet = "1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ".toCharArray();
-    		for( int i = 0; i<36;i++)  {
-    			out.println("<h3><a href = \"/project1/MovieServlet?bTitle="+ alphabet[i]+"&msg=clean\">" + alphabet[i] + "</a></h3>");
-    		}
-    		
+    		out.println("<button onclick=\"window.location.href = \'/project1/MainPage\';\"><h4>Main Page</h4></button>");
+    		out.println("<center>");
+    		out.println("<h1>Transaction Complete!</h1>");
+    		out.println("<br>");
+    		out.println("<h2>Thank you for shopping with Fablix</h2>");
     		out.println("</center>");
     		out.println("</body>");
+    		
+    		request.getSession().setAttribute("cart", cart);
     		
     		statement.close();
     		connection.close();
         		
-    		
         } catch (Exception e) {
     		/*
     		 * After you deploy the WAR file through tomcat manager webpage,
@@ -123,7 +118,6 @@ public class BrowseT extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		
 		doGet(request, response);
 	}
 
