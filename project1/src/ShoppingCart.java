@@ -6,6 +6,9 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
@@ -52,35 +55,12 @@ public class ShoppingCart extends HttpServlet {
         String loginUser = "mytestuser";
         String loginPasswd = "mypassword";
         String loginUrl = "jdbc:mysql://localhost:3306/moviedb";
-		
-        
         
         // set response mime type
         response.setContentType("text/html"); 
 
         // get the printwriter for writing response
         PrintWriter out = response.getWriter();
-        Queue<String> remove = new LinkedList<>();
-        if(cart!=null) {
-	        for(String i: cart.keySet()) {
-	        	if(request.getParameter(i)!=null) {
-	        		//out.println(i);
-	        		Integer value = Integer.parseInt(request.getParameter(i));
-	        		if(value>0)
-	        			cart.put(i, value);
-	        		if(value ==0)
-	        			remove.add(i);
-	        		else
-	        		    response.sendRedirect("/project1/ShoppingCart?errormsg=Cannot enter a negative value");	
-	        	}
-	        	
-	        }
-        }
-        for(String i: remove) {
-        	cart.remove(i);
-        }
-        request.getSession().setAttribute("cart", cart);
-
         
         //set up html page
         out.println("<html>");
@@ -104,18 +84,43 @@ public class ShoppingCart extends HttpServlet {
     		// prepare query, custom made for this problem
     		String query;
     		ResultSet result = null;
+    		
+    		Queue<String> remove = new LinkedList<>();
+            if (cart!=null) {
+    	        for (String i: cart.keySet()) {
+    	        	if (request.getParameter(i)!=null) {
+    	        		//out.println(i);
+    	        		Integer value = Integer.parseInt(request.getParameter(i));
+    	        		
+    	        		if (value>0)
+    	        			cart.put(i, value);
+    	        		else if (value == 0)
+    	        			remove.add(i);
+    	        		else
+    	        		    response.sendRedirect("/project1/ShoppingCart?errormsg=Cannot enter a negative value");	
+    	        	}
+    	        	
+    	        }
+            }
+            
+            for (String i: remove) {
+            	cart.remove(i);
+            }
+            
+            request.getSession().setAttribute("cart", cart);
     	
-    		out.println("<body>");
+    		out.println("<body>");	
     		out.println("<button onclick=\"window.location.href = \'/project1/MovieServlet\';\"><h4>Movie List</h4></button>");
     		out.println("<center>");
     		if (errormsg != null)
     			out.println(errormsg);
-
+    		
     		out.println("<h1>Your Shopping Cart</h1>");
     		out.println("<table border>");
     		out.println("<tr>");
     		out.println("<th width=\"30%\">Movie</th>");
     		out.println("<th width=\"10%\">Quantity</th>");
+    		out.println("<th width=\"10%\">Set Quantity</th>");
     		out.println("</tr>");
     		
     		for (Map.Entry<String, Integer> item : cart.entrySet()) {
@@ -131,13 +136,11 @@ public class ShoppingCart extends HttpServlet {
     		    	out.println("<tr>");
         			out.println("<td width=\"30%\">" + title + "</td>");
         			out.println("<td width=\"10%\">" + quantity + "</td>");			
-        			out.println("<td>"+
+        			out.println("<td width=\"10%\">"+
         			"<form action = \'/project1/ShoppingCart\' method =\'get\'>"+	    		
-        				    		"   <label for=\"quantity\"><b>set quantity</b></label>" + 
-        				    		"   <input type=\"text\"  name=\""+id+"\" value = \""+quantity+"\" >" + 
+        				    		"   <input type=\"text\"  name=\""+id+"\" value = \""+quantity+"\" size=\"4\" >" + 
         				    		"    <button type=\"submit\">Submit</button>" + "</form>"
         					+  "</td>");
-
         			out.println("</tr>");
     		    }
     		}
@@ -148,7 +151,6 @@ public class ShoppingCart extends HttpServlet {
     		out.println("</center>");
     		out.println("</body>");
     		
-    		//result.close();
     		statement.close();
     		connection.close();
         		

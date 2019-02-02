@@ -6,6 +6,9 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -42,6 +45,8 @@ public class ConfirmationServlet extends HttpServlet {
         if (email == null || cart==null)
 		    response.sendRedirect("/project1/LoginServlet?errormsg=You are not logged in");
         
+        String password = (String)request.getSession().getAttribute("pass");
+        
         
 		// change this to your own mysql username and password
         String loginUser = "mytestuser";
@@ -71,20 +76,73 @@ public class ConfirmationServlet extends HttpServlet {
     		Connection connection = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
     		// declare statement
     		Statement statement = connection.createStatement();
+        
+    		String query = "SELECT id FROM customers WHERE email =\"" + email + "\" and password =\"" + password + "\"";
+    		ResultSet result = statement.executeQuery(query);
+    		int customer_id = 0;
+		    if (result.next()) {
+		    	customer_id = Integer.parseInt(result.getString("id"));
+		    }
+		    
+    		String pattern = "yyyy-MM-dd";
+    		SimpleDateFormat formatter = new SimpleDateFormat(pattern);
+    		String date = formatter.format(new Date());	
     		
-    		//String update;
-    		//statement.executeUpdate(update);
-    		cart.clear();
+    		for (Map.Entry<String, Integer> item : cart.entrySet()) {
+    		    String movie_id = item.getKey();
+    		    Integer quantity = item.getValue();
+
+	    		String update = "INSERT INTO sales " +
+	    						"VALUES (NULL, " + customer_id + ", \"" + movie_id + "\", \"" + date + "\", " + quantity + ")";
+	    	    statement.executeUpdate(update);
+    		}
     	
     		out.println("<body>");
     		out.println("<button onclick=\"window.location.href = \'/project1/MainPage\';\"><h4>Main Page</h4></button>");
     		out.println("<center>");
     		out.println("<h1>Transaction Complete!</h1>");
     		out.println("<br>");
-    		out.println("<h2>Thank you for shopping with Fablix</h2>");
+    		out.println("<h2>Order Details</h2>");
+    		
+    		out.println("<table border>");
+    		out.println("<tr>");
+    		out.println("<th width=\"10%\">Sale ID</th>");
+    		out.println("<th width=\"30%\">Movie</th>");
+    		out.println("<th width=\"10%\">Quantity</th>");
+    		out.println("</tr>");
+    		
+    		for (Map.Entry<String, Integer> item : cart.entrySet()) {
+        		Statement statement2 = connection.createStatement();
+
+    		    String id = item.getKey();
+    		    Integer quantity = item.getValue();
+    		    
+    		    query = "SELECT title FROM movies WHERE id =\"" + id + "\"";
+    		    result = statement.executeQuery(query);
+    		    
+    		    while (result.next())
+    		    {
+    		    	String title = result.getString("title");
+    		    	
+    		    	query = "SELECT id FROM sales WHERE customerId=" + customer_id + " AND movieId=\"" + id + "\" AND saleDate=\"" + date + "\"";
+    		    	ResultSet result2 = statement2.executeQuery(query);
+    		    	int sale_id = 0;
+    		    	if (result2.next()) {
+    		    		sale_id = Integer.parseInt(result2.getString("id"));
+    		    	}
+    		    	
+    		    	out.println("<tr>");
+    		    	out.println("<td width=\"10%\">" + sale_id + "</td>");
+        			out.println("<td width=\"30%\">" + title + "</td>");
+        			out.println("<td width=\"10%\">" + quantity + "</td>");	
+        			out.println("</tr>");
+    		    }
+    		}
+    		    
     		out.println("</center>");
     		out.println("</body>");
     		
+    		cart.clear();
     		request.getSession().setAttribute("cart", cart);
     		
     		statement.close();

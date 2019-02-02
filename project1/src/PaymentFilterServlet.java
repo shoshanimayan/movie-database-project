@@ -6,6 +6,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -65,20 +66,12 @@ public class PaymentFilterServlet extends HttpServlet {
     		// create database connection
     		Connection connection = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
     		// declare statement
-    		Statement statement = connection.createStatement();
-    		
-    	
-    		//SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-    		//Date myDate = formatter.parse(exp_date);
-    		//java.sql.Date sqlDate = new java.sql.Date(myDate.getTime());
+    		Statement statement = connection.createStatement();	
     		
     		// prepare queries, custom made for this problem
     		String query =  "SELECT * FROM creditcards WHERE firstName =\"" + first_name + "\" AND lastName=\"" + last_name + "\"\r\n" +
-    						"AND id=\"" + card_num + "\"\r\n";
-    						//"AND expiration=" + sqlDate + "\r\n";
-    		
-    		
-    		
+    						"AND id=\"" + card_num + "\" AND expiration=\"" + exp_date + "\"\r\n";
+		
     		ResultSet result = statement.executeQuery(query);
     		if (!result.next())
     			response.sendRedirect("/project1/PaymentServlet?errormsg=Your information was incorrect");

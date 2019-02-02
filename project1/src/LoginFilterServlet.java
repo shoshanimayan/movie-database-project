@@ -76,6 +76,7 @@ public class LoginFilterServlet extends HttpServlet {
     		
 			Map<String, Integer> cart = new HashMap<String, Integer>();
 	        request.getSession().setAttribute("email", email);
+	        request.getSession().setAttribute("pass", password );
 	        request.getSession().setAttribute("cart", cart );
       
 		    response.sendRedirect(forward);	

@@ -6,6 +6,8 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -304,7 +306,7 @@ public class MovieServlet extends HttpServlet {
     		out.println("</center>");
     		
     		out.println("<right>");
-    		out.println("<form class=\"form1\" action=\"/project1/MovieServlet\"> Page Count <select name=\"pCount\"> <option value=\"\" selected disabled hidden>limit</option><option value=5>5</option><option value=10>10</option><option value=20>20</option><option value=50>50</option><option value=100>100</option> </select> <input type=\"submit\"></form>");
+    		out.println("<form class=\"form1\" action=\"/project1/MovieServlet\"> Movies per page <select name=\"pCount\"> <option value=\"\" selected disabled hidden>limit</option><option value=5>5</option><option value=10>10</option><option value=20>20</option><option value=50>50</option><option value=100>100</option> </select> <input type=\"submit\"></form>");
     		out.print("<form class=\"form2\" method=\"get\"> Sort by:  <button name=\"sort\" type=\"submit\" value=\"r.rating\">Rating</button><button name=\"sort\" type=\"submit\" value=\"m.title\">Title</button><br>In order: <button name=\"direction\" type=\"submit\" value=\"ASC\">Ascend</button><button name=\"direction\" type=\"submit\" value=\"DESC\">Descend</button></form>");
     		out.println("</right>");
     		
@@ -343,7 +345,7 @@ public class MovieServlet extends HttpServlet {
     		
     		out.println("</table>");
     		out.println("<br>");
-    		out.println("<form action=\"/project1/MovieServlet\" method=\"get\"><button name = \"pageMsg\" value=\"prev\">prev</button>"+"<button name = \"pageMsg\" value=\"next\">next</button>"+"</form>");
+    		out.println("<form action=\"/project1/MovieServlet\" method=\"get\"><button name = \"pageMsg\" value=\"prev\">prev</button>"+ " " + "<button name = \"pageMsg\" value=\"next\">next</button>"+"</form>");
     		out.println("</center>");
     		out.println("</body>");
     		

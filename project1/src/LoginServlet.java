@@ -73,7 +73,7 @@ public class LoginServlet extends HttpServlet {
     		if (errormsg != null)
     			out.println(errormsg);
     		
-    		out.println("<h1>Login to Database</h1>");
+    		out.println("<h1>Login to Fablix</h1>");
     		out.println("<form id=\"login_form\" method=\"post\" action=\"/project1/LoginFilterServlet?filterTo=/project1/MainPage\">");
     	    out.println("<label><b>Email</b></label>");
     	    out.println("<input type=\"text\" placeholder=\"Enter Email\" name=\"email\">");
