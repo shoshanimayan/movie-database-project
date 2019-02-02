@@ -144,7 +144,6 @@ public class ConfirmationServlet extends HttpServlet {
     		out.println("</center>");
     		out.println("</body>");
     		
-    		cart.clear();
     		request.getSession().setAttribute("cart", cart);
     		
     		statement.close();
