@@ -7,7 +7,9 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Map;
+import java.util.Queue;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -51,11 +53,35 @@ public class ShoppingCart extends HttpServlet {
         String loginPasswd = "mypassword";
         String loginUrl = "jdbc:mysql://localhost:3306/moviedb";
 		
+        
+        
         // set response mime type
         response.setContentType("text/html"); 
 
         // get the printwriter for writing response
         PrintWriter out = response.getWriter();
+        Queue<String> remove = new LinkedList<>();
+        if(cart!=null) {
+	        for(String i: cart.keySet()) {
+	        	if(request.getParameter(i)!=null) {
+	        		//out.println(i);
+	        		Integer value = Integer.parseInt(request.getParameter(i));
+	        		if(value>0)
+	        			cart.put(i, value);
+	        		if(value ==0)
+	        			remove.add(i);
+	        		else
+	        		    response.sendRedirect("/project1/ShoppingCart?errormsg=Cannot enter a negative value");	
+	        	}
+	        	
+	        }
+        }
+        for(String i: remove) {
+        	cart.remove(i);
+        }
+        request.getSession().setAttribute("cart", cart);
+
+        
         //set up html page
         out.println("<html>");
         out.println("<head>");
@@ -105,6 +131,13 @@ public class ShoppingCart extends HttpServlet {
     		    	out.println("<tr>");
         			out.println("<td width=\"30%\">" + title + "</td>");
         			out.println("<td width=\"10%\">" + quantity + "</td>");			
+        			out.println("<td>"+
+        			"<form action = \'/project1/ShoppingCart\' method =\'get\'>"+	    		
+        				    		"   <label for=\"quantity\"><b>set quantity</b></label>" + 
+        				    		"   <input type=\"text\"  name=\""+id+"\" value = \""+quantity+"\" >" + 
+        				    		"    <button type=\"submit\">Submit</button>" + "</form>"
+        					+  "</td>");
+
         			out.println("</tr>");
     		    }
     		}
