@@ -121,6 +121,7 @@ public class ShoppingCart extends HttpServlet {
     		out.println("<th width=\"30%\">Movie</th>");
     		out.println("<th width=\"10%\">Quantity</th>");
     		out.println("<th width=\"10%\">Set Quantity</th>");
+    		out.println("<th width=\"10%\">Delete</th>");    		
     		out.println("</tr>");
     		
     		for (Map.Entry<String, Integer> item : cart.entrySet()) {
@@ -141,7 +142,9 @@ public class ShoppingCart extends HttpServlet {
         				    		"   <input type=\"text\"  name=\""+id+"\" value = \""+quantity+"\" size=\"4\" >" + 
         				    		"    <button type=\"submit\">Submit</button>" + "</form>"
         					+  "</td>");
+        			out.println("<td width=\"10%\"><button onclick=\"window.location.href = \'/project1/ShoppingCart?"+id+"="+"0"+"\';\" >Delete</button></td>");
         			out.println("</tr>");
+        			
     		    }
     		}
     		

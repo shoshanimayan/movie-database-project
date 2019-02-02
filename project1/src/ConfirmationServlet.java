@@ -138,6 +138,8 @@ public class ConfirmationServlet extends HttpServlet {
         			out.println("</tr>");
     		    }
     		}
+    		
+    		cart.clear();
     		    
     		out.println("</center>");
     		out.println("</body>");
