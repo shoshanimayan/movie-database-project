@@ -62,9 +62,10 @@ public class MovieServlet extends HttpServlet {
         out.println("button {cursor: pointer; border: 1px solid black; border-radius: 4px; }");
         out.println(".form1 {position: absolute; top: 10px; right: 10px; }");
         out.println(".form2 {position: absolute; top: 40px; right: 10px; }");
-        out.println("tr:hover {background-color: #e2e2e2;}");
+        out.println("tr:hover {background-color: #f2f2f2;}");
         out.println("table {border-collapse: collapse; width: 75%; }");
-        out.println("table, td, tr, th {border: 2px solid;  padding: 11px; text-align: left; font-family: Arial}");
+        out.println("table, td, tr {border: 2px solid;  padding: 11px; text-align: left; font-family: Arial}");
+        out.println("th {border: 2px solid;  padding: 11px; text-align: center; font-family: Arial; background-color: #E6FFFF;}");
         out.println("</style>");
         out.println("</head>");
         
@@ -345,7 +346,7 @@ public class MovieServlet extends HttpServlet {
     		
     		out.println("</table>");
     		out.println("<br>");
-    		out.println("<form action=\"/project1/MovieServlet\" method=\"get\"><button name = \"pageMsg\" value=\"prev\">prev</button>"+ " " + "<button name = \"pageMsg\" value=\"next\">next</button>"+"</form>");
+    		out.println("<form action=\"/project1/MovieServlet\" method=\"get\"><button name = \"pageMsg\" value=\"prev\">Prev</button>"+ " " + "<button name = \"pageMsg\" value=\"next\">Next</button>"+"</form>");
     		out.println("</center>");
     		out.println("</body>");
     		

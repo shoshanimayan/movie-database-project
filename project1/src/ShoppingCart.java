@@ -68,9 +68,10 @@ public class ShoppingCart extends HttpServlet {
         out.println("<title>Fabflix</title>");
         out.println("<style>");
         out.println("button{cursor: pointer; border: 1px solid black; border-radius: 4px; }");
-        out.println("tr:hover {background-color: #e2e2e2;}");
+        out.println("tr:hover {background-color: #f2f2f2;}");
         out.println("table {border-collapse: collapse; width: 75%; }");
-        out.println("table, td, tr, th {border: 2px solid;  padding: 14px; text-align: left; font-family: Arial}");
+        out.println("table, td, tr {border: 2px solid;  padding: 14px; text-align: left; font-family: Arial}");
+        out.println("th {border: 2px solid;  padding: 11px; text-align: center; font-family: Arial; background-color: #E6FFFF;}");
         out.println("</style>");
         out.println("</head>");
         
@@ -149,6 +150,7 @@ public class ShoppingCart extends HttpServlet {
     		}
     		
     		out.println("</table>");
+    		out.println("<br>");
     		out.println("<br>");
     		out.println("<button onclick=\"window.location.href = \'/project1/PaymentServlet\';\"><h4>Proceed to Checkout</h4></button>");
     		out.println("</center>");

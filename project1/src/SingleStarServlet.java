@@ -56,9 +56,9 @@ protected void doGet(HttpServletRequest request, HttpServletResponse response) t
     out.println("<title>Fabflix</title>");
     out.println("<style>");
     out.println("button{cursor: pointer; border: 1px solid black; border-radius: 4px; }");
-    out.println("tr:nth-child(even) {background-color: #e2e2e2;}");
     out.println("table {border-collapse: collapse;  width: 75%;  }");
-    out.println("table, tr, td, th {border: 2px solid;  padding: 14px; text-align: left; font-family: Arial}");
+    out.println("table, tr, td {border: 2px solid;  padding: 14px; text-align: left; font-family: Arial}");
+    out.println("th {border: 2px solid;  padding: 11px; text-align: center; font-family: Arial; background-color: #E6FFFF;}");
     out.println("</style>");
     out.println("</head>");        
     

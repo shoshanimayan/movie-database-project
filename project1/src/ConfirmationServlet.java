@@ -64,9 +64,10 @@ public class ConfirmationServlet extends HttpServlet {
         out.println("<title>Fabflix</title>");
         out.println("<style>");
         out.println("button{cursor: pointer; border: 1px solid black; border-radius: 4px; }");
-        out.println("tr:hover {background-color: #e2e2e2;}");
+        out.println("tr:hover {background-color: #f2f2f2;}");
         out.println("table {border-collapse: collapse; width: 75%; }");
-        out.println("table, td, tr, th {border: 2px solid;  padding: 14px; text-align: left; font-family: Arial}");
+        out.println("table, td, tr {border: 2px solid;  padding: 14px; text-align: left; font-family: Arial}");
+        out.println("th {border: 2px solid;  padding: 11px; text-align: center; font-family: Arial; background-color: #E6FFFF;}");
         out.println("</style>");
         out.println("</head>");
         
@@ -124,7 +125,8 @@ public class ConfirmationServlet extends HttpServlet {
     		    {
     		    	String title = result.getString("title");
     		    	
-    		    	query = "SELECT id FROM sales WHERE customerId=" + customer_id + " AND movieId=\"" + id + "\" AND saleDate=\"" + date + "\"";
+    		    	query = "SELECT id FROM sales WHERE customerId=" + customer_id + " AND movieId=\"" + id + "\" AND saleDate=\"" + date + "\"" +
+    		    			" AND count=" + quantity + " ORDER BY id DESC LIMIT 1";
     		    	ResultSet result2 = statement2.executeQuery(query);
     		    	int sale_id = 0;
     		    	if (result2.next()) {
