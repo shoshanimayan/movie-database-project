@@ -53,7 +53,7 @@ public class ShoppingCart extends HttpServlet {
         
 		// change this to your own mysql username and password
         String loginUser = "mytestuser";
-        String loginPasswd = "mypassword";
+        String loginPasswd = "catcat123";
         String loginUrl = "jdbc:mysql://localhost:3306/moviedb";
         
         // set response mime type
@@ -67,9 +67,8 @@ public class ShoppingCart extends HttpServlet {
         out.println("<head>");
         out.println("<title>Fabflix</title>");
         out.println("<style>");
-        out.println("button{cursor: pointer; border: 1px solid black; border-radius: 4px; }");
-        out.println("#checkB{cursor: pointer; border: 1px solid black; border-radius: 4px; background-color: #FF4500;  font-family: Impact; }");
-
+        out.println("button {cursor: pointer; border: 1px solid black; border-radius: 4px; }");
+        out.println(".checkoutB {cursor: pointer; border: 1px solid black; border-radius: 4px; background-color: #85E085;  font-family: Arial Black; }");
         out.println("tr:hover {background-color: #f2f2f2;}");
         out.println("table {border-collapse: collapse; width: 75%; }");
         out.println("table, td, tr {border: 2px solid;  padding: 14px; text-align: left; font-family: Arial}");
@@ -154,7 +153,7 @@ public class ShoppingCart extends HttpServlet {
     		out.println("</table>");
     		out.println("<br>");
     		out.println("<br>");
-    		out.println("<button onclick=\"window.location.href = \'/project1/PaymentServlet\';\" id = \"checkoutB\"><h4>Proceed to Checkout</h4></button>");
+    		out.println("<button class=\"checkoutB\" onclick=\"window.location.href = \'/project1/PaymentServlet\';\"><h4>Proceed to Checkout</h4></button>");
     		out.println("</center>");
     		out.println("</body>");
     		

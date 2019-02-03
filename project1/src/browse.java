@@ -38,7 +38,7 @@ public class browse extends HttpServlet {
 						
 		// change this to your own mysql username and password
         String loginUser = "mytestuser";
-        String loginPasswd = "mypassword";
+        String loginPasswd = "catcat123";
         String loginUrl = "jdbc:mysql://localhost:3306/moviedb";
 		
         // set response mime type
