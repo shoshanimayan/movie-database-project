@@ -86,17 +86,12 @@ public class Search extends HttpServlet {
     		out.println("<h1>Search Page</h1>");
     		out.println("<h3>Search by </h3>");
     		out.print("<form action = \'/project1/MovieServlet?\' method =\'get\'>"+
-    		"	<label for=\"title\"><b>Title</b></label>"+ 
-    		"   <input type=\"text\"  name=\"title\" >"+ 
-    		"   <label for=\"year\"><b>Year</b></label>" + 
-    		"   <input type=\"text\"  name=\"year\" >" + 
-    		"   <label for=\"director\"><b>Director</b></label>" + 
-    		"   <input type=\"text\"  name=\"director\" >" + 
-    		"   <label for=\"star\"><b>Star</b></label>" + 
-    		"   <input type=\"text\"  name=\"star\" >" + 
-    		"	<input id=\"msg\" name=\"msg\" type=\"hidden\" value=\"clean\">\r\n" + 
-
-    		"    <button type=\"submit\">Submit</button>" + "</form>");
+    	    		"    Title:<br>  <input type=\"text\"  name=\"title\" ><br><br>"+ 
+    	    		"    Year:  <br><input type=\"text\"  name=\"year\" ><br><br>" + 
+    	    		"    Director:  <br><input type=\"text\"  name=\"director\" ><br><br>" + 
+    	    		"    Star:  <br><input type=\"text\"  name=\"star\" ><br><br>" + 
+    	    		"	<input id=\"msg\" name=\"msg\" type=\"hidden\" value=\"clean\">\r\n" + 
+    	    		"    <button type=\"submit\">Submit</button>" + "</form>");
     		
     		out.println("</center>");
     		out.println("</body>");
