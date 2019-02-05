@@ -1,7 +1,7 @@
-Used the LIKE predict in MovieServlet.java,
-code checks if the servlet is passed any of the 4 search parameters either through GET or stored in session in if statements.
-for every search parameter found, string with the LIKE predict is is added to a collective string called WHERE, and after all the search conditions are checked, that WHERE string is added to the end of query string.
+Used the LIKE predict in MovieServlet.java, lines 249 - 264
+code checks if the servlet is passed any of the 4 search parameters either through GET in the URL of the page or stored in session in if statements.
+for every search parameter found, string with the LIKE predict is is added to a collective string called WHERE, and after all the search conditions are checked, that WHERE string is added to the end of query string, as well as an AND statement if conditions require it.
 for example  if (titleSearch!="" && titleSearch!=null) {where += "m.title LIKE \'%" + titleSearch + "%\'\r\n" ;} .
-"%" surround the given search information to allow us to filter the search results based on the instructions given for the assignment, namely it allows
+"%" surrounds the given search information to allow us to filter the search results based on the instructions given for the assignment, namely it allows
 the the query to return results where the results either are exactly like the search info, contain the search info in the beginning, middle, or end,
 or that matches a pattern format (ex: A_Z).
