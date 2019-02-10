@@ -1,6 +1,7 @@
 
 
 import java.io.IOException;
+import org.jasypt.util.password.StrongPasswordEncryptor;
 import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -14,6 +15,8 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.jasypt.util.password.StrongPasswordEncryptor;
 
 import project1.RecaptchaHelper;
 import project1.helperFunct;
@@ -74,17 +77,23 @@ public class LoginFilterServlet extends HttpServlet {
     		Statement statement = connection.createStatement();
     		
     		// prepare queries, custom made for this problem
-    		String query1 = " SELECT email from customers where email =\"" + email + "\"";
-    		String query2 = " SELECT email from customers where email =\"" + email + "\" and password =\"" + password + "\"";
+    		String query1 = " SELECT * from customers where email =\"" + email + "\"";
     		
     		ResultSet result = statement.executeQuery(query1);
     		if (!result.next())
     			response.sendRedirect("/project1/LoginServlet?errormsg=Email does not exist");
     				
-    		result = statement.executeQuery(query2);
-    		if (!result.next()) 
-    			response.sendRedirect("/project1/LoginServlet?errormsg=Password is incorrect");
+    		result = statement.executeQuery(query1);
+    		boolean pass = false;
+    		while(result.next()) {
+    			String encrypt = result.getString("password");
+    			pass =  new StrongPasswordEncryptor().checkPassword(password, encrypt);
+    		}
     		
+    		if(!pass) {
+    			response.sendRedirect("/project1/LoginServlet?errormsg=incorrect password");
+
+    		}
     		
 			Map<String, Integer> cart = new HashMap<String, Integer>();
 	        request.getSession().setAttribute("email", email);
