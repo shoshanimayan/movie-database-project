@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import project1.RecaptchaHelper;
 import project1.helperFunct;
 
 /**
@@ -45,10 +46,21 @@ public class LoginFilterServlet extends HttpServlet {
 		
 		// get the printwriter for writing response
         PrintWriter out = response.getWriter();
+        
+        String gRecaptchaResponse = request.getParameter("g-recaptcha-response");
+        System.out.println("gRecaptchaResponse=" + gRecaptchaResponse);
+
+        // Verify reCAPTCHA
+        try {
+            RecaptchaHelper.verify(gRecaptchaResponse);
+        } catch (Exception e) {
+			response.sendRedirect("/project1/LoginServlet?errormsg=need recaptcha");
+
+        }
    	
 		 // change this to your own mysql username and password
-        String loginUser = "mytestuser";
-        String loginPasswd = "catcat123";
+        String loginUser = "root";
+	    String loginPasswd = "espeon123";
         String loginUrl = "jdbc:mysql://localhost:3306/moviedb";
 		
         // set response mime type
