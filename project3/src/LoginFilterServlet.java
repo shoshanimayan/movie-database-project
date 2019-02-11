@@ -78,7 +78,7 @@ public class LoginFilterServlet extends HttpServlet {
     		Statement statement = connection.createStatement();
     		
     		// prepare queries, custom made for this problem
-    		//String query1 = "SELECT * from customers where email = ? ";
+    		
     		PreparedStatement query1 = connection.prepareStatement("SELECT * from customers where email = ? ");
     		query1.setString(1, email);
     		

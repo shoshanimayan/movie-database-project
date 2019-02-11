@@ -54,8 +54,8 @@ public class PaymentFilterServlet extends HttpServlet {
         PrintWriter out = response.getWriter();
    	
 		 // change this to your own mysql username and password
-        String loginUser = "mytestuser";
-        String loginPasswd = "catcat123";
+    	String loginUser = "root";
+	    String loginPasswd = "espeon123";
         String loginUrl = "jdbc:mysql://localhost:3306/moviedb";
 		
         // set response mime type

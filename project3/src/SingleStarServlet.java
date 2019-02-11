@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 
@@ -41,8 +42,8 @@ protected void doGet(HttpServletRequest request, HttpServletResponse response) t
 	String star_to_search = request.getParameter("query");
 		
 	 // change this to your own mysql username and password
-	String loginUser = "mytestuser";
-    String loginPasswd = "catcat123";
+	String loginUser = "root";
+    String loginPasswd = "espeon123";
     String loginUrl = "jdbc:mysql://localhost:3306/moviedb";
 	
     // set response mime type
@@ -75,10 +76,12 @@ protected void doGet(HttpServletRequest request, HttpServletResponse response) t
 				"select name, group_concat(title) as mlist, group_concat(movieId) as movieID from stars_in_movies join stars on stars_in_movies.starId = stars.id  \r\n" + 
 				"join movies on stars_in_movies.movieId = movies.id  Group by name \r\n" + 
 				") sm on s.name=sm.name\r\n" + 
-				"where s.id = \""+star_to_search+"\"" ;
+				"where s.id = ? ";
 		
 		// execute query, taken from example
-		ResultSet resultSet = statement.executeQuery(query);
+		PreparedStatement qry = connection.prepareStatement(query);
+		qry.setString(1, star_to_search);
+		ResultSet resultSet = qry.executeQuery();
 		
 		//set up body
 		out.println("<body>");

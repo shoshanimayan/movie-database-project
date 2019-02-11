@@ -37,8 +37,8 @@ public class browse extends HttpServlet {
 		    response.sendRedirect("/project1/LoginServlet?errormsg=You are not logged in");
 						
 		// change this to your own mysql username and password
-        String loginUser = "mytestuser";
-        String loginPasswd = "catcat123";
+    	String loginUser = "root";
+	    String loginPasswd = "espeon123";
         String loginUrl = "jdbc:mysql://localhost:3306/moviedb";
 		
         // set response mime type

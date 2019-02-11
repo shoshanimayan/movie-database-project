@@ -6,6 +6,7 @@ import java.util.Map;
 import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 
@@ -46,8 +47,8 @@ public class SingleMovieServlet extends HttpServlet {
         cart = (HashMap<String, Integer>)request.getSession().getAttribute("cart");
 
 		// change this to your own mysql username and password
-        String loginUser = "mytestuser";
-	    String loginPasswd = "catcat123";
+    	String loginUser = "root";
+	    String loginPasswd = "espeon123";
         String loginUrl = "jdbc:mysql://localhost:3306/moviedb";
 		
         // set response mime type
@@ -101,13 +102,15 @@ public class SingleMovieServlet extends HttpServlet {
     				"       join movies on stars_in_movies.movieId = movies.id Group by title\r\n" + 
     				"       ) as sm\r\n" + 
     				"       ON sm.title = m.title\r\n" + 
-    				"       where m.id =" +  "\""+movie_to_search+"\"";
+    				"       where m.id = ? ";
     		
             request.getSession().setAttribute("cart", cart);
-    		
+            
+    		PreparedStatement qry = connection.prepareStatement(query);
+    		qry.setString(1, movie_to_search);
             
     		// execute query, taken from example
-    		ResultSet resultSet = statement.executeQuery(query);
+    		ResultSet resultSet = qry.executeQuery();
     		
     		//set up body
     		out.println("<body>");        
