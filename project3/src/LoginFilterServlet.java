@@ -5,6 +5,7 @@ import org.jasypt.util.password.StrongPasswordEncryptor;
 import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.HashMap;
@@ -77,13 +78,19 @@ public class LoginFilterServlet extends HttpServlet {
     		Statement statement = connection.createStatement();
     		
     		// prepare queries, custom made for this problem
-    		String query1 = " SELECT * from customers where email =\"" + email + "\"";
+    		//String query1 = "SELECT * from customers where email = ? ";
+    		PreparedStatement query1 = connection.prepareStatement("SELECT * from customers where email = ? ");
+    		query1.setString(1, email);
     		
-    		ResultSet result = statement.executeQuery(query1);
+
+    		
+    		
+    		ResultSet result = query1.executeQuery();
+    			
     		if (!result.next())
     			response.sendRedirect("/project1/LoginServlet?errormsg=Email does not exist");
     				
-    		result = statement.executeQuery(query1);
+    		result = query1.executeQuery();
     		boolean pass = false;
     		while(result.next()) {
     			String encrypt = result.getString("password");
@@ -93,7 +100,7 @@ public class LoginFilterServlet extends HttpServlet {
     		if(!pass) {
     			response.sendRedirect("/project1/LoginServlet?errormsg=incorrect password");
 
-    		}
+    		} 
     		
 			Map<String, Integer> cart = new HashMap<String, Integer>();
 	        request.getSession().setAttribute("email", email);
