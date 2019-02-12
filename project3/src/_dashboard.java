@@ -1,8 +1,6 @@
 
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -15,16 +13,16 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * Servlet implementation class LoginServlet
+ * Servlet implementation class _dashboard
  */
-@WebServlet("/LoginServlet")
-public class LoginServlet extends HttpServlet {
+@WebServlet("/_dashboard")
+public class _dashboard extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public LoginServlet() {
+    public _dashboard() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -34,8 +32,16 @@ public class LoginServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
+		boolean logged_in;
 		String errormsg = request.getParameter("errormsg");
+		String email = (String)request.getSession().getAttribute("employee_email");
 		
+		if (email == null)
+			logged_in = false;
+		
+		else
+			logged_in = true;
+				
 		// change this to your own mysql username and password
 		String loginUser = "mytestuser";
 	    String loginPasswd = "mypassword";
@@ -52,9 +58,6 @@ public class LoginServlet extends HttpServlet {
         out.println("<title>Fabflix</title>");
         out.println("<style>");
         out.println("button{cursor: pointer; border: 1px solid black; border-radius: 4px; }");
-        out.println("tr:nth-child(even) {background-color: #e2e2e2;}");
-        out.println("table {border-collapse: collapse;  width: 75%;  }");
-        out.println("table, tr, td {border: 2px solid;  padding: 14px; text-align: left; font-family: Arial}");
         out.println("label {display: inline-block; width: 140px; text-align: right;}");
         out.println("</style>");
         out.println("</head>");        
@@ -70,25 +73,34 @@ public class LoginServlet extends HttpServlet {
     		out.println("<body>");
     		out.println("<center>"); 
     		
-    		if (errormsg != null)
-    			out.println(errormsg);
-    		out.println("<script src='https://www.google.com/recaptcha/api.js'></script>");
-    		out.println("<h1>Login to Fablix</h1>");
-    		out.println("<form id=\"login_form\" method=\"post\" action=\"/project1/LoginFilterServlet?filterTo=/project1/MainPage\">");
-    	    out.println("<label><b>Email</b></label>");
-    	    out.println("<input type=\"text\" placeholder=\"Enter Email\" name=\"email\">");
-    	    out.println("<br>");
-    	    out.println("<label><b>Password</b></label>");
-    	    out.println("<input type=\"password\" placeholder=\"Enter Password\" name=\"password\">");
-    	    out.println("<br>");
-    	    out.println("<br>");
-    	    out.println("<div class=\"g-recaptcha\" data-sitekey=\"6Le2P5AUAAAAANWO0tg7PIKQ6ms8WQd6IgYxProo\"></div>");
-
-    	    out.println("<input type=\"submit\"  value=\"Login\">");
-    	    out.println("</form>");
-    	    
-    		out.println("</center>");
-    		out.println("</body>");
+    		if (!logged_in)
+    		{    		
+    			if (errormsg != null)
+    				out.println(errormsg);
+    			
+	    		out.println("<script src='https://www.google.com/recaptcha/api.js'></script>");
+	    		out.println("<h1>Employee Login</h1>");
+	    		out.println("<form id=\"employee_login_form\" method=\"post\" action=\"/project1/EmployeeLoginFilter\">");
+	    	    out.println("<label><b>Email</b></label>");
+	    	    out.println("<input type=\"text\" placeholder=\"Enter Email\" name=\"email\">");
+	    	    out.println("<br>");
+	    	    out.println("<label><b>Password</b></label>");
+	    	    out.println("<input type=\"password\" placeholder=\"Enter Password\" name=\"password\">");
+	    	    out.println("<br>");
+	    	    out.println("<br>");
+	    	    out.println("<div class=\"g-recaptcha\" data-sitekey=\"6Le2P5AUAAAAANWO0tg7PIKQ6ms8WQd6IgYxProo\"></div>");
+	    	    out.println("<br>");
+	    	    out.println("<input type=\"submit\"  value=\"Login\">");
+	    	    out.println("</form>");
+	    	    
+	    		out.println("</center>");
+	    		out.println("</body>");
+    		}
+    		
+    		else
+    		{
+    			out.println("logged in");
+    		}
     		
     		statement.close();
     		connection.close();

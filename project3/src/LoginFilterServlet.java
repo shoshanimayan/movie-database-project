@@ -63,8 +63,8 @@ public class LoginFilterServlet extends HttpServlet {
         }
    	
 		 // change this to your own mysql username and password
-        String loginUser = "root";
-	    String loginPasswd = "espeon123";
+        String loginUser = "mytestuser";
+	    String loginPasswd = "mypassword";
         String loginUrl = "jdbc:mysql://localhost:3306/moviedb";
 		
         // set response mime type
@@ -78,12 +78,8 @@ public class LoginFilterServlet extends HttpServlet {
     		Statement statement = connection.createStatement();
     		
     		// prepare queries, custom made for this problem
-    		
     		PreparedStatement query1 = connection.prepareStatement("SELECT * from customers where email = ? ");
-    		query1.setString(1, email);
-    		
-
-    		
+    		query1.setString(1, email);	
     		
     		ResultSet result = query1.executeQuery();
     			
@@ -98,17 +94,18 @@ public class LoginFilterServlet extends HttpServlet {
     		}
     		
     		if(!pass) {
-    			response.sendRedirect("/project1/LoginServlet?errormsg=incorrect password");
-
+    			response.sendRedirect("/project1/LoginServlet?errormsg=Incorrect password");
     		} 
     		
-			Map<String, Integer> cart = new HashMap<String, Integer>();
-	        request.getSession().setAttribute("email", email);
-	        request.getSession().setAttribute("pass", password );
-	        request.getSession().setAttribute("cart", cart );
-      
-		    response.sendRedirect(forward);	
-  
+    		else
+    		{
+				Map<String, Integer> cart = new HashMap<String, Integer>();
+		        request.getSession().setAttribute("email", email);
+		        request.getSession().setAttribute("pass", password );
+		        request.getSession().setAttribute("cart", cart );
+			    response.sendRedirect(forward);	
+    		}
+    		
     		result.close();
     		statement.close();
     		connection.close();

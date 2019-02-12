@@ -1,12 +1,14 @@
 
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -14,17 +16,21 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.jasypt.util.password.StrongPasswordEncryptor;
+
+import project1.RecaptchaHelper;
+
 /**
- * Servlet implementation class LoginServlet
+ * Servlet implementation class EmployeeLoginFilter
  */
-@WebServlet("/LoginServlet")
-public class LoginServlet extends HttpServlet {
+@WebServlet("/EmployeeLoginFilter")
+public class EmployeeLoginFilter extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public LoginServlet() {
+    public EmployeeLoginFilter() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -34,30 +40,30 @@ public class LoginServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		String errormsg = request.getParameter("errormsg");
+		String email = request.getParameter("email");
+		String password = request.getParameter("password");
 		
-		// change this to your own mysql username and password
-		String loginUser = "mytestuser";
+		// get the printwriter for writing response
+        PrintWriter out = response.getWriter();
+        
+        String gRecaptchaResponse = request.getParameter("g-recaptcha-response");
+        System.out.println("gRecaptchaResponse=" + gRecaptchaResponse);
+
+        // Verify reCAPTCHA
+        try {
+            RecaptchaHelper.verify(gRecaptchaResponse);
+        } catch (Exception e) {
+			response.sendRedirect("/project1/_dashboard?errormsg=Need reCAPTCHA");
+
+        }
+   	
+		 // change this to your own mysql username and password
+        String loginUser = "mytestuser";
 	    String loginPasswd = "mypassword";
         String loginUrl = "jdbc:mysql://localhost:3306/moviedb";
 		
         // set response mime type
         response.setContentType("text/html"); 
-
-        // get the printwriter for writing response
-        PrintWriter out = response.getWriter();
-        //set up html page
-        out.println("<html>");
-        out.println("<head>");
-        out.println("<title>Fabflix</title>");
-        out.println("<style>");
-        out.println("button{cursor: pointer; border: 1px solid black; border-radius: 4px; }");
-        out.println("tr:nth-child(even) {background-color: #e2e2e2;}");
-        out.println("table {border-collapse: collapse;  width: 75%;  }");
-        out.println("table, tr, td {border: 2px solid;  padding: 14px; text-align: left; font-family: Arial}");
-        out.println("label {display: inline-block; width: 140px; text-align: right;}");
-        out.println("</style>");
-        out.println("</head>");        
         
         try {
     		Class.forName("com.mysql.jdbc.Driver").newInstance();
@@ -66,33 +72,37 @@ public class LoginServlet extends HttpServlet {
     		// declare statement
     		Statement statement = connection.createStatement();
     		
-    		//set up body
-    		out.println("<body>");
-    		out.println("<center>"); 
+    		// prepare queries, custom made for this problem
     		
-    		if (errormsg != null)
-    			out.println(errormsg);
-    		out.println("<script src='https://www.google.com/recaptcha/api.js'></script>");
-    		out.println("<h1>Login to Fablix</h1>");
-    		out.println("<form id=\"login_form\" method=\"post\" action=\"/project1/LoginFilterServlet?filterTo=/project1/MainPage\">");
-    	    out.println("<label><b>Email</b></label>");
-    	    out.println("<input type=\"text\" placeholder=\"Enter Email\" name=\"email\">");
-    	    out.println("<br>");
-    	    out.println("<label><b>Password</b></label>");
-    	    out.println("<input type=\"password\" placeholder=\"Enter Password\" name=\"password\">");
-    	    out.println("<br>");
-    	    out.println("<br>");
-    	    out.println("<div class=\"g-recaptcha\" data-sitekey=\"6Le2P5AUAAAAANWO0tg7PIKQ6ms8WQd6IgYxProo\"></div>");
-
-    	    out.println("<input type=\"submit\"  value=\"Login\">");
-    	    out.println("</form>");
-    	    
-    		out.println("</center>");
-    		out.println("</body>");
+    		PreparedStatement query = connection.prepareStatement("SELECT * from employees where email = ? ");
+    		query.setString(1, email);
     		
+    		ResultSet result = query.executeQuery();
+    			
+    		if (!result.next())
+    			response.sendRedirect("/project1/_dashboard?errormsg=Email does not exist");
+    				
+    		result = query.executeQuery();
+    		boolean pass = false;
+    		while(result.next()) {
+    			String encrypt = result.getString("password");
+    			pass = new StrongPasswordEncryptor().checkPassword(password, encrypt);
+    		}
+    		
+    		if(!pass) 
+    			response.sendRedirect("/project1/_dashboard?errormsg=Incorrect password");
+    		
+    		else
+    		{
+		        request.getSession().setAttribute("employee_email", email);
+			    response.sendRedirect("/project1/_dashboard");	
+    		}
+    		
+    		result.close();
     		statement.close();
     		connection.close();
         		
+		
         } catch (Exception e) {
     		/*
     		 * After you deploy the WAR file through tomcat manager webpage,
@@ -112,7 +122,6 @@ public class LoginServlet extends HttpServlet {
     		out.print("</body>");
         }
         
-        out.println("</html>");
         out.close();
 	}
 
