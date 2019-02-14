@@ -80,6 +80,7 @@ public class _dashboard extends HttpServlet {
     			
 	    		out.println("<script src='https://www.google.com/recaptcha/api.js'></script>");
 	    		out.println("<h1>Employee Login</h1>");
+	    		out.println("<br>");
 	    		out.println("<form id=\"employee_login_form\" method=\"post\" action=\"/project1/EmployeeLoginFilter\">");
 	    	    out.println("<label><b>Email</b></label>");
 	    	    out.println("<input type=\"text\" placeholder=\"Enter Email\" name=\"email\">");
@@ -88,19 +89,23 @@ public class _dashboard extends HttpServlet {
 	    	    out.println("<input type=\"password\" placeholder=\"Enter Password\" name=\"password\">");
 	    	    out.println("<br>");
 	    	    out.println("<br>");
+	    	    out.println("<br>");
 	    	    out.println("<div class=\"g-recaptcha\" data-sitekey=\"6Le2P5AUAAAAANWO0tg7PIKQ6ms8WQd6IgYxProo\"></div>");
 	    	    out.println("<br>");
 	    	    out.println("<input type=\"submit\"  value=\"Login\">");
 	    	    out.println("</form>");
-	    	    
-	    		out.println("</center>");
-	    		out.println("</body>");
+	    	   
     		}
     		
     		else
     		{
-    			out.println("logged in");
+	    		out.println("<h1>Employee Dashboard</h1>");
+	    		out.println("<h3>Show Metadata of Database</h3>");
+	    		out.println("<button onclick=\"window.location.href = \'/project1/ShowMetadata\';\"><h4>Show Metadata</h4></button>");
     		}
+    		
+    		out.println("</center>");
+    		out.println("</body>");
     		
     		statement.close();
     		connection.close();
