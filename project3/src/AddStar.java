@@ -5,7 +5,6 @@ import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.Statement;
@@ -16,19 +15,17 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import project1.helperFunct;
-
 /**
- * Servlet implementation class ShowMetadata
+ * Servlet implementation class AddStar
  */
-@WebServlet("/ShowMetadata")
-public class ShowMetadata extends HttpServlet {
+@WebServlet("/AddStar")
+public class AddStar extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public ShowMetadata() {
+    public AddStar() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -39,6 +36,7 @@ public class ShowMetadata extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		String email = (String)request.getSession().getAttribute("employee_email");
+		String msg = request.getParameter("msg");
 		
 		if (email == null)
 		    response.sendRedirect("/project1/_dashboard?errormsg=You are not logged in");
@@ -63,7 +61,7 @@ public class ShowMetadata extends HttpServlet {
         out.println("table {border-collapse: collapse; width: 35%; }");
         out.println("table, td, tr {border: 2px solid;  padding: 11px; text-align: left; font-family: Arial}");
         out.println("th {border: 2px solid;  padding: 11px; text-align: center; font-family: Arial; background-color: #85adad;}");
-        out.println(".secondaryHeader {border: 2px solid;  padding: 11px; text-align: center; font-family: Arial; background-color: #b3cccc;}");
+        out.println("label {display: inline-block; width: 140px; text-align: right;}");
         out.println("</style>");
         out.println("</head>");        
         
@@ -73,59 +71,30 @@ public class ShowMetadata extends HttpServlet {
     		Connection connection = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
     		// declare statement
     		
-    		DatabaseMetaData meta = connection.getMetaData();
-            ResultSet result = meta.getTables(null, null,"%", null);        
-
             //set up body
     		out.println("<body>");
     		out.println("<button onclick=\"window.location.href = \'/project1/_dashboard\';\"><h4>Dashboard</h4></button>");
     		out.println("<center>"); 
-    		out.println("<h1>Fablix Metadata</h1>");
-
-    		 while (result.next())
-             {			 
-    			 String table_name = result.getString(3);
-    			 out.println("<table border>");
-    			 out.println("<tr>");
-    			 out.println("<th colspan=\"4\">" + table_name + "</th>");
-    			 out.println("</tr>");
-    			 
-    			 out.println("<tr>");
-    			 out.println("<th class=\"secondaryHeader\">Attribute</th>");
-    			 out.println("<th class=\"secondaryHeader\">Type</th>");
-    			 out.println("<th class=\"secondaryHeader\">Null</th>");
-    			 out.println("<th class=\"secondaryHeader\">Key</th>");
-    			 out.println("</tr>");
-
-    			 /*
-    			 PreparedStatement stmt = connection.prepareStatement("desc ?");
-    			 stmt.setString(1, table_name);
-    			 ResultSet rs = stmt.executeQuery();
-    			 */
-    			 
-    			 Statement stmt = connection.createStatement();
-    			 ResultSet rs = stmt.executeQuery("desc " + table_name);
-    			 while (rs.next())
-    			 {
-    				 String col = rs.getString("Field");
-    				 String type = rs.getString("Type");
-    				 String null_check = rs.getString("Null");
-    				 String key = rs.getString("Key");
-    				 
-    				 out.println("<tr>");
-      			   	 out.println("<td>" + col + "</td>");
-      			   	 out.println("<td>" + type + "</th>");
-      			   	 out.println("<td>" + null_check + "</th>");
-      			   	 out.println("<td>" + key + "</th>");
-      			   	 out.println("</tr>");			 
-    			 }
-    			 
-    			 
-    			 out.println("</table>");
-    			 out.println("<br>");
-             	
-             }
     		
+    		if (msg != null && msg !="")
+    			out.println(msg);
+    		
+    		out.println("<h1>Add a Star to Database</h1>");
+    		out.println("<br>");
+    		
+    		out.println("<form id=\"add_star_form\" method=\"get\" action=\"/project1/AddStarFilter\">");
+    	    out.println("<label><b>Star Name</b></label>");
+    	    out.println("<input type=\"text\" placeholder=\"Enter star's full name\" name=\"name\" required>");
+    	    out.println("<br>");
+    	    out.println("<br>");
+    	    out.println("<label><b>Birth Year</b></label>");
+    	    out.println("<input type=\"number\" min=\"0001\" max=\"9999\" placeholder=\"YYYY\" name=\"birthyear\" >");
+    	    out.println("<br>");
+    	    out.println("<br>");
+    	    out.println("<br>");
+    	    out.println("<input type=\"submit\" value=\"Submit\">");
+    	    out.println("</form>");
+    		 
     		out.println("</center>");
     		out.println("</body>");
     		

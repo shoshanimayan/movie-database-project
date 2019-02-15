@@ -57,10 +57,14 @@ public class _dashboard extends HttpServlet {
         out.println("<head>");
         out.println("<title>Fabflix</title>");
         out.println("<style>");
+        out.println("table {border-collapse: collapse;  width: 25%; }");
         out.println("button{cursor: pointer; border: 1px solid black; border-radius: 4px; }");
+        out.println("table, td, tr {border: 2px solid;  padding: 14px; text-align: center; font-family: Arial}");
+        out.println("th {border: 2px solid;  padding: 11px; text-align: center; font-family: Arial; background-color: #85adad;}");
         out.println("label {display: inline-block; width: 140px; text-align: right;}");
         out.println("</style>");
         out.println("</head>");        
+        
         
         try {
     		Class.forName("com.mysql.jdbc.Driver").newInstance();
@@ -100,8 +104,27 @@ public class _dashboard extends HttpServlet {
     		else
     		{
 	    		out.println("<h1>Employee Dashboard</h1>");
-	    		out.println("<h3>Show Metadata of Database</h3>");
-	    		out.println("<button onclick=\"window.location.href = \'/project1/ShowMetadata\';\"><h4>Show Metadata</h4></button>");
+	    		out.println("<br>");
+	    		out.println("<table border>");
+	    		out.println("<tr>");
+	    		out.println("<th>Actions</th>");
+	    		out.println("</tr>");
+	    		
+	    		out.println("<tr>");
+	    		out.println("<td><button onclick=\"window.location.href = \'/project1/AddMovie\';\"><h4>Add a Movie</h4></button></td>");
+	    		out.println("</tr>");
+	    		
+	    		out.println("<tr>");
+	    		out.println("<td><button onclick=\"window.location.href = \'/project1/AddStar\';\"><h4>Add a Star</h4></button></td>");
+	    		out.println("</tr>");
+	    		
+	    		out.println("<tr>");
+	    		out.println("<td><button onclick=\"window.location.href = \'/project1/ShowMetadata\';\"><h4>Show Metadata</h4></button></td>");
+	    		out.println("</tr>");
+	    		
+	    		out.println("</table>");
+	    		
+	    		
     		}
     		
     		out.println("</center>");
