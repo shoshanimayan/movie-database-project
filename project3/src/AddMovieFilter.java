@@ -5,7 +5,6 @@ import java.io.PrintWriter;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.Statement;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -14,16 +13,16 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * Servlet implementation class AddStarFilter
+ * Servlet implementation class AddMovieFilter
  */
-@WebServlet("/AddStarFilter")
-public class AddStarFilter extends HttpServlet {
+@WebServlet("/AddMovieFilter")
+public class AddMovieFilter extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public AddStarFilter() {
+    public AddMovieFilter() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -66,26 +65,30 @@ public class AddStarFilter extends HttpServlet {
     		// create database connection
     		Connection connection = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
     		
-    	    CallableStatement callStmt = connection.prepareCall("{call add_star(?, ?)}");
+    	    CallableStatement callStmt = connection.prepareCall("{call add_movie(?, ?, ?, ?, ?, ?)}");
 
-    		String name = request.getParameter("name");
-    		String birthString = request.getParameter("birthyear");
-    		Integer birth_year = null;
-    		
-    		if (birthString != "")
-    		{
-    			birth_year = Integer.parseInt(birthString);
-        	    callStmt.setInt(2, birth_year);
-    		}
-    		
-    		else { callStmt.setNull(2, java.sql.Types.INTEGER); }
-
-    	    callStmt.setString(1, name);
-    	    callStmt.execute();
+    		String title = request.getParameter("title");
+    		Integer year = Integer.parseInt(request.getParameter("year"));
+    		String director = request.getParameter("director");
+    		String star = request.getParameter("star");
+    		String genre = request.getParameter("genre");
     	    
-		    response.sendRedirect("/project1/AddStar?msg=SUCCESS: Star added!");
+    		callStmt.setString(1, title);
+    	    callStmt.setInt(2, year);
+    	    callStmt.setString(3, director);
+    	    callStmt.setString(4, star);
+    	    callStmt.setString(5, genre);
+    	    callStmt.registerOutParameter(6, java.sql.Types.INTEGER);	
+
+    	    callStmt.execute();
+			
+			String added = callStmt.getString(6);
+			if (added.equals("1"))
+				response.sendRedirect("/project1/AddMovie?msg=SUCCESS: Movie added!");
+			else
+				response.sendRedirect("/project1/AddMovie?msg=Movie already exists");
     		
-		    callStmt.close();
+    	    callStmt.close();
     		connection.close();
     			
     		
@@ -100,7 +103,6 @@ public class AddStarFilter extends HttpServlet {
         
         out.println("</html>");
         out.close();
-		
 	}
 
 	/**

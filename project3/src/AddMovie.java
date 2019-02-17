@@ -2,10 +2,8 @@
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.Statement;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -14,16 +12,16 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * Servlet implementation class AddStarFilter
+ * Servlet implementation class AddMovie
  */
-@WebServlet("/AddStarFilter")
-public class AddStarFilter extends HttpServlet {
+@WebServlet("/AddMovie")
+public class AddMovie extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public AddStarFilter() {
+    public AddMovie() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -34,6 +32,7 @@ public class AddStarFilter extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		String email = (String)request.getSession().getAttribute("employee_email");
+		String msg = request.getParameter("msg");
 		
 		if (email == null)
 		    response.sendRedirect("/project1/_dashboard?errormsg=You are not logged in");
@@ -54,10 +53,11 @@ public class AddStarFilter extends HttpServlet {
         out.println("<title>Fabflix</title>");
         out.println("<style>");
         out.println("button {cursor: pointer; border: 1px solid black; border-radius: 4px; }");
-        out.println("tr:hover {background-color: #f2f2f2;}");
-        out.println("table {border-collapse: collapse; width: 35%; }");
-        out.println("table, td, tr {border: 2px solid;  padding: 11px; text-align: left; font-family: Arial}");
-        out.println("th {border: 2px solid;  padding: 11px; text-align: center; font-family: Arial; background-color: #85adad;}");
+        //out.println("tr:hover {background-color: #f2f2f2;}");
+        //out.println("table {border-collapse: collapse; width: 35%; }");
+        //out.println("table, td, tr {border: 2px solid;  padding: 11px; text-align: left; font-family: Arial}");
+        //out.println("th {border: 2px solid;  padding: 11px; text-align: center; font-family: Arial; background-color: #85adad;}");
+        out.println("label {display: inline-block; width: 140px; text-align: right;}");
         out.println("</style>");
         out.println("</head>");        
         
@@ -65,27 +65,47 @@ public class AddStarFilter extends HttpServlet {
     		Class.forName("com.mysql.jdbc.Driver").newInstance();
     		// create database connection
     		Connection connection = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
+    		// declare statement
     		
-    	    CallableStatement callStmt = connection.prepareCall("{call add_star(?, ?)}");
-
-    		String name = request.getParameter("name");
-    		String birthString = request.getParameter("birthyear");
-    		Integer birth_year = null;
+            //set up body
+    		out.println("<body>");
+    		out.println("<button onclick=\"window.location.href = \'/project1/_dashboard\';\"><h4>Dashboard</h4></button>");
+    		out.println("<center>"); 
     		
-    		if (birthString != "")
-    		{
-    			birth_year = Integer.parseInt(birthString);
-        	    callStmt.setInt(2, birth_year);
-    		}
+    		if (msg != null && msg !="")
+    			out.println(msg);
     		
-    		else { callStmt.setNull(2, java.sql.Types.INTEGER); }
-
-    	    callStmt.setString(1, name);
-    	    callStmt.execute();
-    	    
-		    response.sendRedirect("/project1/AddStar?msg=SUCCESS: Star added!");
+    		out.println("<h1>Add a Movie to Database</h1>");
+    		out.println("<br>");
     		
-		    callStmt.close();
+    		out.println("<form id=\"add_movie_form\" method=\"get\" action=\"/project1/AddMovieFilter\">");
+    		out.println("<label><b>Movie Title</b></label>");
+    	    out.println("<input type=\"text\" placeholder=\"Enter title\" name=\"title\" required>");
+    	    out.println("<br>");
+    	    out.println("<br>");
+    	    out.println("<label><b>Year Released</b></label>");
+    	    out.println("<input type=\"number\" min=\"0001\" max=\"9999\" placeholder=\"YYYY\" name=\"year\" required>");
+    	    out.println("<br>");
+    	    out.println("<br>");
+    	    out.println("<label><b>Director</b></label>");
+    	    out.println("<input type=\"text\" placeholder=\"Enter director's name\" name=\"director\" required>");
+    	    out.println("<br>");
+    	    out.println("<br>");
+    	    out.println("<label><b>Star</b></label>");
+    	    out.println("<input type=\"text\" placeholder=\"Enter star's name\" name=\"star\" required>");
+    	    out.println("<br>");
+    	    out.println("<br>");
+    	    out.println("<label><b>Genre</b></label>");
+    	    out.println("<input type=\"text\" placeholder=\"Enter genre\" name=\"genre\" required>");
+    	    out.println("<br>");
+    	    out.println("<br>");
+    	    out.println("<br>");
+    	    out.println("<input type=\"submit\" value=\"Submit\">");
+    	    out.println("</form>");
+    		 
+    		out.println("</center>");
+    		out.println("</body>");
+    		
     		connection.close();
     			
     		
@@ -100,7 +120,6 @@ public class AddStarFilter extends HttpServlet {
         
         out.println("</html>");
         out.close();
-		
 	}
 
 	/**
