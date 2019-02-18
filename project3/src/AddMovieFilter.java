@@ -53,10 +53,6 @@ public class AddMovieFilter extends HttpServlet {
         out.println("<title>Fabflix</title>");
         out.println("<style>");
         out.println("button {cursor: pointer; border: 1px solid black; border-radius: 4px; }");
-        out.println("tr:hover {background-color: #f2f2f2;}");
-        out.println("table {border-collapse: collapse; width: 35%; }");
-        out.println("table, td, tr {border: 2px solid;  padding: 11px; text-align: left; font-family: Arial}");
-        out.println("th {border: 2px solid;  padding: 11px; text-align: center; font-family: Arial; background-color: #85adad;}");
         out.println("</style>");
         out.println("</head>");        
         
@@ -84,9 +80,9 @@ public class AddMovieFilter extends HttpServlet {
 			
 			String added = callStmt.getString(6);
 			if (added.equals("1"))
-				response.sendRedirect("/project1/AddMovie?msg=SUCCESS: Movie added!");
+				response.sendRedirect("/project1/AddMovie?msg=SUCCESS: Movie added!\nStar linked to movie!\nGenre linked to movie!");
 			else
-				response.sendRedirect("/project1/AddMovie?msg=Movie already exists");
+				response.sendRedirect("/project1/AddMovie?msg=Movie already exists, no changes made");
     		
     	    callStmt.close();
     		connection.close();

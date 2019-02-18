@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.text.DateFormat;
@@ -54,8 +55,8 @@ public class PaymentFilterServlet extends HttpServlet {
         PrintWriter out = response.getWriter();
    	
 		 // change this to your own mysql username and password
-    	String loginUser = "root";
-	    String loginPasswd = "espeon123";
+    	String loginUser = "mytestuser";
+	    String loginPasswd = "mypassword";
         String loginUrl = "jdbc:mysql://localhost:3306/moviedb";
 		
         // set response mime type
@@ -65,14 +66,17 @@ public class PaymentFilterServlet extends HttpServlet {
     		Class.forName("com.mysql.jdbc.Driver").newInstance();
     		// create database connection
     		Connection connection = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
-    		// declare statement
-    		Statement statement = connection.createStatement();	
+    			
     		
-    		// prepare queries, custom made for this problem
-    		String query =  "SELECT * FROM creditcards WHERE firstName =\"" + first_name + "\" AND lastName=\"" + last_name + "\"\r\n" +
-    						"AND id=\"" + card_num + "\" AND expiration=\"" + exp_date + "\"\r\n";
-		
-    		ResultSet result = statement.executeQuery(query);
+    		String query = "SELECT * FROM creditcards WHERE firstName = ? AND lastName = ? AND id = ? AND expiration = ?";
+    		PreparedStatement stmt = connection.prepareStatement(query);
+    		stmt.setString(1, first_name);
+    		stmt.setString(2, last_name);
+    		stmt.setString(3, card_num);
+    		stmt.setString(4, exp_date);
+    		
+    		ResultSet result = stmt.executeQuery();
+			
     		if (!result.next())
     			response.sendRedirect("/project1/PaymentServlet?errormsg=Your information was incorrect");
     		
@@ -80,7 +84,7 @@ public class PaymentFilterServlet extends HttpServlet {
     			response.sendRedirect("/project1/ConfirmationServlet");	
   
     		result.close();
-    		statement.close();
+    		stmt.close();
     		connection.close();
         		
 		

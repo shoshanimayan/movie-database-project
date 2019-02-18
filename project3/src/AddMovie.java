@@ -53,10 +53,6 @@ public class AddMovie extends HttpServlet {
         out.println("<title>Fabflix</title>");
         out.println("<style>");
         out.println("button {cursor: pointer; border: 1px solid black; border-radius: 4px; }");
-        //out.println("tr:hover {background-color: #f2f2f2;}");
-        //out.println("table {border-collapse: collapse; width: 35%; }");
-        //out.println("table, td, tr {border: 2px solid;  padding: 11px; text-align: left; font-family: Arial}");
-        //out.println("th {border: 2px solid;  padding: 11px; text-align: center; font-family: Arial; background-color: #85adad;}");
         out.println("label {display: inline-block; width: 140px; text-align: right;}");
         out.println("</style>");
         out.println("</head>");        

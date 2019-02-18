@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.text.DateFormat;
@@ -17,6 +18,8 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.jasypt.util.password.StrongPasswordEncryptor;
 
 /**
  * Servlet implementation class ConfirmationServlet
@@ -49,8 +52,8 @@ public class ConfirmationServlet extends HttpServlet {
         
         
 		// change this to your own mysql username and password
-    	String loginUser = "root";
-	    String loginPasswd = "espeon123";
+    	String loginUser = "mytestuser";
+	    String loginPasswd = "mypassword";
         String loginUrl = "jdbc:mysql://localhost:3306/moviedb";
 		
         // set response mime type
@@ -75,11 +78,14 @@ public class ConfirmationServlet extends HttpServlet {
     		Class.forName("com.mysql.jdbc.Driver").newInstance();
     		// create database connection
     		Connection connection = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
-    		// declare statement
-    		Statement statement = connection.createStatement();
-        
-    		String query = "SELECT id FROM customers WHERE email =\"" + email + "\" and password =\"" + password + "\"";
-    		ResultSet result = statement.executeQuery(query);
+         		
+    		
+    		String query = "SELECT id FROM customers WHERE email = ?";
+    		PreparedStatement stmt = connection.prepareStatement(query);
+    		stmt.setString(1, email);
+    		
+    		ResultSet result = stmt.executeQuery();
+    		
     		int customer_id = 0;
 		    if (result.next()) {
 		    	customer_id = Integer.parseInt(result.getString("id"));
@@ -92,10 +98,16 @@ public class ConfirmationServlet extends HttpServlet {
     		for (Map.Entry<String, Integer> item : cart.entrySet()) {
     		    String movie_id = item.getKey();
     		    Integer quantity = item.getValue();
-
-	    		String update = "INSERT INTO sales " +
-	    						"VALUES (NULL, " + customer_id + ", \"" + movie_id + "\", \"" + date + "\", " + quantity + ")";
-	    	    statement.executeUpdate(update);
+		   
+    		    String update = "INSERT INTO sales VALUES (NULL, ?, ?, ?, ?)";
+    		    stmt = connection.prepareStatement(update);
+    		    
+    		    stmt.setInt(1, customer_id);
+    		    stmt.setString(2, movie_id);
+    		    stmt.setString(3, date);
+    		    stmt.setInt(4, quantity);
+    		    
+    		    stmt.executeUpdate();
     		}
     	
     		out.println("<body>");
@@ -113,21 +125,28 @@ public class ConfirmationServlet extends HttpServlet {
     		out.println("</tr>");
     		
     		for (Map.Entry<String, Integer> item : cart.entrySet()) {
-        		Statement statement2 = connection.createStatement();
-
+    			
     		    String id = item.getKey();
     		    Integer quantity = item.getValue();
     		    
-    		    query = "SELECT title FROM movies WHERE id =\"" + id + "\"";
-    		    result = statement.executeQuery(query);
+    		    query = "SELECT title FROM movies WHERE id = ?";
+    		    stmt = connection.prepareStatement(query);
+    		    stmt.setString(1, id);
+    		    result = stmt.executeQuery();
     		    
     		    while (result.next())
     		    {
     		    	String title = result.getString("title");
     		    	
-    		    	query = "SELECT id FROM sales WHERE customerId=" + customer_id + " AND movieId=\"" + id + "\" AND saleDate=\"" + date + "\"" +
-    		    			" AND count=" + quantity + " ORDER BY id DESC LIMIT 1";
-    		    	ResultSet result2 = statement2.executeQuery(query);
+    		    	query = "SELECT id FROM sales WHERE customerId = ? AND movieId = ? AND saleDate = ? AND count = ? ORDER BY id DESC LIMIT 1";
+    		    	PreparedStatement stmt2 = connection.prepareStatement(query);
+    		    	stmt2.setInt(1, customer_id);
+    		    	stmt2.setString(2, id);
+    		    	stmt2.setString(3, date);
+    		    	stmt2.setInt(4, quantity);
+    		    	
+    		    	ResultSet result2 = stmt2.executeQuery();
+    		    	
     		    	int sale_id = 0;
     		    	if (result2.next()) {
     		    		sale_id = Integer.parseInt(result2.getString("id"));
@@ -148,7 +167,7 @@ public class ConfirmationServlet extends HttpServlet {
     		
     		request.getSession().setAttribute("cart", cart);
     		
-    		statement.close();
+    		stmt.close();
     		connection.close();
         		
         } catch (Exception e) {
