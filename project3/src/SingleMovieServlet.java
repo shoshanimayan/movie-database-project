@@ -91,7 +91,7 @@ public class SingleMovieServlet extends HttpServlet {
     		
     		// prepare query, custom made for this problem
     		String query =  "SELECT * FROM movies as m\r\n" + 
-    				"		JOIN  ratings as r ON r.movieId = m.id\r\n" + 
+    				"		Left JOIN  ratings as r ON r.movieId = m.id\r\n" + 
     				"       join ( \r\n" + 
     				"       select movieId, title, group_concat(name) as genres from genres_in_movies join genres on genres_in_movies.genreId = genres.id \r\n" + 
     				"       join movies on genres_in_movies.movieId = movies.id Group by movies.id\r\n" + 
@@ -101,7 +101,7 @@ public class SingleMovieServlet extends HttpServlet {
     				"       select movieId, title, group_concat(name) as stars, group_concat(starId) as starID from stars_in_movies join stars on stars_in_movies.starId = stars.id \r\n" + 
     				"       join movies on stars_in_movies.movieId = movies.id Group by movies.id\r\n" + 
     				"       ) as sm\r\n" + 
-    				"       ON sm.moviesId = m.id\r\n" + 
+    				"       ON sm.movieId = m.id\r\n" + 
     				"       where m.id = ? ";
     		
             request.getSession().setAttribute("cart", cart);
