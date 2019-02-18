@@ -63,8 +63,7 @@ public class LoginServlet extends HttpServlet {
     		Class.forName("com.mysql.jdbc.Driver").newInstance();
     		// create database connection
     		Connection connection = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
-    		// declare statement
-    		Statement statement = connection.createStatement();
+
     		
     		//set up body
     		out.println("<body>");
@@ -76,10 +75,10 @@ public class LoginServlet extends HttpServlet {
     		out.println("<h1>Login to Fablix</h1>");
     		out.println("<form id=\"login_form\" method=\"post\" action=\"/project1/LoginFilterServlet?filterTo=/project1/MainPage\">");
     	    out.println("<label><b>Email</b></label>");
-    	    out.println("<input type=\"text\" placeholder=\"Enter Email\" name=\"email\">");
+    	    out.println("<input type=\"text\" placeholder=\"Enter Email\" name=\"email\" required>");
     	    out.println("<br>");
     	    out.println("<label><b>Password</b></label>");
-    	    out.println("<input type=\"password\" placeholder=\"Enter Password\" name=\"password\">");
+    	    out.println("<input type=\"password\" placeholder=\"Enter Password\" name=\"password\" required>");
     	    out.println("<br>");
     	    out.println("<br>");
     	    out.println("<div class=\"g-recaptcha\" data-sitekey=\"6Le2P5AUAAAAANWO0tg7PIKQ6ms8WQd6IgYxProo\"></div>");
@@ -90,7 +89,6 @@ public class LoginServlet extends HttpServlet {
     		out.println("</center>");
     		out.println("</body>");
     		
-    		statement.close();
     		connection.close();
         		
         } catch (Exception e) {

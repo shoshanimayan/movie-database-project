@@ -36,7 +36,7 @@ public class _dashboard extends HttpServlet {
 		String errormsg = request.getParameter("errormsg");
 		String email = (String)request.getSession().getAttribute("employee_email");
 		
-		if (email == null)
+		if (email == null || errormsg != null)
 			logged_in = false;
 		
 		else
@@ -70,8 +70,6 @@ public class _dashboard extends HttpServlet {
     		Class.forName("com.mysql.jdbc.Driver").newInstance();
     		// create database connection
     		Connection connection = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
-    		// declare statement
-    		Statement statement = connection.createStatement();
     		
     		//set up body
     		out.println("<body>");
@@ -87,18 +85,17 @@ public class _dashboard extends HttpServlet {
 	    		out.println("<br>");
 	    		out.println("<form id=\"employee_login_form\" method=\"post\" action=\"/project1/EmployeeLoginFilter\">");
 	    	    out.println("<label><b>Email</b></label>");
-	    	    out.println("<input type=\"text\" placeholder=\"Enter Email\" name=\"email\">");
+	    	    out.println("<input type=\"text\" placeholder=\"Enter Email\" name=\"email\" required>");
 	    	    out.println("<br>");
 	    	    out.println("<label><b>Password</b></label>");
-	    	    out.println("<input type=\"password\" placeholder=\"Enter Password\" name=\"password\">");
+	    	    out.println("<input type=\"password\" placeholder=\"Enter Password\" name=\"password\" required>");
 	    	    out.println("<br>");
 	    	    out.println("<br>");
 	    	    out.println("<br>");
 	    	    out.println("<div class=\"g-recaptcha\" data-sitekey=\"6Le2P5AUAAAAANWO0tg7PIKQ6ms8WQd6IgYxProo\"></div>");
 	    	    out.println("<br>");
 	    	    out.println("<input type=\"submit\"  value=\"Login\">");
-	    	    out.println("</form>");
-	    	   
+	    	    out.println("</form>");   	   
     		}
     		
     		else
@@ -122,15 +119,12 @@ public class _dashboard extends HttpServlet {
 	    		out.println("<td><button onclick=\"window.location.href = \'/project1/ShowMetadata\';\"><h4>Show Metadata</h4></button></td>");
 	    		out.println("</tr>");
 	    		
-	    		out.println("</table>");
-	    		
-	    		
+	    		out.println("</table>");   		
     		}
     		
     		out.println("</center>");
     		out.println("</body>");
     		
-    		statement.close();
     		connection.close();
         		
         } catch (Exception e) {

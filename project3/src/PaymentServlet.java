@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.Statement;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -47,8 +46,8 @@ public class PaymentServlet extends HttpServlet {
         String errormsg = request.getParameter("errormsg");
         
 		// change this to your own mysql username and password
-    	String loginUser = "root";
-	    String loginPasswd = "espeon123";
+    	String loginUser = "mytestuser";
+	    String loginPasswd = "mypassword";
         String loginUrl = "jdbc:mysql://localhost:3306/moviedb";
 		
         // set response mime type
@@ -72,10 +71,7 @@ public class PaymentServlet extends HttpServlet {
         try {
     		Class.forName("com.mysql.jdbc.Driver").newInstance();
     		// create database connection
-    		Connection connection = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
-    		// declare statement
-    		Statement statement = connection.createStatement();
-    		
+    		Connection connection = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);	
     		
     		//set up body
     		out.println("<body>");
@@ -109,7 +105,6 @@ public class PaymentServlet extends HttpServlet {
     		out.println("</center>");
     		out.println("</body>");
     		
-    		statement.close();
     		connection.close();
         		
         } catch (Exception e) {

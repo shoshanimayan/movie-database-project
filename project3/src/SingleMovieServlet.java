@@ -86,8 +86,7 @@ public class SingleMovieServlet extends HttpServlet {
     		Class.forName("com.mysql.jdbc.Driver").newInstance();
     		// create database connection
     		Connection connection = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
-    		// declare statement
-    		Statement statement = connection.createStatement();
+
     		
     		// prepare query, custom made for this problem
     		String query =  "SELECT * FROM movies as m\r\n" + 
@@ -106,11 +105,10 @@ public class SingleMovieServlet extends HttpServlet {
     		
             request.getSession().setAttribute("cart", cart);
             
-    		PreparedStatement qry = connection.prepareStatement(query);
-    		qry.setString(1, movie_to_search);
+    		PreparedStatement stmt = connection.prepareStatement(query);
+    		stmt.setString(1, movie_to_search);
             
-    		// execute query, taken from example
-    		ResultSet resultSet = qry.executeQuery();
+    		ResultSet resultSet = stmt.executeQuery();
     		
     		//set up body
     		out.println("<body>");        
@@ -153,7 +151,7 @@ public class SingleMovieServlet extends HttpServlet {
     		out.println("</body>");
 
     		resultSet.close();
-    		statement.close();
+    		stmt.close();
     		connection.close();
         		
 		
