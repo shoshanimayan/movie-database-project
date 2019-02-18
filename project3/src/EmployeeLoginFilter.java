@@ -69,24 +69,21 @@ public class EmployeeLoginFilter extends HttpServlet {
     		Class.forName("com.mysql.jdbc.Driver").newInstance();
     		// create database connection
     		Connection connection = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
-    		// declare statement
-    		Statement statement = connection.createStatement();
+
+    		String query = "SELECT * from employees where email = ? ";
+    		PreparedStatement stmt = connection.prepareStatement(query);
+    		stmt.setString(1, email);
     		
-    		// prepare queries, custom made for this problem
-    		
-    		PreparedStatement query = connection.prepareStatement("SELECT * from employees where email = ? ");
-    		query.setString(1, email);
-    		
-    		ResultSet result = query.executeQuery();
+    		ResultSet result = stmt.executeQuery();
     			
     		if (!result.next())
     			response.sendRedirect("/project1/_dashboard?errormsg=Email does not exist");
     				
-    		result = query.executeQuery();
+    		result = stmt.executeQuery();
     		boolean pass = false;
-    		while(result.next()) {
-    			String encrypt = result.getString("password");
-    			pass = new StrongPasswordEncryptor().checkPassword(password, encrypt);
+    		if (result.next()) {
+    			String encrypted = result.getString("password");
+    			pass = new StrongPasswordEncryptor().checkPassword(password, encrypted);
     		}
     		
     		if(!pass) 
@@ -99,7 +96,7 @@ public class EmployeeLoginFilter extends HttpServlet {
     		}
     		
     		result.close();
-    		statement.close();
+    		stmt.close();
     		connection.close();
         		
 		

@@ -71,7 +71,7 @@ public class ShowMetadata extends HttpServlet {
     		Class.forName("com.mysql.jdbc.Driver").newInstance();
     		// create database connection
     		Connection connection = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
-    		// declare statement
+
     		
     		DatabaseMetaData meta = connection.getMetaData();
             ResultSet result = meta.getTables(null, null,"%", null);        

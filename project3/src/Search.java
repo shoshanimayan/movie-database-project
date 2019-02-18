@@ -35,8 +35,8 @@ public class Search extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 	    
 		String email = (String)request.getSession().getAttribute("email");
-	        if (email == null)
-			    response.sendRedirect("/project1/LoginServlet?errormsg=You are not logged in");	
+		if (email == null)
+			response.sendRedirect("/project1/LoginServlet?errormsg=You are not logged in");	
 		
 		request.getSession().removeAttribute("title");
 		request.getSession().removeAttribute("star");
@@ -76,8 +76,7 @@ public class Search extends HttpServlet {
     		Class.forName("com.mysql.jdbc.Driver").newInstance();
     		// create database connection
     		Connection connection = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
-    		// declare statement
-    		Statement statement = connection.createStatement();
+
     		
     		//set up body
     		out.println("<body>");
@@ -96,7 +95,6 @@ public class Search extends HttpServlet {
     		out.println("</center>");
     		out.println("</body>");
     		
-    		statement.close();
     		connection.close();
 		
         } catch (Exception e) {

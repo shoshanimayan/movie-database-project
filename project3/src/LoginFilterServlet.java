@@ -58,7 +58,7 @@ public class LoginFilterServlet extends HttpServlet {
         try {
             RecaptchaHelper.verify(gRecaptchaResponse);
         } catch (Exception e) {
-			response.sendRedirect("/project1/LoginServlet?errormsg=need recaptcha");
+			response.sendRedirect("/project1/LoginServlet?errormsg=Need reCAPTCHA");
 
         }
    	
@@ -74,23 +74,21 @@ public class LoginFilterServlet extends HttpServlet {
     		Class.forName("com.mysql.jdbc.Driver").newInstance();
     		// create database connection
     		Connection connection = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
-    		// declare statement
-    		Statement statement = connection.createStatement();
     		
-    		// prepare queries, custom made for this problem
-    		PreparedStatement query1 = connection.prepareStatement("SELECT * from customers where email = ? ");
-    		query1.setString(1, email);	
+    		String query = "SELECT * from customers where email = ? ";
+    		PreparedStatement stmt = connection.prepareStatement(query);
+    		stmt.setString(1, email);	
     		
-    		ResultSet result = query1.executeQuery();
+    		ResultSet result = stmt.executeQuery();
     			
     		if (!result.next())
     			response.sendRedirect("/project1/LoginServlet?errormsg=Email does not exist");
     				
-    		result = query1.executeQuery();
+    		result = stmt.executeQuery();
     		boolean pass = false;
-    		while(result.next()) {
-    			String encrypt = result.getString("password");
-    			pass =  new StrongPasswordEncryptor().checkPassword(password, encrypt);
+    		if (result.next()) {
+    			String encrypted = result.getString("password");
+    			pass =  new StrongPasswordEncryptor().checkPassword(password, encrypted);
     		}
     		
     		if(!pass) {
@@ -107,7 +105,7 @@ public class LoginFilterServlet extends HttpServlet {
     		}
     		
     		result.close();
-    		statement.close();
+    		stmt.close();
     		connection.close();
         		
 		

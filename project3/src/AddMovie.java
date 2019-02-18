@@ -61,7 +61,6 @@ public class AddMovie extends HttpServlet {
     		Class.forName("com.mysql.jdbc.Driver").newInstance();
     		// create database connection
     		Connection connection = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
-    		// declare statement
     		
             //set up body
     		out.println("<body>");

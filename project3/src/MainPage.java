@@ -70,8 +70,7 @@ public class MainPage extends HttpServlet {
     		Class.forName("com.mysql.jdbc.Driver").newInstance();
     		// create database connection
     		Connection connection = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
-    		// declare statement
-    		Statement statement = connection.createStatement();
+
     		
     		//set up body
     		out.println("<body>");
@@ -86,7 +85,6 @@ public class MainPage extends HttpServlet {
     		out.println("</center>");
     		out.println("</body>");
     		
-    		statement.close();
     		connection.close();
         		
 		

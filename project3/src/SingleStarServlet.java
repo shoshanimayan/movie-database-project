@@ -67,10 +67,8 @@ protected void doGet(HttpServletRequest request, HttpServletResponse response) t
     	Class.forName("com.mysql.jdbc.Driver").newInstance();
 		// create database connection
 		Connection connection = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
-		// declare statement
-		Statement statement = connection.createStatement();
+
 		
-		// prepare query, custom made for this problem
 		String query =  "SELECT * From stars as s\r\n" + 
 				"Join(\r\n" + 
 				"select name, group_concat(title) as mlist, group_concat(movieId) as movieID from stars_in_movies join stars on stars_in_movies.starId = stars.id  \r\n" + 
@@ -78,10 +76,9 @@ protected void doGet(HttpServletRequest request, HttpServletResponse response) t
 				") sm on s.name=sm.name\r\n" + 
 				"where s.id = ? ";
 		
-		// execute query, taken from example
-		PreparedStatement qry = connection.prepareStatement(query);
-		qry.setString(1, star_to_search);
-		ResultSet resultSet = qry.executeQuery();
+		PreparedStatement stmt = connection.prepareStatement(query);
+		stmt.setString(1, star_to_search);
+		ResultSet resultSet = stmt.executeQuery();
 		
 		//set up body
 		out.println("<body>");
@@ -116,7 +113,7 @@ protected void doGet(HttpServletRequest request, HttpServletResponse response) t
 		out.println("</center>");
 		out.println("</body>");
 		resultSet.close();
-		statement.close();
+		stmt.close();
 		connection.close();
     		
 	
