@@ -161,47 +161,78 @@ public class MovieServlet extends HttpServlet {
     		Connection connection = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
     		// declare statement
     		
-    		///set data to session
-            request.getSession().setAttribute("title", titleSearch);
-            request.getSession().setAttribute("star", starSearch);
-            request.getSession().setAttribute("director", directorSearch);
-            request.getSession().setAttribute("year", yearSearch);
-            request.getSession().setAttribute("bGenre", genreBrowse);
-            request.getSession().setAttribute("bTitle", titleBrowse);
-            request.getSession().setAttribute("direction", direction);
-            request.getSession().setAttribute("sort", sortBy);
-            request.getSession().setAttribute("pCount", pCount);
-            request.getSession().setAttribute("currentPage", currentPage);
-            request.getSession().setAttribute("cart", cart);
     		
     		out.println("");
     		PreparedStatement qry = null;
     		String qry2="";
     		if(genreBrowse!=null) {
-qry2+="SELECT * FROM movies as m JOIN  ratings as r ON r.movieId = m.id join ( select movieId, title, group_concat(name) as genres from genres_in_movies join genres on genres_in_movies.genreId = genres.id join movies on genres_in_movies.movieId = movies.id Group by movies.id HAVING FIND_IN_SET( ? , genres) > 0 ) as gm ON gm.movieId = m.id join ( select movieId, title, group_concat(name) as stars, group_concat(starId) as starID from stars_in_movies join stars on stars_in_movies.starId = stars.id join movies on stars_in_movies.movieId = movies.id Group by movies.id) as sm ON sm.movieId = m.id";
-qry2+=	" ORDER BY ? ? limit ? , ? ;";
+qry2+="SELECT * FROM movies as m JOIN ratings as r ON r.movieId = m.id join ( select movieId, title, group_concat(name) as genres from genres_in_movies join genres on genres_in_movies.genreId = genres.id join movies on genres_in_movies.movieId = movies.id Group by movies.id HAVING FIND_IN_SET( ? , genres) > 0 ) as gm ON gm.movieId = m.id join ( select movieId, title, group_concat(name) as stars, group_concat(starId) as starID from stars_in_movies join stars on stars_in_movies.starId = stars.id join movies on stars_in_movies.movieId = movies.id Group by movies.id) as sm ON sm.movieId = m.id";
+
+
+if(currentPage<0) {currentPage=0;}
+	int Qsize = 0;
+	 qry = connection.prepareStatement(qry2);
+	qry.setString(1, genreBrowse);
+	ResultSet SizeQ = qry.executeQuery() ;
+	if ( SizeQ!= null) 
+	{
+	  SizeQ.beforeFirst();
+	  SizeQ.last();
+	  Qsize = SizeQ.getRow();
+	}
+	if(currentPage>Qsize) {currentPage-=pCount;}
+
+
+if(sortBy.equals("r.rating")&&direction.equals("DESC"))
+	qry2+=	" ORDER BY r.rating is null, r.rating DESC limit ? , ? ;";
+if(sortBy.equals("r.rating")&&direction.equals("ASC"))
+	qry2+=	" ORDER BY r.rating is null, r.rating ASC limit ? , ? ;";
+if(sortBy.equals("m.title")&&direction.equals("DESC"))
+	qry2+=	" ORDER BY m.title is null, m.title DESC limit ? , ? ;";
+if(sortBy.equals("m.title")&&direction.equals("ASC"))
+	qry2+=	" ORDER BY m.title is null,  m.title ASC limit ? , ? ;";
+
     		 qry = connection.prepareStatement(qry2);
     		qry.setString(1, genreBrowse);
-    		qry.setString(2, sortBy);
-    		qry.setString(3, direction);
-    		qry.setInt(4, currentPage);
-    		qry.setInt(5, pCount);
+    		qry.setInt(2, currentPage);
+    		qry.setInt(3, pCount);
 
     		}
     		else if(titleBrowse!=null) {
         		 qry2 = "SELECT * FROM movies as m Left JOIN  ratings as r ON r.movieId = m.id join (select movieId, title, group_concat(name) as genres from genres_in_movies join genres on genres_in_movies.genreId = genres.id join movies on genres_in_movies.movieId = movies.id Group by movies.id ) as gm ON gm.movieId = m.id join ( select movieId, title, group_concat(name) as stars, group_concat(starId) as starID from stars_in_movies join stars on stars_in_movies.starId = stars.id join movies on stars_in_movies.movieId = movies.id Group by movies.id ) as sm ON sm.movieId = m.id WHERE SUBSTRING(m.title, 1, 1) = ? ";
-        		qry2+=	" ORDER BY ? ? limit ? , ? ;";
-        		qry = connection.prepareStatement(qry2);
+        		 
+        		 if(currentPage<0) {currentPage=0;}
+     			int Qsize = 0;
+     			 qry = connection.prepareStatement(qry2);
+         		qry.setString(1, titleBrowse);
+         		ResultSet SizeQ = qry.executeQuery() ;
+         		if ( SizeQ!= null) 
+         		{
+         		  SizeQ.beforeFirst();
+         		  SizeQ.last();
+         		  Qsize = SizeQ.getRow();
+         		}
+         		if(currentPage>Qsize) {currentPage-=pCount;}
+        		 
+        		 
+        		 if(sortBy.equals("r.rating")&&direction.equals("DESC"))
+        				qry2+=	" ORDER BY r.rating is null, r.rating DESC limit ? , ? ;";
+        			if(sortBy.equals("r.rating")&&direction.equals("ASC"))
+        				qry2+=	" ORDER BY r.rating is null, r.rating ASC limit ? , ? ;";
+        			if(sortBy.equals("m.title")&&direction.equals("DESC"))
+        				qry2+=	" ORDER BY m.title is null, m.title DESC limit ? , ? ;";
+        			if(sortBy.equals("m.title")&&direction.equals("ASC"))
+        				qry2+=	" ORDER BY m.title is null,  m.title ASC limit ? , ? ;";
+        		 qry = connection.prepareStatement(qry2);
+
         		qry.setString(1, titleBrowse);
-        		qry.setString(2, sortBy);
-        		qry.setString(3, direction);
-        		qry.setInt(4, currentPage);
-        		qry.setInt(5, pCount);
+        		qry.setInt(2, currentPage);
+        		qry.setInt(3, pCount);
         	}
     		else {
     			 qry2 = "SELECT * FROM movies as m Left JOIN  ratings as r ON r.movieId = m.id join (select movieId, title, group_concat(name) as genres from genres_in_movies join genres on genres_in_movies.genreId = genres.id join movies on genres_in_movies.movieId = movies.id Group by movies.id ) as gm ON gm.movieId = m.id join ( select movieId, title, group_concat(name) as stars, group_concat(starId) as starID from stars_in_movies join stars on stars_in_movies.starId = stars.id join movies on stars_in_movies.movieId = movies.id Group by movies.id ) as sm ON sm.movieId = m.id ";
     			String WHERE="WHERE ";
-    			if(titleSearch!=null) {WHERE+="m.title LIKE ? ;";}
+    			if(titleSearch!=null) {WHERE+="m.title LIKE ? ";}
     			
     			if ( directorSearch != null) {
    				 if(WHERE!="WHERE " ) {WHERE+="AND ";}
@@ -215,31 +246,61 @@ qry2+=	" ORDER BY ? ? limit ? , ? ;";
   				 if(WHERE!="WHERE ") {WHERE+="AND ";}
   				 WHERE += "m.year = ? ";
   			 }
+			if(!WHERE.equals("WHERE ")) {qry2+=WHERE;}
+
+   			int n=1;
+    		qry = connection.prepareStatement(qry2);
+    		if(titleSearch!=null) {qry.setString(n, "%"+titleSearch+"%");n++;}
+    		if(directorSearch!=null) {qry.setString(n, "%"+directorSearch+"%");n++;}
+    		if(starSearch!=null) {qry.setString(n, "%"+starSearch+"%");n++;}
+    		if(yearSearch!=null) {qry.setString(n, yearSearch);n++;}
+    		if(currentPage<0) {currentPage=0;}
+			int Qsize = 0;
+    		ResultSet SizeQ = qry.executeQuery() ;
+    		if ( SizeQ!= null) 
+    		{
+    		  SizeQ.beforeFirst();
+    		  SizeQ.last();
+    		  Qsize = SizeQ.getRow();
+    		}
+
+    		if(currentPage>Qsize) {currentPage-=pCount;}
+    		
    		
-    			if(!WHERE.equals("WHERE ")) {qry2+=WHERE;}
-    		String order="";	
-if(sortBy=="r.rating" &&direction=="DESC") {
-	order+="ORDER BY r.rating DESC";
-}
-    			int n=1;
+    			if(sortBy.equals("r.rating")&&direction.equals("DESC"))
+    				qry2+=	" ORDER BY r.rating is null, r.rating DESC limit ? , ? ;";
+    			if(sortBy.equals("r.rating")&&direction.equals("ASC"))
+    				qry2+=	" ORDER BY r.rating is null, r.rating ASC limit ? , ? ;";
+    			if(sortBy.equals("m.title")&&direction.equals("DESC"))
+    				qry2+=	" ORDER BY m.title is null, m.title DESC limit ? , ? ;";
+    			if(sortBy.equals("m.title")&&direction.equals("ASC"))
+    				qry2+=	" ORDER BY m.title is null,  m.title ASC limit ? , ? ;";
+    			n=1;
         		qry = connection.prepareStatement(qry2);
         		if(titleSearch!=null) {qry.setString(n, "%"+titleSearch+"%");n++;}
         		if(directorSearch!=null) {qry.setString(n, "%"+directorSearch+"%");n++;}
         		if(starSearch!=null) {qry.setString(n, "%"+starSearch+"%");n++;}
         		if(yearSearch!=null) {qry.setString(n, yearSearch);n++;}
 
-
-        		//out.println("strored: "+order);
-        		//qry.setString(n, order);
+        		qry.setInt(n, currentPage);
         		n++;
-        		//qry.setString(n, direction);
-        		n++;
-        		//qry.setInt(n, currentPage);
-        		//n++;
-        		//qry.setInt(n, pCount);
+        		qry.setInt(n, pCount);
     			
     		}
-    	//	qry=connection.prepareStatement("SELECT * FROM movies as m Left JOIN  ratings as r ON r.movieId = m.id join (select movieId, title, group_concat(name) as genres from genres_in_movies join genres on genres_in_movies.genreId = genres.id join movies on genres_in_movies.movieId = movies.id Group by movies.id ) as gm ON gm.movieId = m.id join ( select movieId, title, group_concat(name) as stars, group_concat(starId) as starID from stars_in_movies join stars on stars_in_movies.starId = stars.id join movies on stars_in_movies.movieId = movies.id Group by movies.id ) as sm ON sm.movieId = m.id");
+    		
+    		///set data to session
+            request.getSession().setAttribute("title", titleSearch);
+            request.getSession().setAttribute("star", starSearch);
+            request.getSession().setAttribute("director", directorSearch);
+            request.getSession().setAttribute("year", yearSearch);
+            request.getSession().setAttribute("bGenre", genreBrowse);
+            request.getSession().setAttribute("bTitle", titleBrowse);
+            request.getSession().setAttribute("direction", direction);
+            request.getSession().setAttribute("sort", sortBy);
+            request.getSession().setAttribute("pCount", pCount);
+            request.getSession().setAttribute("currentPage", currentPage);
+            request.getSession().setAttribute("cart", cart);
+    		
     		ResultSet resultSet = qry.executeQuery();
     		// execute query
     		//ResultSet resultSet = statement.executeQuery(query);
