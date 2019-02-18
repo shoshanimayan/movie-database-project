@@ -75,12 +75,16 @@ public class ActorParse extends DefaultHandler {
 	    public void endElement(String uri, String localName, String qName) throws SAXException {
 
 	    	if (qName.equalsIgnoreCase("actor")) {
-	    	//  System.out.println("close");   
+	    	//  System.out.println("close");  
+	    		if(!tempStar.Sname.equals("") ){
+		    	
 	            starList.put(tempStar.Sname,tempStar);
+	            }
 	    	}
 	    	if (qName.equalsIgnoreCase("stagename")) {
-		    	//  System.out.println("close");   
-		            tempStar.setSName(tempVal);;
+		    	//  if(tempVal==null) {System.out.println("problem");   }
+	    		
+		            tempStar.setSName(tempVal);
 		    	}
 	    	else if (qName.equalsIgnoreCase("familyname")) {
 	    		//tempStar.setName(tempVal);

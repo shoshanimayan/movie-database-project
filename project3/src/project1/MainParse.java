@@ -130,7 +130,7 @@ public class MainParse  extends DefaultHandler {
     		String SM;//actor in movie
     		
     		//maps to hold values 
-    		HashMap<String,String> Movies= new HashMap<String,String>();
+    		HashMap<String,movieI> Movies= new HashMap<String,movieI>();
     		HashMap<String,String> Stars= new HashMap<String,String>();
     		HashMap<String,Integer> Genres= new HashMap<String,Integer>();
     	;
@@ -142,7 +142,7 @@ public class MainParse  extends DefaultHandler {
 
 
     		
-    		MQ = "SELECT id, title from movies";
+    		MQ = "SELECT id, title, director, year from movies";
     		SQ = "SELECT id, name from stars";
     		GQ = "SELECT id, name from genres";
     		GM = "SELECT * from genres_in_movies";
@@ -153,7 +153,11 @@ public class MainParse  extends DefaultHandler {
     		ResultSet resultSet = qry.executeQuery();
     		
     		while (resultSet.next()) {
-    			Movies.put(resultSet.getString("title"),resultSet.getString("id") );
+    			movieI temp = new movieI();
+    			temp.setDId(resultSet.getString("id"));
+    			//temp.setDirector(resultSet.getString("director"));
+    			temp.setYear(Integer.parseInt(resultSet.getString("year")));
+    			Movies.put(resultSet.getString("title"),temp );
     		}
     		//System.out.println(Movies.size());
     		
@@ -218,9 +222,21 @@ public class MainParse  extends DefaultHandler {
     		
     		for(movieI i: m.values()) {
     			if(Movies.containsKey(i.Title)) {
-    				
-    				m.get(i.Id).setDId(Movies.get(i.Title));
-        			//System.out.println(i);
+    				if(i.year==Movies.get(i.Title).year )
+    					m.get(i.Id).setDId(Movies.get(i.Title).DId);
+    				else {
+    					String temp="";
+        				maxM+=1;
+        				for(int x=0;x<(7-Integer.toString(maxM).length());x++) {
+        					temp+="0";
+        				}
+        				temp+=Integer.toString(maxM);
+        				temp = "tt"+temp;
+        				m.get(i.Id).setDId(temp);
+        				//Movies.put(i.Title, m.get(i.Id));
+        				//System.out.println(temp);
+        				Fm.put(i.Id, m.get(i.Id));
+    				}
     			}	
     			else {
     				String temp="";
@@ -231,7 +247,7 @@ public class MainParse  extends DefaultHandler {
     				temp+=Integer.toString(maxM);
     				temp = "tt"+temp;
     				m.get(i.Id).setDId(temp);
-    				Movies.put(i.Title, temp);
+    				Movies.put(i.Title, m.get(i.Id));
     				//System.out.println(temp);
     				Fm.put(i.Id, m.get(i.Id));
     			}
@@ -389,7 +405,7 @@ public class MainParse  extends DefaultHandler {
     			qry.setString(2, vals[1]);
     			qry.addBatch();
     			if(x%batchSize==0||x==FG_M.size()) {
-    				System.out.println(i);
+    				//System.out.println(i);
     				qry.executeBatch();
     				connection.commit();
     			}
@@ -406,7 +422,7 @@ public class MainParse  extends DefaultHandler {
     				//try {
     				qry.executeBatch();
     				connection.commit();
-    				System.out.println(i);
+    			//	System.out.println(i);
     				//}
     				//catch(Exception e) {System.out.println(vals[1]);}
     				
