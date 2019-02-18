@@ -78,15 +78,19 @@ public class MainParse  extends DefaultHandler {
 	        		s.get(tempVal).addMov(tempCode);
 	        	} 
 	        	else {
+	        		if(!tempVal.equals("")) {
 	        		s.put(tempVal, new Star());
 	        		s.get(tempVal).setName(tempVal);
+	        		s.get(tempVal).setSName(tempVal);
 	        		s.get(tempVal).addMov(tempCode);
-
+	        		}
 	        	}
 	        }
 	    }
 
 	  public static void main(String[] args) {
+		  long startTime = System.currentTimeMillis();
+
 		  
 		  	HashMap<String,Star> s = new HashMap<String, Star>();
 	        HashMap<String, movieI> m = new HashMap<String, movieI>();
@@ -214,6 +218,7 @@ public class MainParse  extends DefaultHandler {
     		
     		for(movieI i: m.values()) {
     			if(Movies.containsKey(i.Title)) {
+    				
     				m.get(i.Id).setDId(Movies.get(i.Title));
         			//System.out.println(i);
     			}	
@@ -226,16 +231,19 @@ public class MainParse  extends DefaultHandler {
     				temp+=Integer.toString(maxM);
     				temp = "tt"+temp;
     				m.get(i.Id).setDId(temp);
+    				Movies.put(i.Title, temp);
     				//System.out.println(temp);
     				Fm.put(i.Id, m.get(i.Id));
     			}
     		}
-    		
-    		for(String i: s.keySet()) {
-    			if(Stars.containsKey(i)) {
-    				s.get(i).setID(Movies.get(i));
-    				//System.out.println("fine");
+        	//System.out.println(s.containsKey(""));
 
+    		for(Star i: s.values()) {
+    			if(Stars.containsKey(i.name)) {
+    				//System.out.println(i.birthYear);
+    				if(s.get(i.Sname)!=null)
+    					s.get(i.Sname).setID(Stars.get(i.name));
+    				else {  s.get(i.name).setID(Stars.get(i.name));}
     			}	
     			else {
     				String temp="";
@@ -246,8 +254,17 @@ public class MainParse  extends DefaultHandler {
     				temp+=Integer.toString(maxS);
     				temp = "nm"+temp;
     			//	System.out.println(temp);
-    				s.get(i).setID(temp);
-    				Fs.put(i, s.get(i));
+    				//System.out.println(i.Sname);
+    				if(i.Sname.equals("")==false) {
+    				//	System.out.println(i.Sname.equals(""));
+    				s.get(i.Sname).setID(temp);
+    				Stars.put(i.name,temp);
+    				Fs.put(i.name, s.get(i.Sname));
+    				}
+    				else {
+    					s.get(i.name).setID(temp);
+        				Stars.put(i.name,temp);
+        				Fs.put(i.name, s.get(i.name));}
     			}
     		}
     		Integer  max= Collections.max(Genres.values());
@@ -262,6 +279,7 @@ public class MainParse  extends DefaultHandler {
     				max+=1;
     				g.get(i).setId(max);
     				Fg.put(i, g.get(i));
+    				Genres.put(i, max);
     			}
     		}
     		
@@ -269,34 +287,47 @@ public class MainParse  extends DefaultHandler {
     		for(Genre i : g.values()) {
     			for(String movie: i.moviesIn) {
     				if(m.containsKey(movie)) {
+    					//System.out.println(i==null);
     					String temp = Integer.toString(i.id)+","+m.get(movie).DId;
     					if(!G_M.contains(temp)) {
     						FG_M.add(temp);
+    						G_M.add(temp);
     					}
-    					else {System.out.println(temp);}
+    					//System.out.println(i==null);
+    					//else {System.out.println(i.id);}
     				}
     			}
     		}
-    		
+    	
+    		//for(String i: s.keySet()) {
+    		//	if(s.get(i).ID==null) {System.out.println(i);}
+    		//}
     		for(Star i: s.values()) {
+
     			for(String movie: i.moviesIn) {
     				if(m.containsKey(movie)) {
-    					String temp = i.ID+","+m.get(movie).Id;
+    					//if(i.ID==null) {System.out.println(i.moviesIn.size());}
+    					String temp = i.ID+","+m.get(movie).DId;
     					if(!S_M.contains(temp)) {
     						FS_M.add(temp);
+    						S_M.add(temp);
     					}
-    					else {System.out.println(temp);}
+    					//else {System.out.println(i.ID.equals(""));}
     				}
 					//else {System.out.println(movie);}
 
     			}
     		}
-    		
+    		System.out.println(FG_M.size());
+    		System.out.println(FS_M.size());
+
     		//// begin inserting 
+    		 connection.setAutoCommit(false);
     		qry = connection.prepareStatement("insert into movies values (?,?,?,?)");
     		int x=0;
     		int batchSize=1000;
     		for(movieI i: Fm.values()) {
+    			x++;
     			qry.setString(1, i.DId);
     			if(i.Title!=null)
     				qry.setString(2, i.Title);
@@ -311,10 +342,79 @@ public class MainParse  extends DefaultHandler {
     			qry.addBatch();
     			if(x%batchSize==0||x==Fm.size()) {
     				qry.executeBatch();
+    				connection.commit();
+    			}
+    		}
+    		x=0;
+    		qry = connection.prepareStatement("insert into stars values (?,?,?)");
+    		for(Star i : Fs.values()) {
+    			x++;
+    			if(i.ID!=null) {
+    				qry.setString(1, i.ID);
+    			}
+    			else {System.out.println(i.name);}
+    			if(i.name!=null) {
+    				qry.setString(2, i.name);
+    			}else {qry.setString(2, "");}
+    			if(i.birthYear!=null) {
+    				qry.setInt(3, i.birthYear);
+    			}else {qry.setNull(3, java.sql.Types.INTEGER);}
+    			qry.addBatch();
+    			if(x%batchSize==0||x==Fs.size()) {
+    				qry.executeBatch();
+    				connection.commit();
+    			}
+    		
+    		}
+    		//genres
+    		x=0;
+    		qry = connection.prepareStatement("insert into genres values (?,?)");
+    		for(Genre i : Fg.values()) {
+    				qry.setInt(1, i.id);
+    			if(i.name!=null) {
+    				qry.setString(2, i.name);
+    			}else {qry.setString(2, "");}
+    			qry.addBatch();
+    			if(x%batchSize==0||x==Fg.size()) {
+    				qry.executeBatch();
+    				connection.commit();
+    			}
+    		}
+    		//genres in movies
+    		x=0;
+    		qry = connection.prepareStatement("insert into genres_in_movies values (?,?)");
+    		for( String i: FG_M) {
+    			String[] vals=i.split(",");
+    			qry.setInt(1,Integer.parseInt(vals[0]));
+    			qry.setString(2, vals[1]);
+    			qry.addBatch();
+    			if(x%batchSize==0||x==FG_M.size()) {
+    				System.out.println(i);
+    				qry.executeBatch();
+    				connection.commit();
     			}
     		}
     		
-
+    		x=0;
+    		qry = connection.prepareStatement("insert into stars_in_movies values (?,?)");
+    		for( String i: FS_M) {
+    			String[] vals=i.split(",");
+    			qry.setString(1,vals[0]);
+    			qry.setString(2, vals[1]);
+    			qry.addBatch();
+    			if(x%batchSize==0||x==FS_M.size()) {
+    				//try {
+    				qry.executeBatch();
+    				connection.commit();
+    				System.out.println(i);
+    				//}
+    				//catch(Exception e) {System.out.println(vals[1]);}
+    				
+    			}
+    		}
+    		
+    		qry.close();
+    		connection.setAutoCommit(true);
     		resultSet.close();
     		connection.close();
         		
@@ -324,9 +424,11 @@ public class MainParse  extends DefaultHandler {
         }
 
         
-		
+        Long endTime = System.currentTimeMillis();
+
 		System.out.println("done");
-		
+        System.out.println("took: "+(endTime - startTime) );
+
 		
 		
 	}
