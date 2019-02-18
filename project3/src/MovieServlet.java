@@ -178,8 +178,8 @@ public class MovieServlet extends HttpServlet {
     		PreparedStatement qry = null;
     		String qry2="";
     		if(genreBrowse!=null) {
-    		qry2 = "SELECT * FROM movies as m JOIN  ratings as r ON r.movieId = m.id join ( select title, group_concat(name) as genres from genres_in_movies join genres on genres_in_movies.genreId = genres.id join movies on genres_in_movies.movieId = movies.id Group by title HAVING FIND_IN_SET( ? , genres) > 0 ) as gm ON gm.title = m.title join ( select title, group_concat(name) as stars, group_concat(starId) as starID from stars_in_movies join stars on stars_in_movies.starId = stars.id join movies on stars_in_movies.movieId = movies.id Group by title) as sm ON sm.title = m.title";
-    		qry2+=	" ORDER BY ? ? limit ? , ? ;";
+qry2+="SELECT * FROM movies as m JOIN  ratings as r ON r.movieId = m.id join ( select movieId, title, group_concat(name) as genres from genres_in_movies join genres on genres_in_movies.genreId = genres.id join movies on genres_in_movies.movieId = movies.id Group by movies.id HAVING FIND_IN_SET( ? , genres) > 0 ) as gm ON gm.movieId = m.id join ( select movieId, title, group_concat(name) as stars, group_concat(starId) as starID from stars_in_movies join stars on stars_in_movies.starId = stars.id join movies on stars_in_movies.movieId = movies.id Group by movies.id) as sm ON sm.movieId = m.id";
+qry2+=	" ORDER BY ? ? limit ? , ? ;";
     		 qry = connection.prepareStatement(qry2);
     		qry.setString(1, genreBrowse);
     		qry.setString(2, sortBy);
@@ -189,7 +189,7 @@ public class MovieServlet extends HttpServlet {
 
     		}
     		else if(titleBrowse!=null) {
-        		 qry2 = "SELECT * FROM movies as m JOIN  ratings as r ON r.movieId = m.id join (select title, group_concat(name) as genres from genres_in_movies join genres on genres_in_movies.genreId = genres.id join movies on genres_in_movies.movieId = movies.id Group by title ) as gm ON gm.title = m.title join ( select title, group_concat(name) as stars, group_concat(starId) as starID from stars_in_movies join stars on stars_in_movies.starId = stars.id join movies on stars_in_movies.movieId = movies.id Group by title ) as sm ON sm.title = m.title WHERE SUBSTRING(m.title, 1, 1) = ?";
+        		 qry2 = "SELECT * FROM movies as m Left JOIN  ratings as r ON r.movieId = m.id join (select movieId, title, group_concat(name) as genres from genres_in_movies join genres on genres_in_movies.genreId = genres.id join movies on genres_in_movies.movieId = movies.id Group by movies.id ) as gm ON gm.movieId = m.id join ( select movieId, title, group_concat(name) as stars, group_concat(starId) as starID from stars_in_movies join stars on stars_in_movies.starId = stars.id join movies on stars_in_movies.movieId = movies.id Group by movies.id ) as sm ON sm.movieId = m.id WHERE SUBSTRING(m.title, 1, 1) = ? ";
         		qry2+=	" ORDER BY ? ? limit ? , ? ;";
         		qry = connection.prepareStatement(qry2);
         		qry.setString(1, titleBrowse);
@@ -199,9 +199,9 @@ public class MovieServlet extends HttpServlet {
         		qry.setInt(5, pCount);
         	}
     		else {
-    			 qry2 = "SELECT * FROM movies as m JOIN  ratings as r ON r.movieId = m.id join (select title, group_concat(name) as genres from genres_in_movies join genres on genres_in_movies.genreId = genres.id join movies on genres_in_movies.movieId = movies.id Group by title ) as gm ON gm.title = m.title join ( select title, group_concat(name) as stars, group_concat(starId) as starID from stars_in_movies join stars on stars_in_movies.starId = stars.id join movies on stars_in_movies.movieId = movies.id Group by title ) as sm ON sm.title = m.title ";
-        		String WHERE="WHERE ";
-    			if(titleSearch!=null) {WHERE+="m.title LIKE ? ";}
+    			 qry2 = "SELECT * FROM movies as m Left JOIN  ratings as r ON r.movieId = m.id join (select movieId, title, group_concat(name) as genres from genres_in_movies join genres on genres_in_movies.genreId = genres.id join movies on genres_in_movies.movieId = movies.id Group by movies.id ) as gm ON gm.movieId = m.id join ( select movieId, title, group_concat(name) as stars, group_concat(starId) as starID from stars_in_movies join stars on stars_in_movies.starId = stars.id join movies on stars_in_movies.movieId = movies.id Group by movies.id ) as sm ON sm.movieId = m.id ";
+    			String WHERE="WHERE ";
+    			if(titleSearch!=null) {WHERE+="m.title LIKE ? ;";}
     			
     			if ( directorSearch != null) {
    				 if(WHERE!="WHERE " ) {WHERE+="AND ";}
@@ -217,8 +217,11 @@ public class MovieServlet extends HttpServlet {
   			 }
    		
     			if(!WHERE.equals("WHERE ")) {qry2+=WHERE;}
-    			qry2+=	" ORDER BY ? ? limit ? , ? ;";
-        		int n=1;
+    		String order="";	
+if(sortBy=="r.rating" &&direction=="DESC") {
+	order+="ORDER BY r.rating DESC";
+}
+    			int n=1;
         		qry = connection.prepareStatement(qry2);
         		if(titleSearch!=null) {qry.setString(n, "%"+titleSearch+"%");n++;}
         		if(directorSearch!=null) {qry.setString(n, "%"+directorSearch+"%");n++;}
@@ -226,17 +229,17 @@ public class MovieServlet extends HttpServlet {
         		if(yearSearch!=null) {qry.setString(n, yearSearch);n++;}
 
 
-        		
-        		qry.setString(n, sortBy);
-        //		n++;
-        		qry.setString(n+1, direction);
-        //		n++;
-        		qry.setInt(n+2, currentPage);
-        //		n++;
-        		qry.setInt(n+3, pCount);
+        		//out.println("strored: "+order);
+        		//qry.setString(n, order);
+        		n++;
+        		//qry.setString(n, direction);
+        		n++;
+        		//qry.setInt(n, currentPage);
+        		//n++;
+        		//qry.setInt(n, pCount);
     			
     		}
-    		
+    	//	qry=connection.prepareStatement("SELECT * FROM movies as m Left JOIN  ratings as r ON r.movieId = m.id join (select movieId, title, group_concat(name) as genres from genres_in_movies join genres on genres_in_movies.genreId = genres.id join movies on genres_in_movies.movieId = movies.id Group by movies.id ) as gm ON gm.movieId = m.id join ( select movieId, title, group_concat(name) as stars, group_concat(starId) as starID from stars_in_movies join stars on stars_in_movies.starId = stars.id join movies on stars_in_movies.movieId = movies.id Group by movies.id ) as sm ON sm.movieId = m.id");
     		ResultSet resultSet = qry.executeQuery();
     		// execute query
     		//ResultSet resultSet = statement.executeQuery(query);
