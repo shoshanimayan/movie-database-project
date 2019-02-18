@@ -7,8 +7,6 @@ import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
-import java.sql.Statement;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -16,7 +14,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import project1.helperFunct;
 
 /**
  * Servlet implementation class ShowMetadata
@@ -96,15 +93,12 @@ public class ShowMetadata extends HttpServlet {
     			 out.println("<th class=\"secondaryHeader\">Null</th>");
     			 out.println("<th class=\"secondaryHeader\">Key</th>");
     			 out.println("</tr>");
-
-    			 /*
-    			 PreparedStatement stmt = connection.prepareStatement("desc ?");
-    			 stmt.setString(1, table_name);
-    			 ResultSet rs = stmt.executeQuery();
-    			 */
+    		
     			 
-    			 Statement stmt = connection.createStatement();
-    			 ResultSet rs = stmt.executeQuery("desc " + table_name);
+    			 String query = String.format("desc %s", table_name);
+    			 PreparedStatement stmt = connection.prepareStatement(query);
+    			 ResultSet rs = stmt.executeQuery();
+    			     			 
     			 while (rs.next())
     			 {
     				 String col = rs.getString("Field");

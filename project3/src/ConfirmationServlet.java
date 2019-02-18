@@ -6,8 +6,6 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.Statement;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -19,7 +17,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.jasypt.util.password.StrongPasswordEncryptor;
 
 /**
  * Servlet implementation class ConfirmationServlet
@@ -47,9 +44,7 @@ public class ConfirmationServlet extends HttpServlet {
 		String email = (String)request.getSession().getAttribute("email");
         if (email == null || cart==null)
 		    response.sendRedirect("/project1/LoginServlet?errormsg=You are not logged in");
-        
-        String password = (String)request.getSession().getAttribute("pass");
-        
+                
         
 		// change this to your own mysql username and password
     	String loginUser = "mytestuser";

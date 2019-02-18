@@ -6,9 +6,6 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.Statement;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -46,8 +43,8 @@ public class MovieServlet extends HttpServlet {
 		    response.sendRedirect("/project1/LoginServlet?errormsg=You are not logged in");	
         
 		// change this to your own mysql username and password
-        String loginUser = "root";
-        String loginPasswd = "espeon123";
+        String loginUser = "mytestuser";
+        String loginPasswd = "mypassword";
         String loginUrl = "jdbc:mysql://localhost:3306/moviedb";
 		
         // set response mime type
@@ -159,7 +156,6 @@ public class MovieServlet extends HttpServlet {
     		Class.forName("com.mysql.jdbc.Driver").newInstance();
     		// create database connection
     		Connection connection = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
-    		// declare statement
     		
     		
     		out.println("");
@@ -302,8 +298,7 @@ if(sortBy.equals("m.title")&&direction.equals("ASC"))
             request.getSession().setAttribute("cart", cart);
     		
     		ResultSet resultSet = qry.executeQuery();
-    		// execute query
-    		//ResultSet resultSet = statement.executeQuery(query);
+    		
     		//set up body
     		out.println("<body>");
     		out.println("<button onclick=\"window.location.href = \'/project1/MainPage\';\"><h4>Main Page</h4></button>");

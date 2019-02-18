@@ -7,7 +7,6 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.Statement;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -20,7 +19,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.jasypt.util.password.StrongPasswordEncryptor;
 
 import project1.RecaptchaHelper;
-import project1.helperFunct;
 
 /**
  * Servlet implementation class LoginFilterServlet

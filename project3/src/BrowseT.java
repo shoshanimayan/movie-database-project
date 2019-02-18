@@ -4,8 +4,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.Statement;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -13,7 +11,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import project1.helperFunct;
 
 /**
  * Servlet implementation class BrowseGenre
@@ -49,8 +46,8 @@ public class BrowseT extends HttpServlet {
         request.getSession().setAttribute("sort", "r.rating");
 		
 		 // change this to your own mysql username and password
-    	String loginUser = "root";
-	    String loginPasswd = "espeon123";
+    	String loginUser = "mytestuser";
+	    String loginPasswd = "mypassword";
         String loginUrl = "jdbc:mysql://localhost:3306/moviedb";
 		
         // set response mime type
@@ -74,8 +71,7 @@ public class BrowseT extends HttpServlet {
     		Class.forName("com.mysql.jdbc.Driver").newInstance();
     		// create database connection
     		Connection connection = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
-    		// declare statement
-    		Statement statement = connection.createStatement();
+    		
     		
     		//set up body
     		out.println("<body>");
@@ -91,7 +87,6 @@ public class BrowseT extends HttpServlet {
     		out.println("</center>");
     		out.println("</body>");
     		
-    		statement.close();
     		connection.close();
         		
     		

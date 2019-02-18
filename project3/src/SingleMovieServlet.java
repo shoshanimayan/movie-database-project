@@ -8,7 +8,6 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.Statement;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -47,8 +46,8 @@ public class SingleMovieServlet extends HttpServlet {
         cart = (HashMap<String, Integer>)request.getSession().getAttribute("cart");
 
 		// change this to your own mysql username and password
-    	String loginUser = "root";
-	    String loginPasswd = "espeon123";
+    	String loginUser = "mytestuser";
+	    String loginPasswd = "mypassword";
         String loginUrl = "jdbc:mysql://localhost:3306/moviedb";
 		
         // set response mime type
