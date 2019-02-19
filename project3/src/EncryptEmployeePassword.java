@@ -1,8 +1,8 @@
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.Statement;
 import java.util.ArrayList;
 
 import org.jasypt.util.password.PasswordEncryptor;
@@ -28,23 +28,25 @@ public class EncryptEmployeePassword {
 
         Class.forName("com.mysql.jdbc.Driver").newInstance();
         Connection connection = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
-        Statement statement = connection.createStatement();
-
+        
+		
         // change the employees table password column from VARCHAR(20) to VARCHAR(128)
-        String alterQuery = "ALTER TABLE employees MODIFY COLUMN password VARCHAR(128) NOT NULL";
-        int alterResult = statement.executeUpdate(alterQuery);
+		String alterQuery = "ALTER TABLE employees MODIFY COLUMN password VARCHAR(128) NOT NULL";
+		PreparedStatement stmt = connection.prepareStatement(alterQuery);
+		int alterResult = stmt.executeUpdate();
         System.out.println("altering employees table schema completed, " + alterResult + " rows affected");
 
         // get the email and password for each employee
         String query = "SELECT email, password from employees";
+        stmt = connection.prepareStatement(query);
+        ResultSet rs = stmt.executeQuery();
 
-        ResultSet rs = statement.executeQuery(query);
-
+        
         // we use the StrongPasswordEncryptor from jasypt library (Java Simplified Encryption) 
         //  it internally use SHA-256 algorithm and 10,000 iterations to calculate the encrypted password
         PasswordEncryptor passwordEncryptor = new StrongPasswordEncryptor();
 
-        ArrayList<String> updateQueryList = new ArrayList<>();
+        ArrayList<PreparedStatement> updateQueryList = new ArrayList<>();
 
         System.out.println("encrypting password (this might take a while)");
         while (rs.next()) {
@@ -55,23 +57,24 @@ public class EncryptEmployeePassword {
             // encrypt the password using StrongPasswordEncryptor
             String encryptedPassword = passwordEncryptor.encryptPassword(password);
 
-            // generate the update query
-           
-            String updateQuery = "UPDATE employees SET password='" + encryptedPassword + "' WHERE email=\"" + email + "\"";
-            updateQueryList.add(updateQuery);
+            // generate the update query   
+            String updateQuery = "UPDATE employees SET password= ? WHERE email= ? ";
+            PreparedStatement stmt2 = connection.prepareStatement(updateQuery);
+            stmt2.setString(1, encryptedPassword);
+            stmt2.setString(2, email);
+            updateQueryList.add(stmt2);
         }
         rs.close();
 
         // execute the update queries to update the password
         System.out.println("updating password");
         int count = 0;
-        for (String updateQuery : updateQueryList) {
-            int updateResult = statement.executeUpdate(updateQuery);
+        for (PreparedStatement st : updateQueryList) {
+            int updateResult = st.executeUpdate();
             count += updateResult;
         }
         System.out.println("updating password completed, " + count + " rows affected");
 
-        statement.close();
         connection.close();
 
         System.out.println("finished");
