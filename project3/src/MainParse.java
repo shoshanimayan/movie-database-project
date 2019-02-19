@@ -232,7 +232,7 @@ public class MainParse  extends DefaultHandler {
         				temp+=Integer.toString(maxM);
         				temp = "tt"+temp;
         				m.get(i.Id).setDId(temp);
-        				m.get(i.Id).setTitle(m.get(i.Id).Title+" ");
+        				m.get(i.Id).setTitle(m.get(i.Id).Title+"  ");
 
         				//Movies.put(i.Title, m.get(i.Id));
         				//System.out.println(temp);
