@@ -162,7 +162,7 @@ public class MovieServlet extends HttpServlet {
     		PreparedStatement qry = null;
     		String qry2="";
     		if(genreBrowse!=null) {
-qry2+="SELECT * FROM movies as m JOIN ratings as r ON r.movieId = m.id join ( select movieId, title, group_concat(name) as genres from genres_in_movies join genres on genres_in_movies.genreId = genres.id join movies on genres_in_movies.movieId = movies.id Group by movies.id HAVING FIND_IN_SET( ? , genres) > 0 ) as gm ON gm.movieId = m.id join ( select movieId, title, group_concat(name) as stars, group_concat(starId) as starID from stars_in_movies join stars on stars_in_movies.starId = stars.id join movies on stars_in_movies.movieId = movies.id Group by movies.id) as sm ON sm.movieId = m.id";
+qry2+="SELECT * FROM movies as m LEFT JOIN ratings as r ON r.movieId = m.id join ( select movieId, title, group_concat(name) as genres from genres_in_movies join genres on genres_in_movies.genreId = genres.id join movies on genres_in_movies.movieId = movies.id Group by movies.id HAVING FIND_IN_SET( ? , genres) > 0 ) as gm ON gm.movieId = m.id join ( select movieId, title, group_concat(name) as stars, group_concat(starId) as starID from stars_in_movies join stars on stars_in_movies.starId = stars.id join movies on stars_in_movies.movieId = movies.id Group by movies.id) as sm ON sm.movieId = m.id";
 
 
 if(currentPage<0) {currentPage=0;}
