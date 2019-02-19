@@ -1,8 +1,13 @@
-Parser takes 20 seconds to run. The first Optimizations implemented in the parser id that we cached all the relevant database information in a local HashMap 
+Parser takes 18 seconds to run. 
+
+1. The first Optimizations implemented in the parser id that we cached all the relevant database information in a local HashMap 
 if we ever need to check for duplicate values. This is faster than having to query the database every time we want to check a value that’s in the database. 
-The second is that we used the batch inserts to insert new values into the database, calling a batch execute every 1000 or 10000 values and if it reaches the size 
+
+
+2. The second is that we used the batch inserts to insert new values into the database, calling a batch execute every 1000 or 10000 values and if it reaches the size 
 of the objects being looked at, this allows us to cut down on the amount of overhead needed for inserting values. 
  
-Originally, without optimizations, the parser took nearly an hour to run, adding the cached db information reduced it to a couple minutes and adding the batch 
+Originally, without optimizations, the parser took nearly an hour to run on my machine, adding the cached db information reduced it to a couple minutes and adding the batch 
 inserts made it a couple seconds. 
 
+optimizations can be found in the main parser, where all the insertations happen
