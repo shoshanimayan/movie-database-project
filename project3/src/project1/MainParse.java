@@ -131,7 +131,7 @@ public class MainParse  extends DefaultHandler {
     		
     		//maps to hold values 
     		HashMap<String,movieI> Movies= new HashMap<String,movieI>();
-    		HashMap<String,String> Stars= new HashMap<String,String>();
+   // 		HashMap<String,String> Stars= new HashMap<String,String>();
     		HashMap<String,Integer> Genres= new HashMap<String,Integer>();
     	;
     		HashSet<String> G_M= new HashSet<String>();
@@ -143,7 +143,7 @@ public class MainParse  extends DefaultHandler {
 
     		
     		MQ = "SELECT id, title, director, year from movies";
-    		SQ = "SELECT id, name from stars";
+    //		SQ = "SELECT id, name from stars";
     		GQ = "SELECT id, name from genres";
     		GM = "SELECT * from genres_in_movies";
     		SM = "SELECT * from stars_in_movies";
@@ -155,18 +155,18 @@ public class MainParse  extends DefaultHandler {
     		while (resultSet.next()) {
     			movieI temp = new movieI();
     			temp.setDId(resultSet.getString("id"));
-    			//temp.setDirector(resultSet.getString("director"));
+    			temp.setDirector(resultSet.getString("director"));
     			temp.setYear(Integer.parseInt(resultSet.getString("year")));
     			Movies.put(resultSet.getString("title"),temp );
     		}
     		//System.out.println(Movies.size());
     		
-    		qry = connection.prepareStatement(SQ);
-    		resultSet = qry.executeQuery();
+    	//	qry = connection.prepareStatement(SQ);
+    		//resultSet = qry.executeQuery();
     		
-    		while (resultSet.next()) {
-    			Stars.put(resultSet.getString("name"),resultSet.getString("id") );
-    		}
+    		//while (resultSet.next()) {
+    		//	Stars.put(resultSet.getString("name"),resultSet.getString("id") );
+    	//	}
     		//System.out.println(Stars.size());
     		
     		qry = connection.prepareStatement(GQ);
@@ -222,7 +222,7 @@ public class MainParse  extends DefaultHandler {
     		
     		for(movieI i: m.values()) {
     			if(Movies.containsKey(i.Title)) {
-    				if(i.year==Movies.get(i.Title).year )
+    				if(i.year==Movies.get(i.Title).year  && i.Director.equals(Movies.get(i.Title).Director))
     					m.get(i.Id).setDId(Movies.get(i.Title).DId);
     				else {
     					String temp="";
@@ -255,13 +255,13 @@ public class MainParse  extends DefaultHandler {
         	//System.out.println(s.containsKey(""));
 
     		for(Star i: s.values()) {
-    			if(Stars.containsKey(i.name)) {
+    			//if(Stars.containsKey(i.name)) {
     				//System.out.println(i.birthYear);
-    				if(s.get(i.Sname)!=null)
-    					s.get(i.Sname).setID(Stars.get(i.name));
-    				else {  s.get(i.name).setID(Stars.get(i.name));}
-    			}	
-    			else {
+    			//	if(s.get(i.Sname)!=null)
+    			//		s.get(i.Sname).setID(Stars.get(i.name));
+    			//	else {  s.get(i.name).setID(Stars.get(i.name));}
+    			//}	
+    			//else {
     				String temp="";
     				maxS+=1;
     				for(int x=0;x<(7-Integer.toString(maxS).length());x++) {
@@ -274,14 +274,14 @@ public class MainParse  extends DefaultHandler {
     				if(i.Sname.equals("")==false) {
     				//	System.out.println(i.Sname.equals(""));
     				s.get(i.Sname).setID(temp);
-    				Stars.put(i.name,temp);
+    				//Stars.put(i.name,temp);
     				Fs.put(i.name, s.get(i.Sname));
     				}
     				else {
     					s.get(i.name).setID(temp);
-        				Stars.put(i.name,temp);
+        				//Stars.put(i.name,temp);
         				Fs.put(i.name, s.get(i.name));}
-    			}
+    			//}
     		}
     		Integer  max= Collections.max(Genres.values());
     		//System.out.println(max);
@@ -334,8 +334,8 @@ public class MainParse  extends DefaultHandler {
 
     			}
     		}
-    		System.out.println(FG_M.size());
-    		System.out.println(FS_M.size());
+    		//System.out.println(FG_M.size());
+    		//System.out.println(FS_M.size());
 
     		//// begin inserting 
     		 connection.setAutoCommit(false);
@@ -418,7 +418,7 @@ public class MainParse  extends DefaultHandler {
     			qry.setString(1,vals[0]);
     			qry.setString(2, vals[1]);
     			qry.addBatch();
-    			if(x%batchSize==0||x==FS_M.size()) {
+    			if(x%5000==0||x==FS_M.size()) {
     				//try {
     				qry.executeBatch();
     				connection.commit();
@@ -539,22 +539,6 @@ class Genre{
 	
 }
 
-class p1{
-	Integer i;
-	String k;
-	p1(Integer i, String k){
-		this.i=i;
-		this.k=k;
-	}
-}  
-
-class p2{
-	String i;
-	String k;
-	p2(String i, String k){
-		this.i=i;
-		this.k=k;
-	}
-}  
+ 
 
 
