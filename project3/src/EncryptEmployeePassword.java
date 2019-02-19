@@ -1,4 +1,3 @@
-package project1;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -24,7 +23,7 @@ public class EncryptEmployeePassword {
     public static void main(String[] args) throws Exception {
 
         String loginUser = "mytestuser";
-        String loginPasswd = "mypassword";
+        String loginPasswd = "catcat123";
         String loginUrl = "jdbc:mysql://localhost:3306/moviedb";
 
         Class.forName("com.mysql.jdbc.Driver").newInstance();
