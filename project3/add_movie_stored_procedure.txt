@@ -1,0 +1,50 @@
+mysql> use moviedb;
+
+mysql> delimiter $$
+
+mysql> CREATE PROCEDURE add_movie(IN m_title VARCHAR(100), IN m_year INT, IN m_director VARCHAR(100), IN m_star VARCHAR(100), IN m_genre VARCHAR(32), OUT added INT)
+    -> proc_label:BEGIN
+    ->   DECLARE m_id VARCHAR(10);
+    ->   DECLARE s_id VARCHAR(10);
+    ->   DECLARE g_id INT;
+
+    ->   DECLARE lastId INT;
+    ->   DECLARE newId VARCHAR(10);
+    ->   DECLARE maxId VARCHAR(10);
+
+    ->   SELECT id INTO m_id FROM movies WHERE title=m_title AND year=m_year AND director=m_director;
+    ->   IF (m_id IS NULL) THEN
+    ->     SELECT max(id) INTO maxId from movies;
+    ->     SELECT ( (SUBSTRING_INDEX(maxId, 't', -1)) + 0) INTO lastId;
+    ->     SET lastId = lastId + 1;
+    ->     SELECT CAST(lastId as CHAR(10)) INTO newId;
+    ->     SELECT CONCAT("tt", newId) INTO newId;
+    ->     INSERT INTO movies VALUES (newId, m_title, m_year, m_director);
+    ->     SET added = 1;
+    ->   ELSE
+    ->     SET added = 0;
+    ->     LEAVE proc_label;
+    ->   END IF;
+
+    ->   SELECT id INTO s_id FROM stars WHERE name=m_star LIMIT 1;
+    ->   IF (s_id IS NULL) THEN
+    ->     CALL add_star(m_star, NULL);
+    ->   END IF;
+
+    ->   SELECT id INTO g_id FROM genres WHERE name=m_genre;
+    ->   IF (g_id IS NULL) THEN
+    ->     INSERT INTO genres VALUES (NULL, m_genre);
+    ->   END IF;
+
+    ->   SELECT id INTO m_id FROM movies WHERE title=m_title AND year=m_year AND director=m_director;
+    ->   SELECT id INTO s_id FROM stars WHERE name=m_star LIMIT 1;
+    ->   SELECT id INTO g_id FROM genres WHERE name=m_genre;
+
+    ->   INSERT INTO stars_in_movies VALUES (s_id, m_id);
+    ->   INSERT INTO genres_in_movies VALUES (g_id, m_id); 
+    ->   INSERT INTO ratings VALUES (m_id, 0.0, 0);
+
+    -> END
+    -> $$
+
+mysql> delimiter ;
