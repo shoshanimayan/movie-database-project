@@ -103,9 +103,9 @@ public class MovieParse extends DefaultHandler {
 	        //	System.out.println(tempVal);
 	        	boolean pass=true;
 	        	if(!tempVal.equals("")) {
-	        		for(char i: tempVal.toCharArray()) {
-	        			if(Character.isDigit(i)) {pass=false;}
-	        		}
+	        		//for(char i: tempVal.toCharArray()) {
+	        		//	if(Character.isDigit(i)) {pass=false;}
+	        		//}
 		        	if(pass) {
 		        		if(g.containsKey(tempVal)) {
 			        		
