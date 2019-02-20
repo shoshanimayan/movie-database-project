@@ -44,7 +44,7 @@ public class MovieServlet extends HttpServlet {
         
 		// change this to your own mysql username and password
         String loginUser = "mytestuser";
-        String loginPasswd = "catcat123";
+        String loginPasswd = "mypassword";
         String loginUrl = "jdbc:mysql://localhost:3306/moviedb";
 		
         // set response mime type
@@ -68,6 +68,7 @@ public class MovieServlet extends HttpServlet {
         out.println("</head>");
         
         //declare data
+        String fulltextSearch=null;
         String sortBy=null;
         String direction=null;
         String genreBrowse = null;
@@ -91,7 +92,10 @@ public class MovieServlet extends HttpServlet {
         }
         
         /// get data from url or session
- 
+        
+        fulltextSearch = request.getParameter("fulltextSearch");
+        if(fulltextSearch==null||fulltextSearch=="") {fulltextSearch=(String)request.getSession().getAttribute("fulltextSearch");}     
+        
         sortBy = request.getParameter("sort");
         if(sortBy==null||sortBy=="") {sortBy=(String)request.getSession().getAttribute("sort");}
         if(sortBy==null||sortBy=="") {sortBy="r.rating";}
@@ -161,6 +165,39 @@ public class MovieServlet extends HttpServlet {
     		out.println("");
     		PreparedStatement qry = null;
     		String qry2="";
+    		
+    		if (fulltextSearch != null) {
+    			qry2 = "SELECT * FROM movies as m Left JOIN  ratings as r ON r.movieId = m.id join (select movieId, title, group_concat(name) as genres from genres_in_movies join genres on genres_in_movies.genreId = genres.id join movies on genres_in_movies.movieId = movies.id Group by movies.id ) as gm ON gm.movieId = m.id join ( select movieId, title, group_concat(name) as stars, group_concat(starId) as starID from stars_in_movies join stars on stars_in_movies.starId = stars.id join movies on stars_in_movies.movieId = movies.id Group by movies.id ) as sm ON sm.movieId = m.id WHERE MATCH (m.title) AGAINST (? IN BOOLEAN MODE) ";
+       		 
+       		 if(currentPage<0) {currentPage=0;}
+    			int Qsize = 0;
+    			 qry = connection.prepareStatement(qry2);
+        		qry.setString(1, fulltextSearch);
+        		ResultSet SizeQ = qry.executeQuery() ;
+        		if ( SizeQ!= null) 
+        		{
+        		  SizeQ.beforeFirst();
+        		  SizeQ.last();
+        		  Qsize = SizeQ.getRow();
+        		}
+        		if(currentPage>Qsize) {currentPage-=pCount;}
+       		 
+       		 
+       		 if(sortBy.equals("r.rating")&&direction.equals("DESC"))
+       				qry2+=	" ORDER BY r.rating is null, r.rating DESC limit ? , ? ;";
+       			if(sortBy.equals("r.rating")&&direction.equals("ASC"))
+       				qry2+=	" ORDER BY r.rating is null, r.rating ASC limit ? , ? ;";
+       			if(sortBy.equals("m.title")&&direction.equals("DESC"))
+       				qry2+=	" ORDER BY m.title is null, m.title DESC limit ? , ? ;";
+       			if(sortBy.equals("m.title")&&direction.equals("ASC"))
+       				qry2+=	" ORDER BY m.title is null,  m.title ASC limit ? , ? ;";
+       		 qry = connection.prepareStatement(qry2);
+
+       		qry.setString(1, fulltextSearch);
+       		qry.setInt(2, currentPage);
+       		qry.setInt(3, pCount);
+    		}
+    		
     		if(genreBrowse!=null) {
 qry2+="SELECT * FROM movies as m Left JOIN ratings as r ON r.movieId = m.id join ( select movieId, title, group_concat(name) as genres from genres_in_movies join genres on genres_in_movies.genreId = genres.id join movies on genres_in_movies.movieId = movies.id Group by movies.id HAVING FIND_IN_SET( ? , genres) > 0 ) as gm ON gm.movieId = m.id join ( select movieId, title, group_concat(name) as stars, group_concat(starId) as starID from stars_in_movies join stars on stars_in_movies.starId = stars.id join movies on stars_in_movies.movieId = movies.id Group by movies.id) as sm ON sm.movieId = m.id";
 
@@ -296,6 +333,7 @@ if(sortBy.equals("m.title")&&direction.equals("ASC"))
             request.getSession().setAttribute("pCount", pCount);
             request.getSession().setAttribute("currentPage", currentPage);
             request.getSession().setAttribute("cart", cart);
+            request.getSession().setAttribute("fulltextSearch", fulltextSearch);
     		
     		ResultSet resultSet = qry.executeQuery();
     		

@@ -41,7 +41,7 @@ public class MainPage extends HttpServlet {
 		
 		// change this to your own mysql username and password
 		String loginUser = "mytestuser";
-	    String loginPasswd = "catcat123";
+	    String loginPasswd = "mypassword";
         String loginUrl = "jdbc:mysql://localhost:3306/moviedb";
 		
         // set response mime type
@@ -72,6 +72,14 @@ public class MainPage extends HttpServlet {
     		out.println("<button onclick=\"window.location.href = \'/project1/ShoppingCart\';\"><h4>Checkout</h4></button>");
     		out.println("<center>"); 
     		out.println("<h1>Welcome to Fablix</h1>");
+    		out.println("<h3>Full Text Search</h3>");
+    		out.println("<form action = \'/project1/MovieServlet?\' method =\'get\'>" +
+    					"<input type=\"text\"  name=\"fulltextSearch\" ><br><br>" +
+    					"<input id=\"msg\" name=\"msg\" type=\"hidden\" value=\"clean\">" +
+    				    " <button type=\"submit\">Search</button>" + "</form>");
+    		
+    		out.println("<br>");
+    		
     		out.println("<h3>Browse</h3>");
     		out.println("<form action=\"/project1/browse\" method=\"get\"><button>Browse</button></form>");
     		out.println("<h3>Search</h3>");
