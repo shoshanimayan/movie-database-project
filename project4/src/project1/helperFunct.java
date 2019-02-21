@@ -15,6 +15,8 @@ public class helperFunct {
 		listStr = listStr.replace(", ", "}@");
 		String tempid[]= IDS.split(",",0);
 		String temp[] = listStr.split(",",0);
+		if((listStr==null && IDS==null)||(listStr.equals("")&&IDS.equals(""))) {return "null"; }
+
 		
 		int i =0;
 		while(i<temp.length) {
@@ -35,6 +37,7 @@ public class helperFunct {
 	public String listerG( String listStr,String IDS, String URL) {
 		String listHtml ="";
 		
+		
 		// ran into a problem where some movie titles had ", " in them, which breaks links
 		// when we split the string on ",", so below i temporarily replace that char sequence with
 		// one that is less likely to ever appear in a name "}@", and than reverse the process once
@@ -42,7 +45,8 @@ public class helperFunct {
 		listStr = listStr.replace(", ", "}@");
 		String tempid[]= IDS.split(",",0);
 		String temp[] = listStr.split(",",0);
-		
+		if((listStr==null && IDS==null)||(listStr.equals("")&&IDS.equals(""))) {return "null"; }
+
 		int i =0;
 		while(i<temp.length) {
 			
