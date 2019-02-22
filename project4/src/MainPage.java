@@ -5,20 +5,26 @@ import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.DriverManager;
 
+import javax.annotation.Resource;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.sql.DataSource;
 
 
 /**
  * Servlet implementation class MainPage
  */
+//@WebServlet(name = "MainPage", urlPatterns = "/MainPage")
+
 @WebServlet("/MainPage")
 public class MainPage extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
+	//@Resource(name = "jdbc/moviedb")
+    //private DataSource dataSource;
     /**
      * @see HttpServlet#HttpServlet()
      */
@@ -33,15 +39,15 @@ public class MainPage extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		String email = (String)request.getSession().getAttribute("email");
-        if (email == null)
-		    response.sendRedirect("/project1/LoginServlet?errormsg=You are not logged in");
+       //if (email == null)
+		//    response.sendRedirect("/project1/LoginServlet?errormsg=You are not logged in");
 		
 		String src = request.getParameter("src");
 		if (src==null) {src="title";}
 		
 		// change this to your own mysql username and password
-		String loginUser = "mytestuser";
-	    String loginPasswd = "mypassword";
+		String loginUser = "root";
+	    String loginPasswd = "espeon123";
         String loginUrl = "jdbc:mysql://localhost:3306/moviedb";
 		
         // set response mime type
@@ -68,18 +74,29 @@ public class MainPage extends HttpServlet {
 
     		
     		//set up body
+    		out.println("<head>");
+    		out.println(" <!-- Using jQuery -->\r\n" + 
+    				"    <script src=\"https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js\"></script>\r\n" + 
+    				"\r\n" + 
+    				"    <!-- include jquery autocomplete JS  -->\r\n" + 
+    				"    <script src=\"https://cdnjs.cloudflare.com/ajax/libs/jquery.devbridge-autocomplete/1.4.7/jquery.autocomplete.min.js\"></script>\r\n" + 
+    				"\r\n" + 
+    				"    <!-- Bootstrap for CSS -->\r\n" + 
+    				"    <script src=\"https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js\"></script>");
+    		out.println("</head>");
     		out.println("<body>");
     		out.println("<button onclick=\"window.location.href = \'/project1/ShoppingCart\';\"><h4>Checkout</h4></button>");
     		out.println("<center>"); 
     		out.println("<h1>Welcome to Fablix</h1>");
     		out.println("<h3>Full Text Search</h3>");
     		out.println("<form action = \'/project1/MovieServlet?\' method =\'get\'>" +
-    					"<input type=\"text\"  name=\"fulltextSearch\" ><br><br>" +
+    					"<input type=\"text\"  name=\"fulltextSearch\" id=\"autocomplete\" class=\"autocomplete-searchbox form-control\"  ><br><br>" +
     					"<input id=\"msg\" name=\"msg\" type=\"hidden\" value=\"clean\">" +
-    				    " <button type=\"submit\">Search</button>" + "</form>");
+    				    " <button type=\"submit\">Search</button>" +"</form>");
     		
     		out.println("<br>");
-    		
+    		out.println( "<script src=\"autoCom.js\">console.log(\"Hello world!\");</script>");
+    			
     		out.println("<h3>Browse</h3>");
     		out.println("<form action=\"/project1/browse\" method=\"get\"><button>Browse</button></form>");
     		out.println("<h3>Search</h3>");
