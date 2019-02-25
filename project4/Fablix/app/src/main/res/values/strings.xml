@@ -1,6 +1,0 @@
-<resources>
-    <string name="app_name">Fablix</string>
-    <string name="email_message">Enter email</string>
-    <string name="button_login">Login</string>
-    <string name="password_message">Enter password</string>
-</resources>
