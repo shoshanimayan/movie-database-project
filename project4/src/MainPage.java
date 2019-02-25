@@ -64,6 +64,11 @@ public class MainPage extends HttpServlet {
         out.println("tr:nth-child(even) {background-color: #e2e2e2;}");
         out.println("table {border-collapse: collapse;  width: 75%;  }");
         out.println("table, tr, td {border: 2px solid;  padding: 14px; text-align: left; font-family: Arial}");
+        out.println(".autocomplete-suggestions { border: 1px solid #999; background: #FFF; overflow: auto; }\r\n" + 
+        		".autocomplete-suggestion { padding: 2px 5px; white-space: nowrap; overflow: hidden; }\r\n" + 
+        		".autocomplete-selected { background: #f2f2f2; }\r\n" + 
+        		".autocomplete-group { padding: 2px 5px; }\r\n" + 
+        		".autocomplete-group strong { display: block; border-bottom: 1px solid #000; }");
         out.println("</style>");
         out.println("</head>");        
         
