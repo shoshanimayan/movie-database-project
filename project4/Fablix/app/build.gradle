@@ -27,7 +27,6 @@ dependencies {
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
     api files('libs/library-1.0.10.jar')
     api 'com.google.android.gms:play-services-safetynet:15.0.1'
-    compile 'com.mcxiaoke.volley:library:1.0.6@aar'
 
 
 

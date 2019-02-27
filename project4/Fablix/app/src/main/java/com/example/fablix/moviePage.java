@@ -45,8 +45,35 @@ public class moviePage extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.moviepage);
         query="wonder bar";//test query
-        ((TextView) findViewById(R.id.textView)).setText("you are searching: "+query);
-        connectToTomcat();
+        // no user is logged in, so we must connect to the server
+
+        // Use the same network queue across our application
+        final RequestQueue queue = NetworkManager.sharedManager(this).queue;
+
+        // 10.0.2.2 is the host machine when running the android emulator
+        final StringRequest afterLoginRequest = new StringRequest(Request.Method.GET, "http://10.0.2.2:8080/project1/auto?query=wonder",
+
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+
+                        Log.d("username.reponse", response);
+                        ((TextView) findViewById(R.id.textView)).setText(response);
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        ((TextView) findViewById(R.id.textView)).setText("error");
+
+                        Log.d("username.error", error.toString());
+                    }
+                }
+        );
+        queue.add(afterLoginRequest);
+
+        //((TextView) findViewById(R.id.textView)).setText("you are searching: "+query);
+
 
     }
 
@@ -56,6 +83,7 @@ public class moviePage extends AppCompatActivity {
         // Use the same network queue across our application
         final RequestQueue queue = NetworkManager.sharedManager(this).queue;
 
+
         // 10.0.2.2 is the host machine when running the android emulator
         String URL = "http://10.0.2.2:8080/project1/auto?query="+query;
         RequestQueue que = Volley.newRequestQueue(this);
@@ -63,11 +91,14 @@ public class moviePage extends AppCompatActivity {
             @Override
             public void onResponse(JSONArray response){
                 Log.d("message",response.toString());
+                ((TextView) findViewById(R.id.textView)).setText(response.toString());
             }
         },new Response.ErrorListener(){
             @Override
             public void onErrorResponse(VolleyError e){
                 Log.d("error",e.getMessage());
+                ((TextView) findViewById(R.id.textView)).setText("error");
+
             }
         });
 
@@ -84,11 +115,6 @@ public class moviePage extends AppCompatActivity {
 
 
 
-    public JSONArray Search(String query){
-        JSONArray result = new JSONArray();
 
-
-        return result;
-    }
 }
 
