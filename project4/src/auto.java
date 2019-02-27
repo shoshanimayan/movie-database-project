@@ -39,6 +39,7 @@ public class auto extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		String srch = request.getParameter("query");
+		if (srch==null) {srch="wonder bar";}
 		String[] pieces= srch.split(" ");
 	    	String parsedSearch ="";
 	    	for(int i=0; i<pieces.length ;i++) {
@@ -51,7 +52,6 @@ public class auto extends HttpServlet {
 	    String loginUrl = "jdbc:mysql://localhost:3306/moviedb";
 		
 	    // set response mime type
-	    response.setContentType("text/html"); 
 
 	    // get the printwriter for writing response
 	    PrintWriter out = response.getWriter();
@@ -90,11 +90,9 @@ public class auto extends HttpServlet {
 	    		
 		
 	    } catch (Exception e) {
-	    	System.out.println(e);
 			response.sendError(500, e.getMessage());
 	    }
 	    
-	    out.println("</html>");
 	    out.close();
 	     	}
 
