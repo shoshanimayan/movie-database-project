@@ -34,6 +34,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import org.json.JSONArray;
+import org.json.JSONStringer;
+import org.json.JSONTokener;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -41,43 +43,62 @@ import java.util.Map;
 
 public class moviePage extends AppCompatActivity {
     String query="";
+    String msg="";
     JSONArray table = new JSONArray();
+    Integer page=null;
+    Integer limit=5;
+
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Bundle bundle = getIntent().getExtras();
         String msg = bundle.getString("search");
+        if(bundle.getString("page")==null){page=0;}
         setContentView(R.layout.moviepage);
         query = msg;
        query = query.replace(" ", "+");
-        final RequestQueue queue = NetworkManager.sharedManager(this).queue;
-    String URL ="http://10.0.2.2:8080/project1/auto?query=".concat(query);
-
-    Log.d("url",URL);
-        ((TextView) findViewById(R.id.textView)).setText(msg);
-        final StringRequest afterLoginRequest = new StringRequest(Request.Method.GET, URL,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-
-                       Log.d("username.reponse", response);
-                       ((TextView) findViewById(R.id.textView)).setText(response);
-
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                       ((TextView) findViewById(R.id.textView)).setText("ERROR");
-
-                        Log.d("username.error", error.toString());
-                    }
-                }
-        );
-        queue.add(afterLoginRequest);
-
+        tomCat();
 
     }
+
+public JSONArray parse(String s){
+        JSONArray j = new JSONArray();
+
+        return j;
+
+}
+public void tomCat(){
+    final RequestQueue queue = NetworkManager.sharedManager(this).queue;
+    String URL ="http://10.0.2.2:8080/project1/auto?query=".concat(query);//.concat("&limit=1&page=").concat(Integer.toString(page));
+
+    Log.d("url",URL);
+    ((TextView) findViewById(R.id.textView)).setText(msg);
+    final StringRequest afterLoginRequest = new StringRequest(Request.Method.GET, URL,
+            new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+
+                    Log.d("username.reponse", response);
+                    String stuff =response;
+                    ((TextView) findViewById(R.id.textView)).setText(response);
+
+
+
+
+                }
+            },
+            new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    ((TextView) findViewById(R.id.textView)).setText("ERROR");
+
+                    Log.d("username.error", error.toString());
+                }
+            }
+    );
+    queue.add(afterLoginRequest);
+
+}
 
 
 
