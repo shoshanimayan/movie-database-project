@@ -1,7 +1,6 @@
 
 
 import java.io.IOException;
-
 import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -17,19 +16,18 @@ import javax.servlet.http.HttpServletResponse;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
-import project1.helperFunct;
 
 /**
- * Servlet implementation class auto
+ * Servlet implementation class AutoJS
  */
-@WebServlet("/auto")
-public class auto extends HttpServlet {
+@WebServlet("/AutoJS")
+public class AutoJS extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public auto() {
+    public AutoJS() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -38,7 +36,6 @@ public class auto extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
 		String srch = request.getParameter("query");
 		if (srch==null) {srch="wonder bar";}
 		String[] pieces= srch.split(" ");
@@ -47,7 +44,6 @@ public class auto extends HttpServlet {
 	    		if(i>0) {parsedSearch+=" ";}
 	    		parsedSearch+="+"+pieces[i]+"*";
 	    	}	
-	    System.out.println(srch);
 		 // change this to your own mysql username and password
 		String loginUser = "root";
 	    String loginPasswd = "espeon123";
@@ -66,7 +62,7 @@ public class auto extends HttpServlet {
 			Connection connection = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
 
 			
-			String query =  "SELECT * FROM movies as m Left JOIN  ratings as r ON r.movieId = m.id left join (select movieId, title, group_concat(name) as genres from genres_in_movies left join genres on genres_in_movies.genreId = genres.id left join movies on genres_in_movies.movieId = movies.id Group by movies.id ) as gm ON gm.movieId = m.id left join ( select movieId, title, group_concat(name) as stars, group_concat(starId) as starID from stars_in_movies left join stars on stars_in_movies.starId = stars.id left join movies on stars_in_movies.movieId = movies.id Group by movies.id ) as sm ON sm.movieId = m.id WHERE MATCH (m.title) AGAINST (? IN BOOLEAN MODE)"        ;		 
+			String query =  "SELECT id, title from movies WHERE MATCH (title) AGAINST (? IN BOOLEAN MODE)";
 			
 			PreparedStatement stmt = connection.prepareStatement(query);
 			stmt.setString(1, parsedSearch);
@@ -79,7 +75,7 @@ public class auto extends HttpServlet {
 
 			
 			while (resultSet.next()) {
-				jsonArray.add(generateJsonObject(resultSet.getString("id"),resultSet.getString("title"),resultSet.getString("director"),resultSet.getString("genres"),resultSet.getString("rating"),resultSet.getString("stars"),resultSet.getString("starID"),resultSet.getString("year") ));
+				jsonArray.add(generateJsonObject(resultSet.getString("id"),resultSet.getString("title") ));
 
 	    		}
 	    		
@@ -95,8 +91,8 @@ public class auto extends HttpServlet {
 			response.sendError(500, e.getMessage());
 	    }
 	    
-	    out.close();
-	     	}
+	    out.close();	
+	}
 
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
@@ -105,17 +101,15 @@ public class auto extends HttpServlet {
 		// TODO Auto-generated method stub
 		doGet(request, response);
 	}
-	private static JsonObject generateJsonObject(String ID, String title, String Director, String Genres, String rating, String stars, String starIds, String year ) {		
-		JsonObject j = new JsonObject();
-		j.addProperty("value", title);
-		j.addProperty("ID", ID);
-		j.addProperty("Dir", Director);
-		j.addProperty("genres", Genres);
-		j.addProperty("rate", rating);
-		j.addProperty("stars", stars);
-		j.addProperty("starId", starIds);
-		j.addProperty("year", year);
-
-		return j;
+	private static JsonObject generateJsonObject(String ID, String title) {
+		JsonObject jsonObject = new JsonObject();
+		jsonObject.addProperty("value", title);
+		
+		JsonObject additionalDataJsonObject = new JsonObject();
+		additionalDataJsonObject.addProperty("ID", ID);
+		
+		jsonObject.add("data", additionalDataJsonObject);
+		return jsonObject;
 	}
+
 }

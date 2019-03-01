@@ -2,6 +2,7 @@
 
 import java.io.IOException;
 
+
 import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -20,16 +21,16 @@ import com.google.gson.JsonObject;
 import project1.helperFunct;
 
 /**
- * Servlet implementation class auto
+ * Servlet implementation class test
  */
-@WebServlet("/auto")
-public class auto extends HttpServlet {
+@WebServlet("/test")
+public class test extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public auto() {
+    public test() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -38,16 +39,19 @@ public class auto extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
+
 		String srch = request.getParameter("query");
-		if (srch==null) {srch="wonder bar";}
+		System.out.println(srch);
+		if (srch==null) {srch="wonder+bar";}
+		srch =srch.replace("+"," ");
+		System.out.println(srch);
+
 		String[] pieces= srch.split(" ");
 	    	String parsedSearch ="";
 	    	for(int i=0; i<pieces.length ;i++) {
 	    		if(i>0) {parsedSearch+=" ";}
 	    		parsedSearch+="+"+pieces[i]+"*";
 	    	}	
-	    System.out.println(srch);
 		 // change this to your own mysql username and password
 		String loginUser = "root";
 	    String loginPasswd = "espeon123";
@@ -67,7 +71,7 @@ public class auto extends HttpServlet {
 
 			
 			String query =  "SELECT * FROM movies as m Left JOIN  ratings as r ON r.movieId = m.id left join (select movieId, title, group_concat(name) as genres from genres_in_movies left join genres on genres_in_movies.genreId = genres.id left join movies on genres_in_movies.movieId = movies.id Group by movies.id ) as gm ON gm.movieId = m.id left join ( select movieId, title, group_concat(name) as stars, group_concat(starId) as starID from stars_in_movies left join stars on stars_in_movies.starId = stars.id left join movies on stars_in_movies.movieId = movies.id Group by movies.id ) as sm ON sm.movieId = m.id WHERE MATCH (m.title) AGAINST (? IN BOOLEAN MODE)"        ;		 
-			
+
 			PreparedStatement stmt = connection.prepareStatement(query);
 			stmt.setString(1, parsedSearch);
 			ResultSet resultSet = stmt.executeQuery();
@@ -80,7 +84,6 @@ public class auto extends HttpServlet {
 			
 			while (resultSet.next()) {
 				jsonArray.add(generateJsonObject(resultSet.getString("id"),resultSet.getString("title"),resultSet.getString("director"),resultSet.getString("genres"),resultSet.getString("rating"),resultSet.getString("stars"),resultSet.getString("starID"),resultSet.getString("year") ));
-
 	    		}
 	    		
 		
@@ -96,7 +99,8 @@ public class auto extends HttpServlet {
 	    }
 	    
 	    out.close();
-	     	}
+		   
+	}
 
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
@@ -118,4 +122,5 @@ public class auto extends HttpServlet {
 
 		return j;
 	}
+
 }

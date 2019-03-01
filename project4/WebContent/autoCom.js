@@ -18,7 +18,7 @@ function handleLookup(query, doneCallback) {
 		console.log("starting ajax");
 	jQuery.ajax({
 		"method": "GET",
-		"url": "auto?query=" + escape(query),
+		"url": "AutoJS?query=" + escape(query),
 		"success": function(data) {
 			handleLookupAjaxSuccess(data, query, doneCallback) ;
 			

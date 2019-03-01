@@ -3,4 +3,8 @@
     <string name="edit_email">Enter email</string>
     <string name="edit_password">Enter password</string>
     <string name="button_login">Login</string>
+    <string name="button_search">Submit</string>
+    <string name="edit_search">search</string>
+    <string name="movieList">movie list</string>
+
 </resources>
