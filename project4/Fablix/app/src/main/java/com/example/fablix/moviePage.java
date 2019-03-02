@@ -10,7 +10,9 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,6 +39,7 @@ import org.json.JSONArray;
 import org.json.JSONStringer;
 import org.json.JSONTokener;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -46,33 +49,46 @@ public class moviePage extends AppCompatActivity {
     String msg="";
     JSONArray table = new JSONArray();
     Integer page=null;
-    Integer limit=5;
+    Integer limit=1;
+    String[] finalTable= new String[limit];
 
 
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         Bundle bundle = getIntent().getExtras();
-        String msg = bundle.getString("search");
+         msg = bundle.getString("search");
         if(bundle.getString("page")==null){page=0;}
         setContentView(R.layout.moviepage);
         query = msg;
        query = query.replace(" ", "+");
         tomCat();
+        //String[] c = new String[2];
+        ArrayList<JSONObject> c = new ArrayList<JSONObject>();
+        JSONObject j = new JSONObject();
+        try {
+            j.put("title", "test");
+        }
+        catch (JSONException e){Log.d("json set up error",e.getMessage());}
+        c.add(j);
+        //c[0]="birdadkjalfdsfgsfdsgfffffg\nfasdsdfadslksdjf;asdjdf\nflasdjfklajfkdjfalk\naskhflkadhklahfkalsd\nhiasdfliajfajf";
+       // c[1]= "cat";
+        viewer itemsAdapter = new viewer(c,this);
+      //  ArrayAdapter<String> itemsAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1,c );
+        ListView listView = (ListView) findViewById(R.id.list);
+        listView.setAdapter(itemsAdapter);
+
+
 
     }
 
-public JSONArray parse(String s){
-        JSONArray j = new JSONArray();
 
-        return j;
-
-}
 public void tomCat(){
     final RequestQueue queue = NetworkManager.sharedManager(this).queue;
     String URL ="http://10.0.2.2:8080/project1/auto?query=".concat(query);//.concat("&limit=1&page=").concat(Integer.toString(page));
 
     Log.d("url",URL);
-    ((TextView) findViewById(R.id.textView)).setText("searching for: "+URL);
+    ((TextView) findViewById(R.id.textView)).setText("searching for: "+msg);
     final StringRequest afterLoginRequest = new StringRequest(Request.Method.GET, URL,
             new Response.Listener<String>() {
                 @Override
@@ -83,17 +99,13 @@ public void tomCat(){
                         JSONObject reader = new JSONObject(response);
                         JSONArray ar = reader.getJSONArray("list");
                         ((TextView) findViewById(R.id.textView)).setText(ar.toString());
+                        table= ar;
 
                     }
                     catch(JSONException e){
                         Log.d("username.error", e.toString());
                         ((TextView) findViewById(R.id.textView)).setText("ERROR in parse");
-
                     }
-
-
-
-
                 }
             },
             new Response.ErrorListener() {
