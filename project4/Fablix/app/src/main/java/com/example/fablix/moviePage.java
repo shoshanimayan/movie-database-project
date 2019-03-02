@@ -72,15 +72,24 @@ public void tomCat(){
     String URL ="http://10.0.2.2:8080/project1/auto?query=".concat(query);//.concat("&limit=1&page=").concat(Integer.toString(page));
 
     Log.d("url",URL);
-    ((TextView) findViewById(R.id.textView)).setText(msg);
+    ((TextView) findViewById(R.id.textView)).setText("searching for: "+URL);
     final StringRequest afterLoginRequest = new StringRequest(Request.Method.GET, URL,
             new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
 
                     Log.d("username.reponse", response);
-                    String stuff =response;
-                    ((TextView) findViewById(R.id.textView)).setText(response);
+                    try {
+                        JSONObject reader = new JSONObject(response);
+                        JSONArray ar = reader.getJSONArray("list");
+                        ((TextView) findViewById(R.id.textView)).setText(ar.toString());
+
+                    }
+                    catch(JSONException e){
+                        Log.d("username.error", e.toString());
+                        ((TextView) findViewById(R.id.textView)).setText("ERROR in parse");
+
+                    }
 
 
 

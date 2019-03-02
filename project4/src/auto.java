@@ -79,7 +79,7 @@ public class auto extends HttpServlet {
 
 			
 			while (resultSet.next()) {
-				jsonArray.add(generateJsonObject(resultSet.getString("id"),resultSet.getString("title"),resultSet.getString("director"),resultSet.getString("genres"),resultSet.getString("rating"),resultSet.getString("stars"),resultSet.getString("starID"),resultSet.getString("year") ));
+				jsonArray.add(generateJsonObject(resultSet.getString("id"),resultSet.getString("title"),resultSet.getString("director"),resultSet.getString("genres"),resultSet.getString("rating"),resultSet.getString("stars"),resultSet.getString("year") ));
 
 	    		}
 	    		
@@ -108,7 +108,7 @@ public class auto extends HttpServlet {
 		// TODO Auto-generated method stub
 		doGet(request, response);
 	}
-	private static JsonObject generateJsonObject(String ID, String title, String Director, String Genres, String rating, String stars, String starIds, String year ) {		
+	private static JsonObject generateJsonObject(String ID, String title, String Director, String Genres, String rating, String stars, String year ) {		
 		JsonObject j = new JsonObject();
 		j.addProperty("value", title);
 		j.addProperty("ID", ID);
@@ -116,7 +116,6 @@ public class auto extends HttpServlet {
 		j.addProperty("genres", Genres);
 		j.addProperty("rate", rating);
 		j.addProperty("stars", stars);
-		j.addProperty("starId", starIds);
 		j.addProperty("year", year);
 
 		return j;

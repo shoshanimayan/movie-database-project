@@ -77,19 +77,18 @@ public class AndroidMovie extends HttpServlet {
 			//set up body
 			
 
-			JsonArray jsonArray = new JsonArray();
+			JsonObject f= new JsonObject();
 
 			
 			while (resultSet.next()) {
-				jsonArray.add(generateJsonObject(resultSet.getString("title"),resultSet.getString("director"),resultSet.getString("genres"),resultSet.getString("rating"),resultSet.getString("stars"),resultSet.getString("starID"),resultSet.getString("year") ));
-
+				f=generateJsonObject(resultSet.getString("title"),resultSet.getString("director"),resultSet.getString("genres"),resultSet.getString("rating"),resultSet.getString("stars"),resultSet.getString("year") );
 	    		}
 	    		
 		
 			resultSet.close();
 			stmt.close();
 			connection.close();
-			response.getWriter().write(jsonArray.toString());
+			response.getWriter().write(f.toString());
 			return;
 	    		
 		
@@ -107,14 +106,13 @@ public class AndroidMovie extends HttpServlet {
 		// TODO Auto-generated method stub
 		doGet(request, response);
 	}
-	private static JsonObject generateJsonObject(String title, String Director, String Genres, String rating, String stars, String starIds, String year ) {		
+	private static JsonObject generateJsonObject(String title, String Director, String Genres, String rating, String stars, String year ) {		
 		JsonObject j = new JsonObject();
 		j.addProperty("title", title);
 		j.addProperty("Dir", Director);
 		j.addProperty("genres", Genres);
 		j.addProperty("rate", rating);
 		j.addProperty("stars", stars);
-		j.addProperty("starId", starIds);
 		j.addProperty("year", year);
 
 		return j;
