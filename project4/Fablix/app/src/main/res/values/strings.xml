@@ -6,5 +6,6 @@
     <string name="button_search">Submit</string>
     <string name="edit_search">search</string>
     <string name="movieList">movie list</string>
+    <string name="title_login">Login</string>
 
 </resources>

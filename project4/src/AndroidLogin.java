@@ -39,6 +39,8 @@ public class AndroidLogin extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		String login = request.getParameter("query");
+		if (login == null)
+			login = "asdf_asdf";
 		
 		String loginUser = "mytestuser";
 	    String loginPasswd = "catcat123";
@@ -51,7 +53,7 @@ public class AndroidLogin extends HttpServlet {
 			// create database connection
 			Connection connection = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
 			
-			String[] info = login.split("+");
+			String[] info = login.split("_");
 	    	String email = info[0];
 	    	String password = info[1];
 	    	
