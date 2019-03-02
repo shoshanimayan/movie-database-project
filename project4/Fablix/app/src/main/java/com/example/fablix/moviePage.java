@@ -65,12 +65,16 @@ public class moviePage extends AppCompatActivity {
         tomCat();
         //String[] c = new String[2];
         ArrayList<JSONObject> c = new ArrayList<JSONObject>();
-        JSONObject j = new JSONObject();
-        try {
-            j.put("title", "test");
+
+        for(int i =0;i<limit;i++){
+            try {
+                c.add(table.getJSONObject(i));
+            }
+            catch(JSONException e){
+                Log.d("error in getting json",e.getMessage());
+
+            }
         }
-        catch (JSONException e){Log.d("json set up error",e.getMessage());}
-        c.add(j);
         //c[0]="birdadkjalfdsfgsfdsgfffffg\nfasdsdfadslksdjf;asdjdf\nflasdjfklajfkdjfalk\naskhflkadhklahfkalsd\nhiasdfliajfajf";
        // c[1]= "cat";
         viewer itemsAdapter = new viewer(c,this);
