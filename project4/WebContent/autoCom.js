@@ -34,6 +34,7 @@ function handleLookup(query, doneCallback) {
 function handleLookupAjaxSuccess(data, query, doneCallback) {
 	console.log("lookup successful")
 	if (JSON.parse(data) !== undefined && JSON.parse(data).length > 0) {
+		//console.log(data)
 		var jsonData= new Array;
 		for (i = 0; i < 10; i++) {
 			jsonData[i] =JSON.parse(data)[i]
@@ -50,7 +51,7 @@ function handleSelectSuggestion(suggestion) {
 	// TODO: jump to the specific result page based on the selected suggestion
 	
 	//console.log("you select " + suggestion["value"] + " with ID " + suggestion["data"]["ID"])
-	document.location.href="/project1/MovieServlet?fulltextSearch="+suggestion["value"];
+	document.location.href="/project1/SingleMovieServlet?query="+suggestion["data"]["ID"];
 }
 
 $('#autocomplete').autocomplete({
