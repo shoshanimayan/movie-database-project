@@ -50,7 +50,7 @@ public class moviePage extends AppCompatActivity {
     String msg="";
     JSONArray table = new JSONArray();
     Integer page=0;
-    Integer limit=3;
+    Integer limit=2;
 
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,10 +94,10 @@ public void tomCat(){
                         table= ar;
                         ArrayList<JSONObject> c = new ArrayList<JSONObject>();
 
-                        for(int i =0;i<limit;i++){
+                        for(int i =page;i<(limit+page);i++){
                             try {
                                 if(i>table.length()){break;}
-                               // Log.d("Length",Integer.toString(ar.length()));
+                                Log.d("index",Integer.toString(i));
                                // Log.d("index",table.getJSONObject(0).toString());
                                 c.add(ar.getJSONObject(i));
                             }
@@ -153,12 +153,23 @@ public void tomCat(){
 
 
 
-    public void sendMessage(View view) {
+    public void nextPage(View view) {
 
-        Intent goToIntent = new Intent(this, moviePage.class);
+        page+=limit;
+        if(page>table.length()){page=table.length()-limit;}
+        if(page<0){page=0;}
+        tomCat();
 
-        goToIntent.putExtra("search", msg);
-        startActivity(goToIntent);
+
+
+    }
+    public void prevPage(View view) {
+
+        page-=limit;
+        if(page<0){page=0;}
+        tomCat();
+
+
 
     }
 
