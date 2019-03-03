@@ -36,6 +36,9 @@ public class AutoJS extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		String email = (String)request.getSession().getAttribute("email");
+	       if (email == null)
+			    response.sendRedirect("/project1/LoginServlet?errormsg=You are not logged in");
 		String srch = request.getParameter("query");
 		if (srch==null) {srch="wonder bar";}
 		String[] pieces= srch.split(" ");
@@ -66,10 +69,7 @@ public class AutoJS extends HttpServlet {
 			
 			PreparedStatement stmt = connection.prepareStatement(query);
 			stmt.setString(1, parsedSearch);
-			ResultSet resultSet = stmt.executeQuery();
-			
-			//set up body
-			
+			ResultSet resultSet = stmt.executeQuery();			
 
 			JsonArray jsonArray = new JsonArray();
 
