@@ -74,7 +74,12 @@ public class moviePage extends AppCompatActivity {
 
 public void tomCat(){
     final RequestQueue queue = NetworkManager.sharedManager(this).queue;
-    String URL ="https://ec2-13-58-114-64.us-east-2.compute.amazonaws.com:8443/project1/auto?query=".concat(query);
+    String URL;
+    if(!query.equals("")){
+    URL ="https://ec2-13-58-114-64.us-east-2.compute.amazonaws.com:8443/project1/auto?query=".concat(query);}
+    else{
+        URL ="https://ec2-13-58-114-64.us-east-2.compute.amazonaws.com:8443/project1/auto?";
+}
     ((TextView) findViewById(R.id.textView)).setText("searching for: "+msg);
     final StringRequest afterLoginRequest = new StringRequest(Request.Method.GET, URL,
             new Response.Listener<String>() {
@@ -116,6 +121,8 @@ public void tomCat(){
                                    Intent goToIntent = new Intent(moviePage.this, movieStuff.class);
                                    goToIntent.putExtra("page", send.toString());
                                    goToIntent.putExtra("search", msg);
+                                   startActivity(goToIntent);
+
                                }catch(JSONException e){Log.d("sending error",e.getMessage());}
                             }
                         });
@@ -146,14 +153,14 @@ public void tomCat(){
 
 
 
+    public void sendMessage(View view) {
 
+        Intent goToIntent = new Intent(this, moviePage.class);
 
+        goToIntent.putExtra("search", msg);
+        startActivity(goToIntent);
 
-
-
-
-
-
+    }
 
 
 }
