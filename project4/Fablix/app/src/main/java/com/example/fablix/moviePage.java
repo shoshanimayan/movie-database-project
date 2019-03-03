@@ -156,7 +156,7 @@ public void tomCat(){
     public void nextPage(View view) {
 
         page+=limit;
-        if(page>table.length()){page=table.length()-limit;}
+        if(page>table.length()-1){page=table.length()-limit;}
         if(page<0){page=0;}
         tomCat();
 
