@@ -80,7 +80,7 @@ public void tomCat(){
     else{
         URL ="https://ec2-13-58-114-64.us-east-2.compute.amazonaws.com:8443/project1/auto?";
 }
-    ((TextView) findViewById(R.id.textView)).setText("searching for: "+msg);
+
     final StringRequest afterLoginRequest = new StringRequest(Request.Method.GET, URL,
             new Response.Listener<String>() {
                 @Override

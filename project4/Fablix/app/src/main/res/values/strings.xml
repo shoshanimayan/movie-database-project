@@ -14,5 +14,6 @@
     <string name="stuff_stars">Stars:</string>
     <string name="stuff_genres">Genres:</string>
     <string name="stuff_rating">Rating:</string>
+    <string name="title_movies">Movies</string>
 
 </resources>
