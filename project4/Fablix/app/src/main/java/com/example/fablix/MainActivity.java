@@ -1,5 +1,7 @@
 package com.example.fablix;
 
+import android.content.Context;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -17,11 +19,13 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class MainActivity extends AppCompatActivity {
+    Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        context = this;
     }
 
     public void verifyLogin(View view) {
@@ -46,11 +50,20 @@ public class MainActivity extends AppCompatActivity {
 
                         try {
                             JSONObject j = new JSONObject(response);
-                            ((TextView) findViewById(R.id.textView4)).setText(j.toString());
+                            String msg = j.getString("msg");
+
+                            if (msg.equals("Success")) {
+                                Intent goToSearch = new Intent(context, search.class);
+                                startActivity(goToSearch);
+                            }
+
+                            else {
+                                ((TextView) findViewById(R.id.textView4)).setText(msg);
+                            }
 
                         }
                         catch(JSONException e){
-                            ((TextView) findViewById(R.id.textView4)).setText("ERROR in Login");
+                            ((TextView) findViewById(R.id.textView4)).setText("ERROR");
 
                         }
 
