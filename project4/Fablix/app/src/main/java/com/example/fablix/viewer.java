@@ -33,8 +33,25 @@ public class viewer extends ArrayAdapter<JSONObject> {
         JSONObject movie = j.get(position);
 
         TextView titleView = (TextView)view.findViewById(R.id.mTitle);
+        TextView directorView = (TextView)view.findViewById(R.id.mDirector);
+        TextView yearView = (TextView)view.findViewById(R.id.mYear);
+        TextView GenreView = (TextView)view.findViewById(R.id.mGenres);
+        TextView StarView = (TextView)view.findViewById(R.id.mStars);
+        TextView ratingView = (TextView)view.findViewById(R.id.mRating);
+
+
+
+
+
         try {
-            titleView.setText(movie.getString("title"));
+            titleView.setText(movie.getString("value"));
+            directorView.setText(movie.getString("Dir"));
+            yearView.setText(movie.getString("year"));
+            GenreView.setText(movie.getString("genres"));
+            StarView.setText(movie.getString("stars"));
+            ratingView.setText(movie.getString("rate"));
+
+
         }
         catch (JSONException e){
             Log.d("viewer error",e.getMessage());}

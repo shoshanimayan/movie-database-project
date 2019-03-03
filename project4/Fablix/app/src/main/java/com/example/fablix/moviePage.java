@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -48,40 +49,24 @@ public class moviePage extends AppCompatActivity {
     String query="";
     String msg="";
     JSONArray table = new JSONArray();
-    Integer page=null;
-    Integer limit=1;
-    String[] finalTable= new String[limit];
+    Integer page=0;
+    Integer limit=3;
 
 
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         Bundle bundle = getIntent().getExtras();
+        if(bundle != null){
          msg = bundle.getString("search");
-        if(bundle.getString("page")==null){page=0;}
+         if(bundle.getString("page")==null){page=0;}
+         else{page = Integer.parseInt(bundle.getString("page"));}
+        }
         setContentView(R.layout.moviepage);
         query = msg;
        query = query.replace(" ", "+");
         tomCat();
         //String[] c = new String[2];
-        ArrayList<JSONObject> c = new ArrayList<JSONObject>();
-
-        for(int i =0;i<limit;i++){
-            try {
-                c.add(table.getJSONObject(i));
-            }
-            catch(JSONException e){
-                Log.d("error in getting json",e.getMessage());
-
-            }
-        }
-        //c[0]="birdadkjalfdsfgsfdsgfffffg\nfasdsdfadslksdjf;asdjdf\nflasdjfklajfkdjfalk\naskhflkadhklahfkalsd\nhiasdfliajfajf";
-       // c[1]= "cat";
-        viewer itemsAdapter = new viewer(c,this);
-      //  ArrayAdapter<String> itemsAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1,c );
-        ListView listView = (ListView) findViewById(R.id.list);
-        listView.setAdapter(itemsAdapter);
-
 
 
     }
@@ -89,9 +74,7 @@ public class moviePage extends AppCompatActivity {
 
 public void tomCat(){
     final RequestQueue queue = NetworkManager.sharedManager(this).queue;
-    String URL ="http://10.0.2.2:8080/project1/auto?query=".concat(query);//.concat("&limit=1&page=").concat(Integer.toString(page));
-
-    Log.d("url",URL);
+    String URL ="https://ec2-13-58-114-64.us-east-2.compute.amazonaws.com:8443/project1/auto?query=".concat(query);
     ((TextView) findViewById(R.id.textView)).setText("searching for: "+msg);
     final StringRequest afterLoginRequest = new StringRequest(Request.Method.GET, URL,
             new Response.Listener<String>() {
@@ -102,8 +85,42 @@ public void tomCat(){
                     try {
                         JSONObject reader = new JSONObject(response);
                         JSONArray ar = reader.getJSONArray("list");
-                        ((TextView) findViewById(R.id.textView)).setText(ar.toString());
+                        Log.d("jsonarrystuff",ar.toString());
                         table= ar;
+                        ArrayList<JSONObject> c = new ArrayList<JSONObject>();
+
+                        for(int i =0;i<limit;i++){
+                            try {
+                                if(i>table.length()){break;}
+                               // Log.d("Length",Integer.toString(ar.length()));
+                               // Log.d("index",table.getJSONObject(0).toString());
+                                c.add(ar.getJSONObject(i));
+                            }
+                            catch(JSONException e){
+                                Log.d("error in getting json",e.getMessage());
+
+                            }
+                        }
+
+                        viewer adp = new viewer(c,moviePage.this);
+                        ListView listView = (ListView) findViewById(R.id.list);
+                        listView.setAdapter(adp);
+
+                        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                            @Override
+                            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                                String clicked = parent.getItemAtPosition(position).toString();
+                               try {
+                                   JSONObject send = new JSONObject(clicked);
+                                 //  Toast.makeText(getApplicationContext(),send.toString() , Toast.LENGTH_SHORT).show();
+
+                               }catch(JSONException e){Log.d("sending error",e.getMessage());}
+                            }
+                        });
+
+
+
+
 
                     }
                     catch(JSONException e){
