@@ -19,9 +19,7 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".movieStuff"
-            android:parentActivityName=".moviePage">
-        </activity>
+        <activity android:name=".movieStuff" />
 
         <activity android:name=".moviePage"
             android:parentActivityName=".search">
