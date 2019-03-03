@@ -59,8 +59,8 @@ public class moviePage extends AppCompatActivity {
         Bundle bundle = getIntent().getExtras();
         if(bundle != null){
          msg = bundle.getString("search");
-         if(bundle.getString("page")==null){page=0;}
-         else{page = Integer.parseInt(bundle.getString("page"));}
+         if(bundle.getString("move")==null){page=0;}
+         else{page = bundle.getInt("move");}
         }
         setContentView(R.layout.moviepage);
         query = msg;
@@ -113,7 +113,9 @@ public void tomCat(){
                                try {
                                    JSONObject send = new JSONObject(clicked);
                                  //  Toast.makeText(getApplicationContext(),send.toString() , Toast.LENGTH_SHORT).show();
-
+                                   Intent goToIntent = new Intent(moviePage.this, movieStuff.class);
+                                   goToIntent.putExtra("page", send.toString());
+                                   goToIntent.putExtra("search", msg);
                                }catch(JSONException e){Log.d("sending error",e.getMessage());}
                             }
                         });
