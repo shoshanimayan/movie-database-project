@@ -174,7 +174,13 @@ public void tomCat(){
         if(page<0){page=0;}
         tomCat();
 
+    }
 
+    public void sendBack(View view) {
+
+        Intent goToIntent = new Intent(this, search.class);
+
+        startActivity(goToIntent);
 
     }
 
