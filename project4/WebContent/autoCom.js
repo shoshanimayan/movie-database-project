@@ -33,12 +33,14 @@ function handleLookup(query, doneCallback) {
 
 function handleLookupAjaxSuccess(data, query, doneCallback) {
 	console.log("lookup successful")
-	if (JSON.parse(data) !== undefined && JSON.parse(data).length > 0) {
+	if (JSON.parse(data).length > 0) {
 		//console.log(data)
 		var jsonData= new Array;
 		for (i = 0; i < 10; i++) {
+			if(i>=JSON.parse(data).length){break;}
 			jsonData[i] =JSON.parse(data)[i]
-		} 
+			//console.log(JSON.parse(data)[i])}
+			}
 		dict[query]= jsonData
 		console.log(jsonData)
 		doneCallback( { suggestions: jsonData } );
