@@ -39,15 +39,15 @@ public class MainPage extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		String email = (String)request.getSession().getAttribute("email");
-       //if (email == null)
-		//    response.sendRedirect("/project1/LoginServlet?errormsg=You are not logged in");
+       if (email == null)
+		    response.sendRedirect("/project1/LoginServlet?errormsg=You are not logged in");
 		
 		String src = request.getParameter("src");
 		if (src==null) {src="title";}
 		
 		// change this to your own mysql username and password
-		String loginUser = "root";
-	    String loginPasswd = "espeon123";
+		String loginUser = "mytestuser";
+	    String loginPasswd = "catcat123";
         String loginUrl = "jdbc:mysql://localhost:3306/moviedb";
 		
         // set response mime type
