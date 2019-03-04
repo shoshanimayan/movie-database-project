@@ -106,7 +106,7 @@ public class MovieServlet extends HttpServlet {
 	    		parsedSearch+="+"+pieces[i]+"*";
 	    	}
         }
-        out.println(parsedSearch);
+       // out.println(parsedSearch);
 
         sortBy = request.getParameter("sort");
         if(sortBy==null||sortBy=="") {sortBy=(String)request.getSession().getAttribute("sort");}
