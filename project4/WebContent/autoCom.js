@@ -55,7 +55,7 @@ function handleSelectSuggestion(suggestion) {
 	//console.log("you select " + suggestion["value"] + " with ID " + suggestion["data"]["ID"])
 	document.location.href="/project1/SingleMovieServlet?query="+suggestion["data"]["ID"];
 }
-
+$('#autocomplete').options(triggerSelectOnValidInput=false)
 $('#autocomplete').autocomplete({
 	// documentation of the lookup function can be found under the "Custom lookup function" section
     lookup: function (query, doneCallback) {
