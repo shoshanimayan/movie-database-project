@@ -1,0 +1,20 @@
+mysql> use moviedb;
+
+mysql> delimiter $$
+
+mysql> CREATE PROCEDURE add_star(IN starName VARCHAR(100), IN starYear INT)
+    -> BEGIN
+    ->   DECLARE lastId INT;
+    ->   DECLARE newId VARCHAR(10);
+    ->   DECLARE maxId VARCHAR(10);
+
+    ->   SELECT max(id) INTO maxId from stars;
+    ->   SELECT ( (SUBSTRING_INDEX(maxId, 'm', -1)) + 0) INTO lastId;
+    ->   SET lastId = lastId + 1;
+    ->   SELECT CAST(lastId as CHAR(10)) INTO newId;
+    ->   SELECT CONCAT("nm", newId) INTO newId;
+    ->   INSERT INTO stars VALUES (newId, starName, starYear);
+    -> END
+    -> $$
+
+mysql> delimiter ;
