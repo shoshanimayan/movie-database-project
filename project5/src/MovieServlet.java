@@ -9,11 +9,15 @@ import java.sql.ResultSet;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.naming.Context;
+import javax.naming.InitialContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.sql.DataSource;
+
 import project1.helperFunct;
 
 /**
@@ -40,12 +44,12 @@ public class MovieServlet extends HttpServlet {
 		
 		String email = (String)request.getSession().getAttribute("email");
         if (email == null || cart==null)
-		    response.sendRedirect("/project1/LoginServlet?errormsg=You are not logged in");	
+        	response.sendRedirect("/project1/LoginServlet?errormsg=You are not logged in");	
         
 		// change this to your own mysql username and password
-        String loginUser = "mytestuser";
-	    String loginPasswd = "catcat123";
-        String loginUrl = "jdbc:mysql://localhost:3306/moviedb";
+       // String loginUser = "mytestuser";
+	   // String loginPasswd = "catcat123";
+       // String loginUrl = "jdbc:mysql://localhost:3306/moviedb";
 		
         // set response mime type
         response.setContentType("text/html"); 
@@ -170,9 +174,19 @@ public class MovieServlet extends HttpServlet {
         
         try {
     		Class.forName("com.mysql.jdbc.Driver").newInstance();
-    		// create database connection
-    		Connection connection = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
-    		
+    		 Context initCtx = new InitialContext();
+
+             Context envCtx = (Context) initCtx.lookup("java:comp/env");
+             if (envCtx == null)
+                 out.println("envCtx is NULL");
+
+             DataSource ds = (DataSource) envCtx.lookup("jdbc/moviedb");
+
+
+             if (ds == null)
+                 out.println("ds is null.");
+
+             Connection connection= ds.getConnection();    		
     		
     		out.println("");
     		PreparedStatement qry = null;

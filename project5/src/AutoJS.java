@@ -7,11 +7,14 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
+import javax.naming.Context;
+import javax.naming.InitialContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.sql.DataSource;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -37,8 +40,8 @@ public class AutoJS extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String email = (String)request.getSession().getAttribute("email");
-	       if (email == null)
-			    response.sendRedirect("/project1/LoginServlet?errormsg=You are not logged in");
+	//       if (email == null)
+		//	    response.sendRedirect("/project1/LoginServlet?errormsg=You are not logged in");
 		String srch = request.getParameter("query");
 		if (srch==null) {srch="wonder bar";}
 		String[] pieces= srch.split(" ");
@@ -62,8 +65,20 @@ public class AutoJS extends HttpServlet {
 	    try {
 	    	Class.forName("com.mysql.jdbc.Driver").newInstance();
 			// create database connection
-			Connection connection = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
+	    	// create database connection
+   		 Context initCtx = new InitialContext();
 
+            Context envCtx = (Context) initCtx.lookup("java:comp/env");
+            if (envCtx == null)
+                out.println("envCtx is NULL");
+
+            DataSource ds = (DataSource) envCtx.lookup("jdbc/moviedb");
+
+
+            if (ds == null)
+                out.println("ds is null.");
+
+            Connection connection= ds.getConnection();  
 			
 			String query =  "SELECT id, title from movies WHERE MATCH (title) AGAINST (? IN BOOLEAN MODE)";
 			

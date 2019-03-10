@@ -7,11 +7,14 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
+import javax.naming.Context;
+import javax.naming.InitialContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.sql.DataSource;
 
 import project1.helperFunct;
 
@@ -65,8 +68,20 @@ protected void doGet(HttpServletRequest request, HttpServletResponse response) t
     try {
     	Class.forName("com.mysql.jdbc.Driver").newInstance();
 		// create database connection
-		Connection connection = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
+    	// create database connection
+		 Context initCtx = new InitialContext();
 
+        Context envCtx = (Context) initCtx.lookup("java:comp/env");
+        if (envCtx == null)
+            out.println("envCtx is NULL");
+
+        DataSource ds = (DataSource) envCtx.lookup("jdbc/moviedb");
+
+
+        if (ds == null)
+            out.println("ds is null.");
+
+        Connection connection= ds.getConnection();  
 		
 		String query =  "SELECT * From stars as s\r\n" + 
 				"Join(\r\n" + 

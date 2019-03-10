@@ -9,11 +9,14 @@ import java.sql.ResultSet;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.naming.Context;
+import javax.naming.InitialContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.sql.DataSource;
 
 /**
  * Servlet implementation class PaymentFilterServlet
@@ -61,8 +64,20 @@ public class PaymentFilterServlet extends HttpServlet {
         try {
     		Class.forName("com.mysql.jdbc.Driver").newInstance();
     		// create database connection
-    		Connection connection = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
-    			
+    		// create database connection
+   		 Context initCtx = new InitialContext();
+
+            Context envCtx = (Context) initCtx.lookup("java:comp/env");
+            if (envCtx == null)
+                out.println("envCtx is NULL");
+
+            DataSource ds = (DataSource) envCtx.lookup("jdbc/moviedb");
+
+
+            if (ds == null)
+                out.println("ds is null.");
+
+            Connection connection= ds.getConnection();      			
     		
     		String query = "SELECT * FROM creditcards WHERE firstName = ? AND lastName = ? AND id = ? AND expiration = ?";
     		PreparedStatement stmt = connection.prepareStatement(query);

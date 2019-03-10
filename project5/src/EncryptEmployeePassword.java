@@ -5,6 +5,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.sql.DataSource;
+
 import org.jasypt.util.password.PasswordEncryptor;
 import org.jasypt.util.password.StrongPasswordEncryptor;
 
@@ -27,7 +31,14 @@ public class EncryptEmployeePassword {
         String loginUrl = "jdbc:mysql://localhost:3306/moviedb";
 
         Class.forName("com.mysql.jdbc.Driver").newInstance();
-        Connection connection = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
+     // create database connection
+		 Context initCtx = new InitialContext();
+
+        Context envCtx = (Context) initCtx.lookup("java:comp/env");
+   
+        DataSource ds = (DataSource) envCtx.lookup("jdbc/moviedb");
+
+        Connection connection= ds.getConnection();  
         
 		
         // change the employees table password column from VARCHAR(20) to VARCHAR(128)

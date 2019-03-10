@@ -6,6 +6,8 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 
 import javax.annotation.Resource;
+import javax.naming.Context;
+import javax.naming.InitialContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -39,16 +41,16 @@ public class MainPage extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		String email = (String)request.getSession().getAttribute("email");
-       if (email == null)
-		    response.sendRedirect("/project1/LoginServlet?errormsg=You are not logged in");
+       //if (email == null)
+		 //   response.sendRedirect("/project1/LoginServlet?errormsg=You are not logged in");
 		
 		String src = request.getParameter("src");
 		if (src==null) {src="title";}
 		
 		// change this to your own mysql username and password
-		String loginUser = "mytestuser";
-	    String loginPasswd = "catcat123";
-        String loginUrl = "jdbc:mysql://localhost:3306/moviedb";
+		//String loginUser = "mytestuser";
+	   // String loginPasswd = "catcat123";
+       // String loginUrl = "jdbc:mysql://localhost:3306/moviedb";
 		
         // set response mime type
         response.setContentType("text/html"); 
@@ -75,8 +77,19 @@ public class MainPage extends HttpServlet {
         try {
     		Class.forName("com.mysql.jdbc.Driver").newInstance();
     		// create database connection
-    		Connection connection = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
+    		 Context initCtx = new InitialContext();
 
+             Context envCtx = (Context) initCtx.lookup("java:comp/env");
+             if (envCtx == null)
+                 out.println("envCtx is NULL");
+
+             DataSource ds = (DataSource) envCtx.lookup("jdbc/moviedb");
+
+
+             if (ds == null)
+                 out.println("ds is null.");
+
+             Connection connection= ds.getConnection();  
     		
     		//set up body
     		out.println("<head>");
