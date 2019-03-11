@@ -56,12 +56,12 @@ public class LoginFilterServlet extends HttpServlet {
         System.out.println("gRecaptchaResponse=" + gRecaptchaResponse);
 
         // Verify reCAPTCHA
-        try {
-            RecaptchaHelper.verify(gRecaptchaResponse);
-        } catch (Exception e) {
-			response.sendRedirect("/project1/LoginServlet?errormsg=Need reCAPTCHA");
-
-        }
+     //   try {
+     //       RecaptchaHelper.verify(gRecaptchaResponse);
+     //   } catch (Exception e) {
+	//		response.sendRedirect("/project1/LoginServlet?errormsg=Need reCAPTCHA");
+//
+  //      }
    	
 		 // change this to your own mysql username and password
       //  String loginUser = "mytestuser";
