@@ -82,7 +82,7 @@ public class LoginServlet extends HttpServlet {
     		
     		if (errormsg != null)
     			out.println(errormsg);
-    		out.println("<script src='https://www.google.com/recaptcha/api.js'></script>");
+    	//	out.println("<script src='https://www.google.com/recaptcha/api.js'></script>");
     		out.println("<h1>Login to Fablix</h1>");
     		out.println("<form id=\"login_form\" method=\"post\" action=\"/project1/LoginFilterServlet?filterTo=/project1/MainPage\">");
     	    out.println("<label><b>Email</b></label>");
@@ -92,7 +92,7 @@ public class LoginServlet extends HttpServlet {
     	    out.println("<input type=\"password\" placeholder=\"Enter Password\" name=\"password\" required>");
     	    out.println("<br>");
     	    out.println("<br>");
-    	    out.println("<div class=\"g-recaptcha\" data-sitekey=\"6Le2P5AUAAAAANWO0tg7PIKQ6ms8WQd6IgYxProo\"></div>");
+    	    //out.println("<div class=\"g-recaptcha\" data-sitekey=\"6Le2P5AUAAAAANWO0tg7PIKQ6ms8WQd6IgYxProo\"></div>");
 
     	    out.println("<input type=\"submit\"  value=\"Login\">");
     	    out.println("</form>");
