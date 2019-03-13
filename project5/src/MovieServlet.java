@@ -1,5 +1,7 @@
 
 
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
@@ -38,13 +40,26 @@ public class MovieServlet extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		//File file = new File("test");
+		String contextPath = getServletContext().getRealPath("/");
+
+		String xmlFilePath=contextPath+"\\TimeLogs";
+
+		File myfile = new File(xmlFilePath);
+		myfile.createNewFile();
+		FileWriter f = new FileWriter(xmlFilePath, true);
 		
+
+
+		
+		long startTime = System.nanoTime();
+
 		Map<String, Integer> cart= new HashMap<String,Integer>();
         cart = (HashMap<String, Integer>)request.getSession().getAttribute("cart");
 		
 		String email = (String)request.getSession().getAttribute("email");
-        if (email == null || cart==null)
-        	response.sendRedirect("/project1/LoginServlet?errormsg=You are not logged in");	
+        //if (email == null || cart==null)
+        	//response.sendRedirect("/project1/LoginServlet?errormsg=You are not logged in");	
         
 		// change this to your own mysql username and password
        // String loginUser = "mytestuser";
@@ -187,7 +202,7 @@ public class MovieServlet extends HttpServlet {
                  out.println("ds is null.");
 
              Connection connection= ds.getConnection();    		
-    		
+             long startJD = System.nanoTime();
     		out.println("");
     		PreparedStatement qry = null;
     		String qry2="";
@@ -361,7 +376,8 @@ if(sortBy.equals("m.title")&&direction.equals("ASC"))
             request.getSession().setAttribute("fulltextSearch", fulltextSearch);
     		
     		ResultSet resultSet = qry.executeQuery();
-    		
+    		long endJD = System.nanoTime();
+
     		//set up body
     		out.println("<body>");
     		out.println("<button onclick=\"window.location.href = \'/project1/MainPage\';\"><h4>Main Page</h4></button>");
@@ -426,7 +442,13 @@ if(sortBy.equals("m.title")&&direction.equals("ASC"))
     		
     		resultSet.close();
     		connection.close();
-        		
+    		long endTime = System.nanoTime();
+    		long fullTime = (endTime - startTime);
+    		long JDBCTime = (endJD-startJD);
+    		f.write(String.valueOf(fullTime)+"-"+String.valueOf(JDBCTime)+"\n");
+  
+    		
+    		f.close();
         } catch (Exception e) {
     		/*
     		 * After you deploy the WAR file through tomcat manager webpage,
