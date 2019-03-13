@@ -1,5 +1,9 @@
+import os
 def reader():
-    f = open("C:/Users/Shoshani/Desktop/apache-tomcat-8.5.37/webapps/project1/TimeLogs", "r")
+
+    path = os.getcwd()
+    print(path)
+    f = open(path+"/TimeLogs", "r")
     text = f.readlines()
     sum1=0
     sum2=0
@@ -19,3 +23,4 @@ def reader():
     
 if __name__ == "__main__":
     reader()
+ 
