@@ -2,7 +2,7 @@ import os
 def reader():
 
     path = os.getcwd()
-    print(path)
+    
     f = open(path+"/TimeLogs", "r")
     text = f.readlines()
     sum1=0
