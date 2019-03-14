@@ -37,8 +37,8 @@ public class AddStar extends HttpServlet {
 		String email = (String)request.getSession().getAttribute("employee_email");
 		String msg = request.getParameter("msg");
 		
-		if (email == null)
-		    response.sendRedirect("/project1/_dashboard?errormsg=You are not logged in");
+		//if (email == null)
+		  //  response.sendRedirect("/project1/_dashboard?errormsg=You are not logged in");
 						
 		// change this to your own mysql username and password
     	String loginUser = "mytestuser";

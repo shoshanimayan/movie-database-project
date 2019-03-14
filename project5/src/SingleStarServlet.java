@@ -38,8 +38,8 @@ public class SingleStarServlet extends HttpServlet {
 protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 	String email = (String)request.getSession().getAttribute("email");
-    if (email == null)
-	    response.sendRedirect("/project1/LoginServlet?errormsg=You are not logged in");	
+    //if (email == null)
+	  //  response.sendRedirect("/project1/LoginServlet?errormsg=You are not logged in");	
 		
 	String star_to_search = request.getParameter("query");
 		

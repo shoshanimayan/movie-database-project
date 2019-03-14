@@ -45,8 +45,8 @@ public class ConfirmationServlet extends HttpServlet {
         cart = (HashMap<String, Integer>)request.getSession().getAttribute("cart");
 		
 		String email = (String)request.getSession().getAttribute("email");
-        if (email == null || cart==null)
-		    response.sendRedirect("/project1/LoginServlet?errormsg=You are not logged in");
+      //  if (email == null || cart==null)
+		//    response.sendRedirect("/project1/LoginServlet?errormsg=You are not logged in");
                 
         
 		// change this to your own mysql username and password

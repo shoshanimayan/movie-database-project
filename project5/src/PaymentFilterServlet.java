@@ -42,8 +42,8 @@ public class PaymentFilterServlet extends HttpServlet {
         cart = (HashMap<String, Integer>)request.getSession().getAttribute("cart");
 		
 		String email = (String)request.getSession().getAttribute("email");
-        if (email == null || cart==null)
-		    response.sendRedirect("/project1/LoginServlet?errormsg=You are not logged in");	
+      //  if (email == null || cart==null)
+		//    response.sendRedirect("/project1/LoginServlet?errormsg=You are not logged in");	
         
 		String first_name = request.getParameter("first_name");
 		String last_name = request.getParameter("last_name");

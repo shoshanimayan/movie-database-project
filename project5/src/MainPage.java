@@ -41,8 +41,8 @@ public class MainPage extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		String email = (String)request.getSession().getAttribute("email");
-       if (email == null)
-		    response.sendRedirect("/project1/LoginServlet?errormsg=You are not logged in");
+      // if (email == null)
+		//    response.sendRedirect("/project1/LoginServlet?errormsg=You are not logged in");
 		
 		String src = request.getParameter("src");
 		if (src==null) {src="title";}

@@ -40,8 +40,8 @@ public class PaymentServlet extends HttpServlet {
         cart = (HashMap<String, Integer>)request.getSession().getAttribute("cart");
 		
 		String email = (String)request.getSession().getAttribute("email");
-        if (email == null || cart==null)
-		    response.sendRedirect("/project1/LoginServlet?errormsg=You are not logged in");	
+        //if (email == null || cart==null)
+		  //  response.sendRedirect("/project1/LoginServlet?errormsg=You are not logged in");	
         
         if (cart.size() <= 0)
 		    response.sendRedirect("/project1/ShoppingCart?errormsg=No items to checkout");	
