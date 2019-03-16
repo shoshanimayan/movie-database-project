@@ -43,7 +43,7 @@ public class MovieServlet extends HttpServlet {
 		//File file = new File("test");
 		String contextPath = getServletContext().getRealPath("/");
 
-		String xmlFilePath=contextPath+"\\TimeLogs";
+		String xmlFilePath=contextPath+"/TimeLogs.txt";
 
 		File myfile = new File(xmlFilePath);
 		myfile.createNewFile();
