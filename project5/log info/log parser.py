@@ -3,7 +3,7 @@ def reader():
 
     path = os.getcwd()
     
-    f = open(path+"/TimeLogs", "r")
+    f = open(path+"/TimeLogs.txt", "r")
     text = f.readlines()
     sum1=0
     sum2=0
