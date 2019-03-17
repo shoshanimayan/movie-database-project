@@ -157,7 +157,7 @@ public class MovieServlet extends HttpServlet {
         String count = request.getParameter("pCount");
         if(count==null||count=="") { 
         	pCount =(Integer)request.getSession().getAttribute("pCount");
-            if(pCount==null || pCount <= 0) {pCount=50;}
+            if(pCount==null || pCount <= 0) {pCount=20;}
         	}
         else {
         	pCount = Integer.parseInt(count);
