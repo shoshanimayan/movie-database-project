@@ -41,9 +41,9 @@ public class AddMovieFilter extends HttpServlet {
 		  //  response.sendRedirect("/project1/_dashboard?errormsg=You are not logged in");
 						
 		// change this to your own mysql username and password
-    	String loginUser = "mytestuser";
-	    String loginPasswd = "catcat123";
-        String loginUrl = "jdbc:mysql://localhost:3306/moviedb";
+    	//String loginUser = "mytestuser";
+	    //String loginPasswd = "catcat123";
+        //String loginUrl = "jdbc:mysql://localhost:3306/moviedb";
 		
         // set response mime type
         response.setContentType("text/html"); 
@@ -69,8 +69,7 @@ public class AddMovieFilter extends HttpServlet {
             if (envCtx == null)
                 out.println("envCtx is NULL");
 
-            DataSource ds = (DataSource) envCtx.lookup("jdbc/moviedb");
-
+            DataSource ds = (DataSource) envCtx.lookup("jdbc/write_moviedb");
 
             if (ds == null)
                 out.println("ds is null.");

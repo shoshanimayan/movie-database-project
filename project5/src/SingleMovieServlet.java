@@ -49,9 +49,9 @@ public class SingleMovieServlet extends HttpServlet {
         cart = (HashMap<String, Integer>)request.getSession().getAttribute("cart");
 
 		// change this to your own mysql username and password
-    	String loginUser = "mytestuser";
-	    String loginPasswd = "catcat123";
-        String loginUrl = "jdbc:mysql://localhost:3306/moviedb";
+    	//String loginUser = "mytestuser";
+	    //String loginPasswd = "catcat123";
+        //String loginUrl = "jdbc:mysql://localhost:3306/moviedb";
 		
         // set response mime type
         response.setContentType("text/html"); 

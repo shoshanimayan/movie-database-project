@@ -14,6 +14,17 @@
               driverClassName="com.mysql.jdbc.Driver"
               url="jdbc:mysql://localhost:3306/moviedb?autoReconnect=true&amp;useSSL=false&amp;cachePrepStmts=true"/>
 
+<Resource name="jdbc/write_moviedb"
+          		 auth="Container" 
+          		 type="javax.sql.DataSource"
+              maxTotal="100" 
+              maxIdle="30"
+               maxWaitMillis="10000"
+              username="mytestuser"
+              password="mypassword" 
+              driverClassName="com.mysql.jdbc.Driver"
+              url="jdbc:mysql://172.31.42.140:3306/moviedb?autoReconnect=true&amp;useSSL=false&amp;cachePrepStmts=true"/>
+
               
 
 

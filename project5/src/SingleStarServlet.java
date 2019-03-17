@@ -44,9 +44,9 @@ protected void doGet(HttpServletRequest request, HttpServletResponse response) t
 	String star_to_search = request.getParameter("query");
 		
 	 // change this to your own mysql username and password
-	String loginUser = "mytestuser";
-    String loginPasswd = "catcat123";
-    String loginUrl = "jdbc:mysql://localhost:3306/moviedb";
+	//String loginUser = "mytestuser";
+    //String loginPasswd = "catcat123";
+    //String loginUrl = "jdbc:mysql://localhost:3306/moviedb";
 	
     // set response mime type
     response.setContentType("text/html"); 

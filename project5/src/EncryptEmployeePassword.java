@@ -36,7 +36,7 @@ public class EncryptEmployeePassword {
 
         Context envCtx = (Context) initCtx.lookup("java:comp/env");
    
-        DataSource ds = (DataSource) envCtx.lookup("jdbc/moviedb");
+        DataSource ds = (DataSource) envCtx.lookup("jdbc/write_moviedb");
 
         Connection connection= ds.getConnection();  
         

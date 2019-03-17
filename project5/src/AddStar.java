@@ -41,9 +41,9 @@ public class AddStar extends HttpServlet {
 		  //  response.sendRedirect("/project1/_dashboard?errormsg=You are not logged in");
 						
 		// change this to your own mysql username and password
-    	String loginUser = "mytestuser";
-	    String loginPasswd = "catcat123";
-        String loginUrl = "jdbc:mysql://localhost:3306/moviedb";
+    	//String loginUser = "mytestuser";
+	    //String loginPasswd = "catcat123";
+        //String loginUrl = "jdbc:mysql://localhost:3306/moviedb";
 		
         // set response mime type
         response.setContentType("text/html"); 

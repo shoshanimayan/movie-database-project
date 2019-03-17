@@ -50,9 +50,9 @@ public class ConfirmationServlet extends HttpServlet {
                 
         
 		// change this to your own mysql username and password
-    	String loginUser = "mytestuser";
-	    String loginPasswd = "catcat123";
-        String loginUrl = "jdbc:mysql://localhost:3306/moviedb";
+    	//String loginUser = "mytestuser";
+	    //String loginPasswd = "catcat123";
+        //String loginUrl = "jdbc:mysql://localhost:3306/moviedb";
 		
         // set response mime type
         response.setContentType("text/html"); 
@@ -81,7 +81,7 @@ public class ConfirmationServlet extends HttpServlet {
             if (envCtx == null)
                 out.println("envCtx is NULL");
 
-            DataSource ds = (DataSource) envCtx.lookup("jdbc/moviedb");
+            DataSource ds = (DataSource) envCtx.lookup("jdbc/write_moviedb");
 
 
             if (ds == null)
