@@ -207,8 +207,15 @@ public class MovieServlet extends HttpServlet {
     		PreparedStatement qry = null;
     		String qry2="";
     		
+    		
     		if (fulltextSearch != null) {
-    			qry2 = "SELECT * FROM movies as m Left JOIN  ratings as r ON r.movieId = m.id left join (select movieId, title, group_concat(name) as genres from genres_in_movies left join genres on genres_in_movies.genreId = genres.id left join movies on genres_in_movies.movieId = movies.id Group by movies.id ) as gm ON gm.movieId = m.id left join ( select movieId, title, group_concat(name) as stars, group_concat(starId) as starID from stars_in_movies left join stars on stars_in_movies.starId = stars.id left join movies on stars_in_movies.movieId = movies.id Group by movies.id ) as sm ON sm.movieId = m.id WHERE MATCH (m.title) AGAINST (? IN BOOLEAN MODE)"        ;		 
+    			qry2 = "SELECT * FROM movies as m Left JOIN  ratings as r ON r.movieId = m.id left join "
+    					+ "(select movieId, title, group_concat(name) as genres from genres_in_movies left join genres "
+    					+ "on genres_in_movies.genreId = genres.id left join movies on genres_in_movies.movieId = movies.id "
+    					+ "Group by movies.id ) as gm ON gm.movieId = m.id left join ( select movieId, title, group_concat(name)"
+    					+ " as stars, group_concat(starId) as starID from stars_in_movies left join stars on stars_in_movies.starId "
+    					+ "= stars.id left join movies on stars_in_movies.movieId = movies.id Group by movies.id ) "
+    					+ "as sm ON sm.movieId = m.id WHERE MATCH (m.title) AGAINST (? IN BOOLEAN MODE)"        ;		 
        		 if(currentPage<0) {currentPage=0;}
     			int Qsize = 0;
     			 qry = connection.prepareStatement(qry2);
@@ -239,7 +246,12 @@ public class MovieServlet extends HttpServlet {
     		}
     		
     		else if(genreBrowse!=null) {
-qry2+="SELECT * FROM movies as m Left JOIN ratings as r ON r.movieId = m.id join ( select movieId, title, group_concat(name) as genres from genres_in_movies join genres on genres_in_movies.genreId = genres.id join movies on genres_in_movies.movieId = movies.id Group by movies.id HAVING FIND_IN_SET( ? , genres) > 0 ) as gm ON gm.movieId = m.id join ( select movieId, title, group_concat(name) as stars, group_concat(starId) as starID from stars_in_movies join stars on stars_in_movies.starId = stars.id join movies on stars_in_movies.movieId = movies.id Group by movies.id) as sm ON sm.movieId = m.id";
+qry2+="SELECT * FROM movies as m Left JOIN ratings as r ON r.movieId = m.id join ( select movieId, title, group_concat(name) as"
+		+ " genres from genres_in_movies join genres on genres_in_movies.genreId = genres.id join movies on genres_in_movies.movieId"
+		+ " = movies.id Group by movies.id HAVING FIND_IN_SET( ? , genres) > 0 ) as gm ON gm.movieId = "
+		+ "m.id join ( select movieId, title, group_concat(name) as stars, group_concat(starId) as starID from stars_in_movies"
+		+ " join stars on stars_in_movies.starId = stars.id join movies on stars_in_movies.movieId = movies.id"
+		+ " Group by movies.id) as sm ON sm.movieId = m.id";
 
 
 if(currentPage<0) {currentPage=0;}
@@ -272,7 +284,13 @@ if(sortBy.equals("m.title")&&direction.equals("ASC"))
 
     		}
     		else if(titleBrowse!=null) {
-        		 qry2 = "SELECT * FROM movies as m Left JOIN  ratings as r ON r.movieId = m.id join (select movieId, title, group_concat(name) as genres from genres_in_movies join genres on genres_in_movies.genreId = genres.id join movies on genres_in_movies.movieId = movies.id Group by movies.id ) as gm ON gm.movieId = m.id join ( select movieId, title, group_concat(name) as stars, group_concat(starId) as starID from stars_in_movies join stars on stars_in_movies.starId = stars.id join movies on stars_in_movies.movieId = movies.id Group by movies.id ) as sm ON sm.movieId = m.id WHERE SUBSTRING(m.title, 1, 1) = ? ";
+        		 qry2 = "SELECT * FROM movies as m Left JOIN  ratings as r ON r.movieId = m.id "
+        		 		+ "join (select movieId, title, group_concat(name) as genres from genres_in_movies "
+        		 		+ "join genres on genres_in_movies.genreId = genres.id join movies on genres_in_movies.movieId = movies.id "
+        		 		+ "Group by movies.id ) as gm ON gm.movieId = m.id join ( select movieId, title, group_concat(name) as stars,"
+        		 		+ " group_concat(starId) as starID from stars_in_movies join stars on stars_in_movies.starId = stars.id"
+        		 		+ " join movies on stars_in_movies.movieId = movies.id Group by movies.id ) as sm ON sm.movieId = m.id "
+        		 		+ "WHERE SUBSTRING(m.title, 1, 1) = ? ";
         		 
         		 if(currentPage<0) {currentPage=0;}
      			int Qsize = 0;
