@@ -1,0 +1,114 @@
+ <!DOCTYPE html>
+<html>
+<head>
+<style>
+body {
+    background-color: linen;
+}
+
+td {
+    border-top-style: solid;
+}
+</style>
+</head>
+<body>
+
+<table style="width:100%">
+  <tr style="font-weight:bold; background-color: orange">
+    <td width="300px">Single-instance version cases</td>
+    <td>Graph Results Screenshot</td>
+    <td>Average Query Time(ms)</td>
+    <td>Average Search Servlet Time(ms)</td>
+    <td>Average JDBC Time(ms)</td>
+    <td>Analysis</td>
+  </tr>
+  <tr>
+    <td>Case 1: HTTP/1 thread</td>
+    <td><img src="8080_thread1_50.PNG" alt="Graph Results Screenshot Case 1" style="width:304px;height:228px;"></td>
+    <td>788 ms</td>
+    <td>550.605326 ms</td>
+    <td>550.1444314557154 ms</td>
+    <td>looking at the graph we can see that the average remains relativly stable, and it seems that the the avergae query time has come out larger than both TS and Tj. possible erros are our wifi connection, and the fact AWS has exceeded its time and CPU limits, and has been giving us memory failures, this caused us to have to make several attempts to run this test as the server would either stop responding or turn off tomcat due to "memory failure error" which could have effected our results. Additionally instructions where very vague about what "the average time spent on the parts that use JDBC" actually means and that could have effected the gotten results for TJ.</td>
+  </tr>
+  <tr>
+    <td>Case 2: HTTP/10 threads</td>
+    <td><img src="graph_results_case2.png" alt="Graph Results Screenshot Case 2" style="width:304px;height:228px;"></td>
+    <td>??</td>
+    <td>??</td>
+    <td>??</td>
+    <td>--</td>
+  </tr>
+  <tr>
+    <td>Case 3: HTTPS/10 threads</td>
+    <td><img src="graph_results_case3.png" alt="Graph Results Screenshot Case 3" style="width:304px;height:228px;"></td>
+    <td>??</td>
+    <td>??</td>
+    <td>??</td>
+    <td>--</td>
+  </tr>
+  <tr>
+    <td>Case 4: HTTP/10 threads/No prepared statements</td>
+    <td><img src="graph_results_case4.png" alt="Graph Results Screenshot Case 4" style="width:304px;height:228px;"></td>
+    <td>??</td>
+    <td>??</td>
+    <td>??</td>
+    <td>--</td>
+  </tr>
+  <tr>
+    <td>Case 5: HTTP/10 threads/No connection pooling</td>
+    <td><img src="graph_results_case4.png" alt="Graph Results Screenshot Case 4" style="width:304px;height:228px;"></td>
+    <td>??</td>
+    <td>??</td>
+    <td>??</td>
+    <td>--</td>
+  </tr>
+
+</table> 
+
+
+<table style="width:100%">
+  <tr style="font-weight:bold; background-color: orange">
+    <td width="300px">Scaled version cases</td>
+    <td>Graph Results Screenshot</td>
+    <td>Average Query Time(ms)</td>
+    <td>Average Search Servlet Time(ms)</td>
+    <td>Average JDBC Time(ms)</td>
+    <td>Analysis</td>
+  </tr>
+  <tr>
+    <td>Case 1: HTTP/1 thread</td>
+    <td><img src="graph_results_case1.png" alt="Graph Results Screenshot Case 1" style="width:304px;height:228px;"></td>
+    <td>??</td>
+    <td>??</td>
+    <td>??</td>
+    <td>--</td>
+  </tr>
+  <tr>
+    <td>Case 2: HTTP/10 threads</td>
+    <td><img src="graph_results_case2.png" alt="Graph Results Screenshot Case 2" style="width:304px;height:228px;"></td>
+    <td>??</td>
+    <td>??</td>
+    <td>??</td>
+    <td>--</td>
+  </tr>
+  <tr>
+    <td>Case 3: HTTP/10 threads/No prepared statements</td>
+    <td><img src="graph_results_case4.png" alt="Graph Results Screenshot Case 4" style="width:304px;height:228px;"></td>
+    <td>??</td>
+    <td>??</td>
+    <td>??</td>
+    <td>--</td>
+  </tr>
+  <tr>
+    <td>Case 4: HTTP/10 threads/No connection pooling</td>
+    <td><img src="graph_results_case4.png" alt="Graph Results Screenshot Case 4" style="width:304px;height:228px;"></td>
+    <td>??</td>
+    <td>??</td>
+    <td>??</td>
+    <td>--</td>
+  </tr>
+
+</table> 
+
+</body>
+</html>
