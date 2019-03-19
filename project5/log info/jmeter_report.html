@@ -26,40 +26,40 @@ td {
     <td>Case 1: HTTP/1 thread</td>
     <td><img src="8080_thread1_50.PNG" alt="Graph Results Screenshot Case 1" style="width:304px;height:228px;"></td>
     <td>788 ms</td>
-    <td>550.605326 ms</td>
+    <td>550.6053263205905 ms</td>
     <td>550.1444314557154 ms</td>
     <td>looking at the graph we can see that the average remains relativly stable, and it seems that the the avergae query time has come out larger than both TS and Tj. possible erros are our wifi connection, and the fact AWS has exceeded its time and CPU limits, and has been giving us memory failures, this caused us to have to make several attempts to run this test as the server would either stop responding or turn off tomcat due to "memory failure error" which could have effected our results. Additionally instructions where very vague about what "the average time spent on the parts that use JDBC" actually means and that could have effected the gotten results for TJ.</td>
   </tr>
   <tr>
     <td>Case 2: HTTP/10 threads</td>
     <td><img src="8080_thread10_50.PNG" alt="Graph Results Screenshot Case 2" style="width:304px;height:228px;"></td>
-    <td>??</td>
-    <td>??</td>
-    <td>??</td>
+    <td>7753 ms</td>
+    <td>7441.355083952687 ms</td>
+    <td>7434.56427945193 ms</td>
     <td>--</td>
   </tr>
   <tr>
     <td>Case 3: HTTPS/10 threads</td>
     <td><img src="8443_thread10_50.PNG" alt="Graph Results Screenshot Case 3" style="width:304px;height:228px;"></td>
-    <td>??</td>
-    <td>??</td>
-    <td>??</td>
+    <td>6580</td>
+    <td>5030.425475549583 ms</td>
+    <td>5025.672162098789 ms</td>
     <td>--</td>
   </tr>
   <tr>
     <td>Case 4: HTTP/10 threads/No prepared statements</td>
-    <td><img src="graph_results_case4.png" alt="Graph Results Screenshot Case 4" style="width:304px;height:228px;"></td>
-    <td>??</td>
-    <td>??</td>
-    <td>??</td>
+    <td><img src="8080_thread10_noPrepared-1.png" alt="Graph Results Screenshot Case 4" style="width:304px;height:228px;"></td>
+    <td>10805 ms</td>
+    <td>7169.114223885314 ms</td>
+    <td>7167.842918642695 ms</td>
     <td>--</td>
   </tr>
   <tr>
     <td>Case 5: HTTP/10 threads/No connection pooling</td>
     <td><img src="8080_thread10_noPool.PNG" alt="Graph Results Screenshot Case 4" style="width:304px;height:228px;"></td>
-    <td>??</td>
-    <td>??</td>
-    <td>??</td>
+    <td>7534</td>
+    <td>7328.342954003407 ms</td>
+    <td>7326.218977578728 ms</td>
     <td>--</td>
   </tr>
 
@@ -78,33 +78,33 @@ td {
   <tr>
     <td>Case 1: HTTP/1 thread</td>
     <td><img src="80_thread1_50.PNG" alt="Graph Results Screenshot Case 1" style="width:304px;height:228px;"></td>
-    <td>??</td>
-    <td>??</td>
-    <td>??</td>
+    <td>378 ms</td>
+    <td>176.9205280662377 ms</td>
+    <td>176.60443848713098 ms</td>
     <td>definitely ran better than the single instance version</td>
   </tr>
   <tr>
     <td>Case 2: HTTP/10 threads</td>
     <td><img src="80_thread10_50.PNG" alt="Graph Results Screenshot Case 2" style="width:304px;height:228px;"></td>
-    <td>??</td>
-    <td>??</td>
-    <td>??</td>
+    <td>911 ms</td>
+    <td>712.4952850749432 ms</td>
+    <td>711.4746476767601 ms</td>
     <td>we expected this test to run verry fast because of the stablization and master slave relationship allowing for faster processing of multiple threads. This case ran better than the scaled version with only one thread, leading us to conclude that having more threads on the scaled version allows it to go through all the tasked work faster.</td>
   </tr>
   <tr>
     <td>Case 3: HTTP/10 threads/No prepared statements</td>
     <td><img src="80_thread10_noPrepared.PNG" alt="Graph Results Screenshot Case 4" style="width:304px;height:228px;"></td>
-    <td>??</td>
-    <td>??</td>
-    <td>??</td>
+    <td>7452 ms</td>
+    <td>7169.114223885314 ms</td>
+    <td>7167.842918642695 ms</td>
     <td>we expected this test to still be relativly fast, with higher TS, TJ, and average speeds than case 4 below, because we thought tgat prepared statements contributed less to the speed, as they did with the no prepared statement on the single instance</td>
   </tr>
   <tr>
     <td>Case 4: HTTP/10 threads/No connection pooling</td>
     <td><img src="80_thread10_noPool.PNG" alt="Graph Results Screenshot Case 4" style="width:304px;height:228px;"></td>
-    <td>??</td>
-    <td>??</td>
-    <td>??</td>
+    <td>996 ms</td>
+    <td>803.8916998796367 ms</td>
+    <td>803.5942308402725 ms</td>
     <td>we initally expected this test to go slower without connection pooling and for TS,TJ, and the average to be lower, because connection pooling should remove the time spent making connections. looking at the graph it seems everything in this test stayed relativly stable, with the lines being mostly straight. This case ran relativly fast, about the same as scaled version case two, and better than the other two cases for scaled version, further supporting the idea drawn form our results that having prepared statements and multiple threads on the scaled version allows the site to get more work done and deal with a heavier load, and our implies that having a connection pool important to the overall improvement of the program. possible errors are the same as listed in the first case </td>
   </tr>
 

@@ -18,8 +18,8 @@ def reader():
     sum1=sum1/len(inside)
     sum2=sum2/len(inside)
     
-    print("TS: "+str(sum1))
-    print("TJ: "+str(sum2))
+    print("TS: "+str(sum1/1000000))
+    print("TJ: "+str(sum2/1000000))
     
 if __name__ == "__main__":
     reader()
