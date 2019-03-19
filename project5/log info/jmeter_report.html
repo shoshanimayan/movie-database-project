@@ -28,7 +28,7 @@ td {
     <td>788 ms</td>
     <td>550.6053263205905 ms</td>
     <td>550.1444314557154 ms</td>
-    <td>looking at the graph we can see that the average remains relativly stable, and it seems that the the avergae query time has come out larger than both TS and Tj. possible erros are our wifi connection, and the fact AWS has exceeded its time and CPU limits, and has been giving us memory failures, this caused us to have to make several attempts to run this test as the server would either stop responding or turn off tomcat due to "memory failure error" which could have effected our results. Additionally instructions where very vague about what "the average time spent on the parts that use JDBC" actually means and that could have effected the gotten results for TJ.</td>
+    <td>we expected this test to run relativly smoothly and for the average query time to be smaller than TS since it its the entire complete time of the servlet. looking at the graph we can see that the average remains relativly stable, and it seems that the the avergae query time has come out larger than both TS and Tj. possible erros are our wifi connection, and the fact AWS has exceeded its time and CPU limits, and has been giving us memory failures, this caused us to have to make several attempts to run this test as the server would either stop responding or turn off tomcat due to "memory failure error" which could have effected our results. Additionally instructions where very vague about what "the average time spent on the parts that use JDBC" actually means and that could have effected the gotten results for TJ. of the single instance cases this one ultimately had the best times.</td>
   </tr>
   <tr>
     <td>Case 2: HTTP/10 threads</td>
@@ -36,7 +36,7 @@ td {
     <td>7753 ms</td>
     <td>7441.355083952687 ms</td>
     <td>7434.56427945193 ms</td>
-    <td>--</td>
+    <td>for this test we expected it to run better than case 1 because of the additional threads, but looking at the comparison of the averages we can clearly see that the opposite is true, as the average times for this times for this case are much higher. looking at the graph we can see that it stabilizes into straight lines early on. again average query time was larger that TS and TJ. possible errors for this test are the same as those listed at the end of case 1.</td>
   </tr>
   <tr>
     <td>Case 3: HTTPS/10 threads</td>
@@ -44,7 +44,7 @@ td {
     <td>6580</td>
     <td>5030.425475549583 ms</td>
     <td>5025.672162098789 ms</td>
-    <td>--</td>
+    <td>we expected this one to run the slowest of the first three tests, because we thought the extra security around https might slow it down, but it was actually only the second slowest. 10 threads on https actaully ran faster than 10 threads on http, as can be seen by the average query times. looking at the graph we can see that the average curves up and down at first and then stabilizes. Again average query time was larger that TS and TJ. possible errors for this test are the same as those listed at the end of case 1. </td>
   </tr>
   <tr>
     <td>Case 4: HTTP/10 threads/No prepared statements</td>
@@ -52,7 +52,10 @@ td {
     <td>10805 ms</td>
     <td>7169.114223885314 ms</td>
     <td>7167.842918642695 ms</td>
-    <td>--</td>
+    <td>we expected that losing prepared statements would not effect the test to much, as we thought that they did not contribute to much to the query speed compared to pooling. However we ran into major issues during this test, as you can see in the graph, we ran through every possible query given, but the blue average query line seems to disappear half way through and reappears in 8080_thread10_noPrepared-2.PNG. we can also see on this graph that the green throughput line skyrockets upwards. The major consequence of this is the while we ran through all 2642 queries,the program only wrote 73 queries to the Time Log for this test.	
+	This could be the result of connection issues on our part, but we believe it is something to do with our AWS low memory errors, or some other problem with AWS since we tried this test multiple times on different wifi connections and different computers and the program would always stop recording the time logs for TS and TJ after around 70 messages were sent to it, and honestly we do not know why this only ever happened on this test so we have to chalk it up to an effect of removing the prepared statements or a problem with AWS.
+	again TS and TJ where smaller than the average query times, possible errors for this are listed in the analysis of case 1.
+	</td>
   </tr>
   <tr>
     <td>Case 5: HTTP/10 threads/No connection pooling</td>
@@ -60,7 +63,8 @@ td {
     <td>7534</td>
     <td>7328.342954003407 ms</td>
     <td>7326.218977578728 ms</td>
-    <td>--</td>
+    <td>we expected this one to run much slower than the rest of the test since we though that getting rid of pooling would have a major effect on the query time, since it meant you had to reconnect each time. however the avaerage query time of this test ran much like the normal 10 threads on http test, if not slightly better. looking at the grpah we can see it the average query time looks less like a solid line and is more spotty and this may be a result of constantly reconnecting. again TS and TJ were smaller than the average time , possible error causes were listed under case one's analysis.	 
+	</td>
   </tr>
 
 </table> 
@@ -81,7 +85,8 @@ td {
     <td>378 ms</td>
     <td>176.9205280662377 ms</td>
     <td>176.60443848713098 ms</td>
-    <td>definitely ran better than the single instance version</td>
+    <td>we expected this test to run faster than its single instance counter part, as the load balancing would mean that it would be able to split all the work amongst the master and slave. Definitely ran better than the single instance version, and we can attribute this to the master - slave relationship of the load balancing. looking at the graph we can see that the values start out a bit sporadic, but eventually stablize and almost overlap one another. This case had the shortest TS, TJ, and average query time of any of the cases. 
+	once again average query time is larger than the average search servlet or JDBC times. possible errors are listed in case one of the single instance tests. </td>
   </tr>
   <tr>
     <td>Case 2: HTTP/10 threads</td>
@@ -89,7 +94,8 @@ td {
     <td>911 ms</td>
     <td>712.4952850749432 ms</td>
     <td>711.4746476767601 ms</td>
-    <td>we expected this test to run verry fast because of the stablization and master slave relationship allowing for faster processing of multiple threads. This case ran better than the scaled version with only one thread, leading us to conclude that having more threads on the scaled version allows it to go through all the tasked work faster.</td>
+    <td>we expected this test to run very fast because of the stablization and master slave relationship allowing for faster processing of multiple threads, we thought it might actually run faster than the previous case. This case ran worse than only one thread on load stablizer, leading us to conclude that having more threads on the scaled version does not allow it to go through all the tasked work faster than one thread. It does hoever run much faster than 10 threads on the single instance, solidifying the idea that the load balancer increases the averages times of the program. looking at the graph, it looks like the the average query times started out by increaseing in time time taken, and than stablized out. 
+	once again average query time is larger than the average search servlet or JDBC times. possible errors are listed in case one of the single instance tests.</td>
   </tr>
   <tr>
     <td>Case 3: HTTP/10 threads/No prepared statements</td>
@@ -97,7 +103,7 @@ td {
     <td>7452 ms</td>
     <td>7169.114223885314 ms</td>
     <td>7167.842918642695 ms</td>
-    <td>we expected this test to still be relativly fast, with higher TS, TJ, and average speeds than case 4 below, because we thought tgat prepared statements contributed less to the speed, as they did with the no prepared statement on the single instance</td>
+    <td>we expected this test to still be relativly fast, with higher TS, TJ, and average speeds than case 4 below, because we thought that prepared statements contributed less to the speed, as they did with the no prepared statement on the single instance. Lucking at the graph, all the recorded elements are almost entirely straight lines. Luckily this time we were able to get all the log times for TS and TJ with no prepared staments, which only raises more questions about why it never worked in case 4 above. both the Average query time, TS, and TJ look much closer to the results of the single instance cases, up in the 7000 ms range, which implies that prepared statements might have more effect on imporving query time than pooling does.. Again TS and TJ are larger than the average query time. Possible error causes are listed under case 1 for the single instance. </td>
   </tr>
   <tr>
     <td>Case 4: HTTP/10 threads/No connection pooling</td>
@@ -105,7 +111,7 @@ td {
     <td>996 ms</td>
     <td>803.8916998796367 ms</td>
     <td>803.5942308402725 ms</td>
-    <td>we initally expected this test to go slower without connection pooling and for TS,TJ, and the average to be lower, because connection pooling should remove the time spent making connections. looking at the graph it seems everything in this test stayed relativly stable, with the lines being mostly straight. This case ran relativly fast, about the same as scaled version case two, and better than the other two cases for scaled version, further supporting the idea drawn form our results that having prepared statements and multiple threads on the scaled version allows the site to get more work done and deal with a heavier load, and our implies that having a connection pool important to the overall improvement of the program. possible errors are the same as listed in the first case </td>
+    <td>we initally expected this test to go slower without connection pooling and for TS,TJ, and the average to be lower, because connection pooling should remove the time spent making connections. looking at the graph it seems everything in this test stayed relativly stable, with the lines being mostly straight. This case ran relativly fast, about the same as scaled version case two, and better than the no prepaed statement case for scaled version, further supporting the idea drawn form our results that having prepared statements and multiple threads on the scaled version allows the site to get more work done and deal with a heavier load, and our implies that having a connection pool may be less important to the overall improvement of the program. possible errors are the same as listed in the first case.</td>
   </tr>
 
 </table> 
