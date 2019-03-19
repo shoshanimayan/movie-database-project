@@ -1,7 +1,7 @@
 # cs122b-winter19-team-12
 
 script instructions:
-the log parser.py is python 3.6 program. which when ran with a TimeLogs.txt in the same folder will yreturn to you the average TS and TJ times in milliseconds. 
+the log parser.py is python 3.6 program. which when ran with a TimeLogs.txt in the same folder will return to you the average TS and TJ times in milliseconds. 
 
 you can run it in aws with the command python3 log parser.py. 
 
