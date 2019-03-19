@@ -32,7 +32,7 @@ td {
   </tr>
   <tr>
     <td>Case 2: HTTP/10 threads</td>
-    <td><img src="graph_results_case2.png" alt="Graph Results Screenshot Case 2" style="width:304px;height:228px;"></td>
+    <td><img src="8080_thread10_50.PNG" alt="Graph Results Screenshot Case 2" style="width:304px;height:228px;"></td>
     <td>??</td>
     <td>??</td>
     <td>??</td>
@@ -40,7 +40,7 @@ td {
   </tr>
   <tr>
     <td>Case 3: HTTPS/10 threads</td>
-    <td><img src="graph_results_case3.png" alt="Graph Results Screenshot Case 3" style="width:304px;height:228px;"></td>
+    <td><img src="8443_thread10_50.PNG" alt="Graph Results Screenshot Case 3" style="width:304px;height:228px;"></td>
     <td>??</td>
     <td>??</td>
     <td>??</td>
@@ -56,7 +56,7 @@ td {
   </tr>
   <tr>
     <td>Case 5: HTTP/10 threads/No connection pooling</td>
-    <td><img src="graph_results_case4.png" alt="Graph Results Screenshot Case 4" style="width:304px;height:228px;"></td>
+    <td><img src="8080_thread10_noPool.PNG" alt="Graph Results Screenshot Case 4" style="width:304px;height:228px;"></td>
     <td>??</td>
     <td>??</td>
     <td>??</td>
@@ -77,35 +77,35 @@ td {
   </tr>
   <tr>
     <td>Case 1: HTTP/1 thread</td>
-    <td><img src="graph_results_case1.png" alt="Graph Results Screenshot Case 1" style="width:304px;height:228px;"></td>
+    <td><img src="80_thread1_50.PNG" alt="Graph Results Screenshot Case 1" style="width:304px;height:228px;"></td>
     <td>??</td>
     <td>??</td>
     <td>??</td>
-    <td>--</td>
+    <td>definitely ran better than the single instance version</td>
   </tr>
   <tr>
     <td>Case 2: HTTP/10 threads</td>
-    <td><img src="graph_results_case2.png" alt="Graph Results Screenshot Case 2" style="width:304px;height:228px;"></td>
+    <td><img src="80_thread10_50.PNG" alt="Graph Results Screenshot Case 2" style="width:304px;height:228px;"></td>
     <td>??</td>
     <td>??</td>
     <td>??</td>
-    <td>--</td>
+    <td>we expected this test to run verry fast because of the stablization and master slave relationship allowing for faster processing of multiple threads. This case ran better than the scaled version with only one thread, leading us to conclude that having more threads on the scaled version allows it to go through all the tasked work faster.</td>
   </tr>
   <tr>
     <td>Case 3: HTTP/10 threads/No prepared statements</td>
-    <td><img src="graph_results_case4.png" alt="Graph Results Screenshot Case 4" style="width:304px;height:228px;"></td>
+    <td><img src="80_thread10_noPrepared.PNG" alt="Graph Results Screenshot Case 4" style="width:304px;height:228px;"></td>
     <td>??</td>
     <td>??</td>
     <td>??</td>
-    <td>--</td>
+    <td>we expected this test to still be relativly fast, with higher TS, TJ, and average speeds than case 4 below, because we thought tgat prepared statements contributed less to the speed, as they did with the no prepared statement on the single instance</td>
   </tr>
   <tr>
     <td>Case 4: HTTP/10 threads/No connection pooling</td>
-    <td><img src="graph_results_case4.png" alt="Graph Results Screenshot Case 4" style="width:304px;height:228px;"></td>
+    <td><img src="80_thread10_noPool.PNG" alt="Graph Results Screenshot Case 4" style="width:304px;height:228px;"></td>
     <td>??</td>
     <td>??</td>
     <td>??</td>
-    <td>--</td>
+    <td>we initally expected this test to go slower without connection pooling and for TS,TJ, and the average to be lower, because connection pooling should remove the time spent making connections. looking at the graph it seems everything in this test stayed relativly stable, with the lines being mostly straight. This case ran relativly fast, about the same as scaled version case two, and better than the other two cases for scaled version, further supporting the idea drawn form our results that having prepared statements and multiple threads on the scaled version allows the site to get more work done and deal with a heavier load, and our implies that having a connection pool important to the overall improvement of the program. possible errors are the same as listed in the first case </td>
   </tr>
 
 </table> 
