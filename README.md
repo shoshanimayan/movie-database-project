@@ -1,5 +1,7 @@
 # cs122b-winter19-team-12
 
+this acts as the main landing page for 5 projects we did in the developement of a movie database project, with each project 1-5 being an iteration on the last project with improvements and features added. so project one would be the earliest version of the project and project 5 would be the final.
+--------------------------------------------------------------------
 script instructions:
 the log parser.py is python 3.6 program. which when ran with a TimeLogs.txt in the same folder will return to you the average TS and TJ times in milliseconds. 
 
